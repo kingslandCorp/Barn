@@ -1,0 +1,12 @@
+{
+  "name": "The Barn — Kingsland Barn",
+  "short_name": "The Barn",
+  "icons": [
+    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#FAF5EA",
+  "background_color": "#FAF5EA",
+  "display": "standalone"
+}

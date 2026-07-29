@@ -1,1 +1,135 @@
-<!doctype html><html lang='en-GB'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Places to visit | The Barn</title><meta name='description' content='A welcoming country barn stay in the Vale of Glamorgan, Wales.'><link rel='stylesheet' href='style.css'></head><body><nav class='nav'><div class='container nav-inner'><a class='brand' href='index.html'>The Barn</a><button class='menu' aria-label='Menu'>☰</button><div class='links'><a href='index.html'>Welcome</a><a href='directions.html'>Directions</a><a href='places-to-visit.html'>Places to visit</a><a href='house-rules.html'>House rules</a><a class='pill' href='index.html#contact'>Guest info</a></div></div></nav><main><section class='section'><div class='container'><div class='eyebrow'>Explore</div><h2>Food, coast and gentle Welsh days out</h2><p class='lead'>Coast, country lanes and warm Welsh welcomes — a few favourite places nearby.</p><div class='card'><h3>Eat & drink</h3><div class='place'><div><strong>The Blacksmith Arms</strong><p>A characterful country pub with fires and seasonal cooking. A relaxed supper option.</p></div><span class='tag'>Llanmaes · approx. 10 min</span></div><div class='place'><div><strong>The Duke of Wellington</strong><p>Smart gastro-dining on Cowbridge High Street for lunch or a special evening.</p></div><span class='tag'>Cowbridge · approx. 12 min</span></div><div class='place'><div><strong>Cowbridge cafés</strong><p>Independent coffee houses and delis for breakfast, lunch or afternoon treats.</p></div><span class='tag'>Cowbridge</span></div></div><br><div class='card'><h3>Stock the larder</h3><div class='place'><div><strong>Waitrose</strong><p>Main local supermarket for a full shop, with café and parking.</p></div><span class='tag'>Cowbridge · approx. 12 min</span></div><div class='place'><div><strong>Co-op</strong><p>Useful for essentials, fresh bread and last-minute bits.</p></div><span class='tag'>Cowbridge / Llantwit</span></div><div class='place'><div><strong>Londis</strong><p>Closest convenience option for milk, papers and forgotten essentials.</p></div><span class='tag'>Nearby village</span></div></div><br><div class='card'><h3>Things to do & the coast</h3><div class='place'><div><strong>Nash Point Lighthouse</strong><p>Victorian lighthouse above limestone cliffs, with clifftop walks.</p></div><span class='tag'>approx. 20 min</span></div><div class='place'><div><strong>Southerndown Beach</strong><p>A sweep of sand backed by cliffs and the ruins of Dunraven walled garden.</p></div><span class='tag'>approx. 25 min</span></div><div class='place'><div><strong>Cowbridge & St Athan</strong><p>Boutiques and the Physic Garden in town; RAF St Athan museum for a rainy day.</p></div><span class='tag'>approx. 10–15 min</span></div></div></div></section></main><footer class='footer'><div class='container'><p><strong>The Barn</strong> · Vale of Glamorgan, Wales · Hosted by Kim & Pete</p><p class='small'>GitHub-ready static site. Replace placeholder contact, Wi‑Fi and map details before publishing publicly.</p></div></footer><script src='script.js'></script></body></html>
+# The Barn — Kingsland Barn
+
+A premium, mobile-first website for The Barn (Kingsland Barn), a luxury countryside
+holiday let in the Vale of Glamorgan, Wales. Built with Next.js 15 (App Router),
+TypeScript, Tailwind CSS and Framer Motion, and configured to export as a fully static
+site that GitHub Pages can host for free.
+
+## Pages
+
+| Page | Route | Notes |
+|---|---|---|
+| Home | `/` | Hero, warm welcome, stay highlights, gallery, area teaser |
+| Directions | `/directions` | Arrival steps, map, what3words, parking, arriving after dark |
+| Explore the Area | `/explore` | Coast & beaches, food & drink, towns & villages, family activities |
+| Before You Leave | `/before-you-leave` | Interactive departure checklist |
+| Guests | `/guests` | **Email-gated** house rules and pool safety information |
+
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+If `npm install` complains about peer dependencies (this can happen with React 19 and
+some Framer Motion versions), run:
+
+```bash
+npm install --legacy-peer-deps
+```
+
+## Before you launch — things to check or replace
+
+Real property photography is now built in (see "Photography" below) — the two things
+still specific to the exact property are the map location and the what3words address:
+
+1. **Map.** `mapEmbedSrc` in `src/lib/content.ts` currently points to a generic
+   "Llanmaes, Vale of Glamorgan" search. Replace it with an embed URL for the exact
+   address (Google Maps → Share → Embed a map → copy the `src`).
+2. **what3words.** `what3words` in `src/lib/content.ts` is a placeholder
+   (`///example.words.here`). Replace `words` and `url` with the real address for the
+   entrance.
+3. **Domain.** `siteUrl` in `src/app/layout.tsx` and the URLs in
+   `public/robots.txt` / `public/sitemap.xml` currently use `https://kingsland.co.uk` —
+   update all three if the real domain differs.
+4. **Contact email.** Everything reads from `siteConfig.email` in
+   `src/lib/content.ts` (currently `Hello@Kingsland.co.uk`) — change it in one place if
+   needed.
+
+## Photography
+
+All photos are real, guest-supplied images of the actual property, resized and
+compressed for the web (see `public/images/`). They're wired up in two places:
+
+- **`sitePhotos`** in `src/lib/content.ts` — the single "hero" style photos used once
+  each: the homepage hero, the "Warm Welcome" section, "Discover the Vale", the
+  directions track photo, the after-dark arrival photo, and the pool-safety photo.
+- **`galleryItems`** in `src/lib/content.ts` — the homepage gallery grid. Each entry
+  needs its real pixel `width`/`height` so the layout can reserve the correct aspect
+  ratio without a layout shift.
+
+Both render through `src/components/Photo.tsx`, a small wrapper around `next/image`
+that keeps the site's rounded-card, gradient-caption look. To swap or add a photo:
+drop the file in `public/images/`, then point a `sitePhotos` or `galleryItems` entry at
+it with its real width/height.
+
+The **Explore the Area** page (Southerndown Beach, Nash Point, Cowbridge, etc.) still
+uses the soft colour-gradient placeholders from the original design — no photos of
+those specific locations were supplied. Add real ones the same way if you have them
+(`src/components/AreaCard.tsx` reads from `src/lib/content.ts`'s `exploreCategories`).
+
+## Editing copy
+
+Nearly all text content — stay highlights, gallery captions, arrival steps, area guide
+entries, house rules, pool rules, and the departure checklist — lives in
+`src/lib/content.ts`. Edit it there rather than hunting through page/component files.
+
+## The Guests section — how the login works, and its limits
+
+`/guests` asks for an email address before showing house rules and pool safety
+information. Please go in with the right expectations about what this is:
+
+- **This is a static website with no server or database**, so there is nothing to check
+  the email address against — anyone who enters *any* validly formatted email address is
+  let in, and the choice is remembered in that browser's `localStorage` so they aren't
+  asked again on return visits (there's a "Sign out" link in `src/components/GuestArea.tsx`
+  to reset it).
+- Its purpose is to make sure casual visitors and search engines don't stumble onto pool
+  safety rules on the homepage nav — it is a courtesy gate, **not real access control**.
+  It won't stop someone determined from viewing the page source or reading the compiled
+  JavaScript, and it doesn't verify the email belongs to an actual guest.
+- `/guests` is excluded from `robots.txt` and the sitemap so it won't be indexed by
+  search engines.
+
+If you need genuine guest-only access (e.g. verified against a real booking system),
+that requires a backend — options include a small serverless function (Vercel/Netlify/
+Cloudflare Workers) that checks the email against your booking platform, or a proper
+auth provider. That's a bigger job than a static GitHub Pages site can do on its own,
+but happy to help scope it out if it becomes a priority.
+
+## Deploying to GitHub Pages
+
+A ready-made workflow lives at `.github/workflows/deploy.yml`. Steps:
+
+1. Push this repo to GitHub.
+2. In the repo, go to **Settings → Pages → Build and deployment → Source**, and choose
+   **GitHub Actions**.
+3. Push to `main` (or run the workflow manually from the **Actions** tab). It will build
+   the site with `next build` (static export) and publish the `out/` folder.
+
+**One setting to check:** the workflow automatically sets the site's base path to
+`/<repo-name>/`, which is correct if your site will live at
+`https://<username>.github.io/<repo-name>/`. If instead you're using:
+
+- a repo named `<username>.github.io` (a root user/org site), or
+- a custom domain (via a `CNAME` file in `public/`),
+
+then open `.github/workflows/deploy.yml` and delete the "Set base path for project
+pages" step, since the site should be served from `/` in both of those cases.
+
+*(Small cosmetic note: on a project-page deployment under a sub-path, the browser tab
+favicon may not pick up the sub-path prefix. It's a one-line fix if it comes up —
+everything else on the site, including all navigation, is basePath-aware already.)*
+
+## Tech
+
+- **Next.js 15** (App Router, static export via `output: 'export'`)
+- **TypeScript**, **Tailwind CSS**, **Framer Motion**
+- **lucide-react** for icons
+- SEO: per-page metadata, Open Graph + Twitter cards, `LodgingBusiness` JSON-LD structured
+  data, `robots.txt`, `sitemap.xml`
+- Accessibility: visible keyboard focus states, `prefers-reduced-motion` respected
+  throughout (see `src/app/globals.css` and `src/components/Hero.tsx`)

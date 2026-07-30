@@ -52,7 +52,7 @@ export default function HomePage() {
       {/* Gallery */}
       <section className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
-        <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {galleryItems.map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
               <Photo
@@ -71,7 +71,7 @@ export default function HomePage() {
 {/* The Views */}
       <section className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
-        <div className="mt-14 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {viewPhotos.map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
               <Photo

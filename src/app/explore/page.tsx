@@ -53,7 +53,7 @@ export default function ExplorePage() {
         </section>
       ))}
 
-      {/* A Day in Cardiff */}
+      {/* Days Out */}
       <section
         className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
           exploreCategories.length % 2 === 1 ? 'bg-white/40 max-w-none' : ''
@@ -62,9 +62,9 @@ export default function ExplorePage() {
         <div className={exploreCategories.length % 2 === 1 ? 'mx-auto max-w-content' : ''}>
           <Reveal>
             <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-              {String(exploreCategories.length + 1).padStart(2, '0')} — A Day in Cardiff
+              {String(exploreCategories.length + 1).padStart(2, '0')} — Days Out
             </p>
-            <h2 className="font-display text-3xl text-ink sm:text-4xl">A Day in Cardiff</h2>
+            <h2 className="font-display text-3xl text-ink sm:text-4xl">Days Out</h2>
             <p className="mt-3 max-w-2xl text-base text-ink/65">
               Just up the road, Wales' capital is an easy add-on to your stay — here are our
               go-to picks.

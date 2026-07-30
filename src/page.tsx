@@ -80,7 +80,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Row 2 — four medium images */}
+        {/* Row 2 — four medium images, all matched height */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
           {galleryItems.slice(2, 6).map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
@@ -91,13 +91,13 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="aspect-square"
+                className="h-56 w-full sm:h-64"
               />
             </Reveal>
           ))}
         </div>
 
-        {/* Row 3 — three medium images, plus one stacked pair filling the fourth slot */}
+        {/* Row 3 — three matched-height images, plus one stacked pair filling the fourth slot */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
           {galleryItems.slice(6, 9).map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
@@ -108,13 +108,13 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="aspect-square"
+                className="h-56 w-full sm:h-64"
               />
             </Reveal>
           ))}
-          <div className="flex h-full flex-col gap-3 sm:gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4">
             {galleryItems.slice(9, 11).map((item, i) => (
-              <Reveal key={item.label} delay={i * 0.05} className="min-h-0 flex-1">
+              <Reveal key={item.label} delay={i * 0.05}>
                 <Photo
                   src={item.src}
                   alt={item.label}
@@ -122,7 +122,7 @@ export default function HomePage() {
                   height={item.height}
                   label={item.label}
                   caption={item.caption}
-                  className="h-full"
+                  className="h-[106px] w-full sm:h-[120px]"
                 />
               </Reveal>
             ))}
@@ -143,6 +143,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
+                className="h-40 w-full sm:h-52"
               />
             </Reveal>
           ))}

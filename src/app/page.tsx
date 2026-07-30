@@ -69,7 +69,7 @@ export default function HomePage() {
       </section>
 
 {/* The Views */}
-      <section className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
         <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
           {viewPhotos.map((item, i) => (
@@ -88,7 +88,7 @@ export default function HomePage() {
       </section>
       
       {/* Discover the Vale */}
-      <section className="bg-coast py-20 text-cream sm:py-28">
+      <section className="bg-coast py-14 text-cream sm:py-20">
         <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
           <Reveal>
             <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-light">
@@ -122,7 +122,7 @@ export default function HomePage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="mx-auto max-w-content px-5 py-20 text-center sm:px-8 sm:py-28 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-14 text-center sm:px-8 sm:py-20 lg:px-12">
         <Reveal>
           <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
             Ready when you are.

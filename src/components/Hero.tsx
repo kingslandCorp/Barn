@@ -50,8 +50,8 @@ export default function Hero() {
           <p className="eyebrow mb-4 text-xs font-semibold uppercase text-cream/80 sm:text-sm">
             {siteConfig.region}
           </p>
-          <h1 className="max-w-2xl font-display text-5xl leading-[1.05] text-cream sm:text-6xl md:text-7xl">
-            Welcome to <span className="italic text-gold-light">The Barn</span>
+           <h1 className="max-w-3xl whitespace-normal font-display text-4xl leading-[1.05] text-cream sm:whitespace-nowrap sm:text-5xl md:text-6xl lg:text-7xl">
+            Welcome to <span className="italic text-gold-light">{siteConfig.name}</span>
           </h1>
           <p className="mt-6 max-w-md text-base leading-relaxed text-cream/85 sm:text-lg">
             {siteConfig.tagline}

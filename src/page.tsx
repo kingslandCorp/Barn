@@ -49,12 +49,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Gallery */}
+{/* Gallery */}
       <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {galleryItems.map((item, i) => (
-            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
+
+        {/* Row 1 — two hero images */}
+        <div className="mt-14 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
+          {galleryItems.slice(0, 2).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
               <Photo
                 src={item.src}
                 alt={item.label}
@@ -65,6 +67,55 @@ export default function HomePage() {
               />
             </Reveal>
           ))}
+        </div>
+
+        {/* Row 2 — four medium images */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(2, 6).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Row 3 — three medium images, plus one stacked pair filling the fourth slot */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(6, 9).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+          <div className="flex h-full flex-col gap-3 sm:gap-4">
+            {galleryItems.slice(9, 11).map((item, i) => (
+              <Reveal key={item.label} delay={i * 0.05} className="min-h-0 flex-1">
+                <Photo
+                  src={item.src}
+                  alt={item.label}
+                  width={item.width}
+                  height={item.height}
+                  label={item.label}
+                  caption={item.caption}
+                  className="h-full"
+                />
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

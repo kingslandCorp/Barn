@@ -1,100 +1,204 @@
-import type { Metadata } from 'next';
-import Reveal from '@/components/Reveal';
-import AreaCard from '@/components/AreaCard';
+import Link from 'next/link';
 import Image from 'next/image';
-import { exploreCategories, dayTrips, siteConfig } from '@/lib/content';
+import Hero from '@/components/Hero';
+import SectionHeading from '@/components/SectionHeading';
+import IconCard from '@/components/IconCard';
+import Photo from '@/components/Photo';
+import Reveal from '@/components/Reveal';
+import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
 
-export const metadata: Metadata = {
-  title: 'Explore The Area',
-  description: `A local guide to the Vale of Glamorgan around ${siteConfig.fullName} — coast, food, towns and family days out.`,
-};
-
-export default function ExplorePage() {
+export default function HomePage() {
   return (
-    <div className="pb-24">
-      <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
-        <Reveal>
-          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
-            Local Guide
-          </p>
-          <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
-            Explore the Vale
-          </h1>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-            The Vale of Glamorgan rewards slow exploring — dramatic coastline, proper village
-            pubs, and quiet corners most visitors never find. Here are our favourites, grouped by
-            what kind of day you're after.
-          </p>
-        </Reveal>
+    <>
+      <Hero />
+
+      {/* A Warm Welcome */}
+      <section className="relative mx-auto max-w-content overflow-hidden px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        {/* Ambient colour wash — a soft, blurred echo of the photo bleeding behind the text */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <Image
+            src={sitePhotos.warmWelcome.src}
+            alt=""
+            fill
+            className="scale-125 object-cover opacity-20 blur-3xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/90 to-cream/30" />
+        </div>
+
+        <div className="relative z-10 grid gap-12 md:grid-cols-[3fr_2fr] md:gap-16">
+          <SectionHeading
+            eyebrow="A Warm Welcome"
+            title="Somewhere to properly switch off"
+            subtitle="There's a particular kind of quiet that settles over the Vale of Glamorgan in summer — long evenings, warm stone, and a sky that turns gold long before it thinks about getting dark. The Barn was made for exactly that: mornings by the pool, afternoons on the coast, and evenings that ask nothing of you at all."
+          />
+          <Reveal delay={0.1}>
+            <Photo
+              src={sitePhotos.warmWelcome.src}
+              alt={sitePhotos.warmWelcome.alt}
+              width={sitePhotos.warmWelcome.width}
+              height={sitePhotos.warmWelcome.height}
+              label={sitePhotos.warmWelcome.label}
+              className="max-h-[460px]"
+            />
+          </Reveal>
+        </div>
       </section>
 
-      {exploreCategories.map((category, ci) => (
-        <section
-          key={category.id}
-          id={category.id}
-          className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
-            ci % 2 === 1 ? 'bg-white/40 max-w-none' : ''
-          }`}
-        >
-          <div className={ci % 2 === 1 ? 'mx-auto max-w-content' : ''}>
-            <Reveal>
-              <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-                {String(ci + 1).padStart(2, '0')} — {category.title}
-              </p>
-              <h2 className="font-display text-3xl text-ink sm:text-4xl">{category.title}</h2>
-              <p className="mt-3 max-w-2xl text-base text-ink/65">{category.intro}</p>
-            </Reveal>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {category.places.map((place, pi) => (
-                <AreaCard key={place.name} place={place} delay={pi * 0.08} />
-              ))}
-            </div>
+      {/* Stay Highlights */}
+      <section className="bg-white/50 py-16 sm:py-24">
+        <div className="mx-auto max-w-content px-5 sm:px-8 lg:px-12">
+          <SectionHeading
+            eyebrow="Stay Highlights"
+            title="Everything you need, nothing you don't"
+            align="center"
+          />
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {stayHighlights.map((item, i) => (
+              <IconCard key={item.title} delay={i * 0.06} {...item} />
+            ))}
           </div>
-        </section>
-      ))}
+        </div>
+      </section>
 
-      {/* Days Out */}
-      <section
-        className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
-          exploreCategories.length % 2 === 1 ? 'bg-white/40 max-w-none' : ''
-        }`}
-      >
-        <div className={exploreCategories.length % 2 === 1 ? 'mx-auto max-w-content' : ''}>
-          <Reveal>
-            <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-              {String(exploreCategories.length + 1).padStart(2, '0')} — Days Out
-            </p>
-            <h2 className="font-display text-3xl text-ink sm:text-4xl">Days Out</h2>
-            <p className="mt-3 max-w-2xl text-base text-ink/65">
-              Just up the road, Wales' capital is an easy add-on to your stay — here are our
-              go-to picks.
-            </p>
-          </Reveal>
-          <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {dayTrips.map((spot, i) => (
-              <Reveal key={spot.name} delay={i * 0.05} className="h-full">
-                <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white/70 shadow-card">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
-                      src={spot.image.src}
-                      alt={spot.image.alt}
-                      fill
-                      sizes="(min-width: 1024px) 25vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <h3 className="font-display text-lg text-ink">{spot.name}</h3>
-                    <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/65">
-                      {spot.description}
-                    </p>
-                  </div>
-                </div>
+      {/* Gallery */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        <SectionHeading eyebrow="Gallery" title="A closer look inside" />
+
+        {/* Row 1 — two hero images */}
+        <div className="mt-14 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
+          {galleryItems.slice(0, 2).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+              />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Row 2 — four medium images */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(2, 6).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Row 3 — three medium images, plus one stacked pair filling the fourth slot */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(6, 9).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+          <div className="flex h-full flex-col gap-3 sm:gap-4">
+            {galleryItems.slice(9, 11).map((item, i) => (
+              <Reveal key={item.label} delay={i * 0.05} className="min-h-0 flex-1">
+                <Photo
+                  src={item.src}
+                  alt={item.label}
+                  width={item.width}
+                  height={item.height}
+                  label={item.label}
+                  caption={item.caption}
+                  className="h-full"
+                />
               </Reveal>
             ))}
           </div>
         </div>
       </section>
-    </div>
+
+      {/* The Views */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        <SectionHeading eyebrow="The Views" title="Right outside the door" />
+        <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
+          {viewPhotos.map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+              />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      {/* Discover the Vale */}
+      <section className="bg-coast py-16 text-cream sm:py-24">
+        <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
+          <Reveal>
+            <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-light">
+              Discover the Vale
+            </p>
+            <h2 className="font-display text-3xl leading-tight sm:text-4xl md:text-5xl">
+              Beyond the Barn, a whole coastline is waiting
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-cream/80 sm:text-lg">
+              Dramatic cliffs, surf beaches, sleepy market towns, cosy pubs and some of the best
+              sunsets in Wales — the Vale of Glamorgan rewards guests who venture just a little
+              further than the garden gate.
+            </p>
+            <Link
+              href="/explore"
+              className="mt-8 inline-block rounded-full bg-gold px-7 py-3.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
+            >
+              Explore The Area
+            </Link>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Photo
+              src={sitePhotos.discoverTheVale.src}
+              alt={sitePhotos.discoverTheVale.alt}
+              width={sitePhotos.discoverTheVale.width}
+              height={sitePhotos.discoverTheVale.height}
+              label={sitePhotos.discoverTheVale.label}
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Closing CTA */}
+      <section className="mx-auto max-w-content px-5 py-16 text-center sm:px-8 sm:py-24 lg:px-12">
+        <Reveal>
+          <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
+            Ready when you are.
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-base text-ink/70">
+            Already booked? Find house and pool guidance in the Guests section, or reach us
+            directly at{' '}
+            <a href={`mailto:${siteConfig.email}`} className="text-coast underline">
+              {siteConfig.email}
+            </a>
+            .
+          </p>
+        </Reveal>
+      </section>
+    </>
   );
 }

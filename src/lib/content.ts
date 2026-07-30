@@ -380,8 +380,9 @@ export const exploreCategories: AreaCategory[] = [
       image: {
       src: '/images/Thomas.jpg',
       width: 400,
-      height: 400,
+    height: 400,
       alt: 'The exterior of Thomas restaurant',
+    },
     },
       ],
   },

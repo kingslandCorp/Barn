@@ -34,7 +34,7 @@ export default function HomePage() {
       </section>
 
       {/* Stay Highlights */}
-      <section className="bg-white/50 py-20 sm:py-28">
+      <section className="bg-white/50 py-14 sm:py-20">
         <div className="mx-auto max-w-content px-5 sm:px-8 lg:px-12">
           <SectionHeading
             eyebrow="Stay Highlights"
@@ -50,7 +50,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery */}
-      <section className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
         <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {galleryItems.map((item, i) => (

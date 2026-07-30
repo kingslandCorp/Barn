@@ -335,7 +335,7 @@ export const exploreCategories: AreaCategory[] = [
       {
         name: 'Barry Island',
         description:
-          'O...Whats Occurring! Sandcastles, fish and chips, and unmistakably Welsh charm — Barry Island is a family fave and home of the legendary Gavin & Stacey.',
+          "O...Whats Occurring! Sandcastles, fish and chips, and unmistakably Welsh charm — Barry Island is a family fave and home of the legendary Gavin & Stacey.",
         tags: ['Sandcastles', 'Fish and chips', 'Gavin & Stacey', 'fairground'],
         tone: 'sand',
         image: {
@@ -373,7 +373,7 @@ export const exploreCategories: AreaCategory[] = [
         tags: ['Independent coffee', 'Delis', 'Picnic supplies'],
         tone: 'sand',
       },
- {
+      {
         name: 'Thomas',
         description:
           'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
@@ -386,12 +386,12 @@ export const exploreCategories: AreaCategory[] = [
           alt: 'The exterior of Thomas restaurant',
         },
       },
-      ],
+    ],
   },
   {
     id: 'towns-villages',
-    title: 'Towns & Villages',
-    intro: 'Historic market towns and quiet coastal villages, all within easy reach.',
+    title: 'City and Towns',
+    intro: 'Market towns, coastal villages, and the capital itself — all within easy reach.',
     places: [
       {
         name: 'Cowbridge',
@@ -408,45 +408,31 @@ export const exploreCategories: AreaCategory[] = [
         tone: 'coast',
       },
       {
-        name: 'St Athan',
-        description: 'A quiet village with useful local amenities and easy access to the coast road.',
-        tags: ['Local attractions', 'Convenient stop'],
+        name: 'Cardiff',
+        description:
+          "Wales' compact, walkable capital — castle, waterfront, shopping arcades and a buzz that's easy to dip into for the day.",
+        tags: ['Capital city', 'Castle', 'Waterfront'],
         tone: 'sage',
+        image: {
+          src: '/images/Cardiff.jpg',
+          width: 597,
+          height: 335,
+          alt: 'Cardiff Bay waterfront with the Pierhead Building and the Wales Millennium Wheel',
+        },
       },
     ],
   },
   {
     id: 'family-activities',
     title: 'Family Activities',
-    intro: 'Castles, gardens and coastal paths to fill long summer days.',
+    intro: 'Grand gardens and gentle days out, perfect for slowing the pace right down.',
     places: [
-      {
-        name: 'Ogmore Castle',
-        description:
-          'Atmospheric ruins beside the River Ewenny — a favourite for stepping-stone crossings and picnics.',
-        tags: ['Castle', 'Picnics', 'Free to explore'],
-        tone: 'stone',
-      },
-      {
-        name: 'Dunraven Bay & Heritage Coast Walk',
-        description:
-          'Walled gardens above the bay and one of the best short coastal walks in the Vale.',
-        tags: ['Coastal walks', 'Gardens', 'National Trust'],
-        tone: 'sage',
-      },
       {
         name: 'Dyffryn Gardens',
         description:
           'Grand Edwardian gardens with room to roam, a lovely stop for a slower family day.',
         tags: ['Gardens', 'National Trust', 'Family friendly'],
         tone: 'sand',
-      },
-      {
-        name: 'Barry Island',
-        description:
-          'Classic seaside fun — a sandy beach, an arcade-lined promenade and a traditional pleasure park.',
-        tags: ['Beach', 'Pleasure park', 'Summer activities'],
-        tone: 'coast',
       },
     ],
   },
@@ -464,17 +450,6 @@ export type DayOutSpot = {
 };
 
 export const dayTrips: DayOutSpot[] = [
-  {
-    name: 'Cardiff',
-    description:
-      "Wales' compact, walkable capital — castle, waterfront, shopping arcades and a buzz that's easy to dip into for the day.",
-    image: {
-      src: '/images/Cardiff.jpg',
-      width: 597,
-      height: 335,
-      alt: 'Cardiff Bay waterfront with the Pierhead Building and the Wales Millennium Wheel',
-    },
-  },
   {
     name: 'Cardiff Castle Events',
     description:
@@ -541,7 +516,6 @@ export const dayTrips: DayOutSpot[] = [
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
   },
-  
 ];
 
 export const houseRules: { icon: string; title: string; description: string }[] = [

@@ -29,10 +29,10 @@ export default function DirectionsPage() {
           <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
             Finding The Barn
           </h1>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
-            Tucked down a quiet private track, The Barn is easy to reach and even easier to
-            settle into. Here's everything you need for a smooth arrival.
-          </p>
+          <p className="mt-5 max-w-none text-base leading-relaxed text-ink/70 sm:text-lg">
+  Tucked down a quiet private track, The Barn is easy to reach and even easier to
+  settle into. Here's everything you need for a smooth arrival.
+</p>
         </Reveal>
       </section>
 

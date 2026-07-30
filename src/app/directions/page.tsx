@@ -36,9 +36,49 @@ export default function DirectionsPage() {
         </Reveal>
       </section>
 
-      {/* Arrival steps */}
+      {/* Map — first */}
+      <section className="mx-auto max-w-content px-5 py-10 sm:px-8 lg:px-12">
+        <SectionHeading eyebrow="Getting Here" title="Find us on the map" />
+        <Reveal delay={0.1} className="mt-8 overflow-hidden rounded-3xl shadow-card">
+          <iframe
+            title="Map to The Barn, Vale of Glamorgan"
+            src={mapEmbedSrc}
+            width="100%"
+            height="420"
+            style={{ border: 0 }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </Reveal>
+      </section>
+
+      {/* What3Words + Parking, side by side */}
+      <section className="mx-auto grid max-w-content gap-6 px-5 py-10 sm:px-8 md:grid-cols-2 lg:px-12">
+        <Reveal className="rounded-3xl bg-sage/15 p-7 shadow-card">
+          <MapPin className="text-sage-dark" size={26} strokeWidth={1.5} />
+          <h3 className="mt-4 font-display text-xl text-ink">What3Words</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink/65">
+            The precise entrance to The Barn:
+          </p>
+          <a
+            href={what3words.url}
+            className="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
+          >
+            {what3words.words}
+          </a>
+        </Reveal>
+
+        <Reveal delay={0.08} className="rounded-3xl bg-gold/15 p-7 shadow-card">
+          <ParkingCircle className="text-gold-deep" size={26} strokeWidth={1.5} />
+          <h3 className="mt-4 font-display text-xl text-ink">{parkingInfo.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink/65">{parkingInfo.description}</p>
+        </Reveal>
+      </section>
+
+      {/* Finding the barn — arrival steps */}
       <section className="mx-auto max-w-content px-5 py-16 sm:px-8 lg:px-12">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+        <SectionHeading eyebrow="Arrival" title="Finding the barn" />
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
           <div className="space-y-6">
             {arrivalSteps.map((step, i) => (
               <Reveal key={step.step} delay={i * 0.08}>
@@ -66,68 +106,30 @@ export default function DirectionsPage() {
         </div>
       </section>
 
-      {/* Map */}
-      <section className="mx-auto max-w-content px-5 py-10 sm:px-8 lg:px-12">
-        <SectionHeading eyebrow="Getting Here" title="Find us on the map" />
-        <Reveal delay={0.1} className="mt-8 overflow-hidden rounded-3xl shadow-card">
-          <iframe
-            title="Map to The Barn, Vale of Glamorgan"
-            src={mapEmbedSrc}
-            width="100%"
-            height="420"
-            style={{ border: 0 }}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </Reveal>
-        <p className="mt-3 text-xs text-ink/50">
-          Map centred on the local area — replace <code>mapEmbedSrc</code> in{' '}
-          <code>src/lib/content.ts</code> with your exact address once available.
-        </p>
-      </section>
-
-      {/* What3Words, Parking, After dark */}
-      <section className="mx-auto grid max-w-content gap-6 px-5 py-10 sm:px-8 md:grid-cols-3 lg:px-12">
-        <Reveal className="rounded-3xl bg-sage/15 p-7 shadow-card">
-          <MapPin className="text-sage-dark" size={26} strokeWidth={1.5} />
-          <h3 className="mt-4 font-display text-xl text-ink">What3Words</h3>
-          <p className="mt-2 text-sm leading-relaxed text-ink/65">
-            The precise entrance to The Barn:
-          </p>
-          <a
-            href={what3words.url}
-            className="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
-          >
-            {what3words.words}
-          </a>
-        </Reveal>
-
-        <Reveal delay={0.08} className="rounded-3xl bg-gold/15 p-7 shadow-card">
-          <ParkingCircle className="text-gold-deep" size={26} strokeWidth={1.5} />
-          <h3 className="mt-4 font-display text-xl text-ink">{parkingInfo.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-ink/65">{parkingInfo.description}</p>
-        </Reveal>
-
-        <Reveal delay={0.16} className="rounded-3xl bg-coast/10 p-7 shadow-card">
-          <MoonStar className="text-coast" size={26} strokeWidth={1.5} />
-          <h3 className="mt-4 font-display text-xl text-ink">{afterDarkInfo.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-ink/65">{afterDarkInfo.description}</p>
-        </Reveal>
-      </section>
-
-      {/* After dark, in photos */}
-      <section className="mx-auto max-w-content px-5 py-6 sm:px-8 lg:px-12">
-        <Reveal>
-          <Photo
-            src={sitePhotos.directionsAfterDark.src}
-            alt={sitePhotos.directionsAfterDark.alt}
-            width={sitePhotos.directionsAfterDark.width}
-            height={sitePhotos.directionsAfterDark.height}
-            label="Arriving after dark"
-            caption="The outside lights are on the moment you turn onto the track"
-            className="max-h-[420px]"
-          />
-        </Reveal>
+      {/* Arriving after dark — text box alongside photo */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 lg:px-12">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <Reveal className="rounded-3xl bg-coast/10 p-7 shadow-card">
+            <MoonStar className="text-coast" size={26} strokeWidth={1.5} />
+            <h3 className="mt-4 font-display text-xl text-ink sm:text-2xl">
+              {afterDarkInfo.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink/65 sm:text-base">
+              {afterDarkInfo.description}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Photo
+              src={sitePhotos.directionsAfterDark.src}
+              alt={sitePhotos.directionsAfterDark.alt}
+              width={sitePhotos.directionsAfterDark.width}
+              height={sitePhotos.directionsAfterDark.height}
+              label="Arriving after dark"
+              caption="The outside lights are on the moment you turn onto the track"
+              className="max-h-[420px]"
+            />
+          </Reveal>
+        </div>
       </section>
 
       <section className="mx-auto max-w-content px-5 pt-10 sm:px-8 lg:px-12">

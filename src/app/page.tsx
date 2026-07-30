@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Hero from '@/components/Hero';
 import SectionHeading from '@/components/SectionHeading';
 import IconCard from '@/components/IconCard';
@@ -12,14 +13,25 @@ export default function HomePage() {
       <Hero />
 
       {/* A Warm Welcome */}
-      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
+      <section className="relative mx-auto max-w-content overflow-hidden px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+        {/* Ambient colour wash — a soft, blurred echo of the photo bleeding behind the text */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <Image
+            src={sitePhotos.warmWelcome.src}
+            alt=""
+            fill
+            className="scale-125 object-cover opacity-20 blur-3xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/90 to-cream/30" />
+        </div>
+
+        <div className="relative z-10 grid gap-12 md:grid-cols-[3fr_2fr] md:gap-16">
           <SectionHeading
             eyebrow="A Warm Welcome"
             title="Somewhere to properly switch off"
             subtitle="There's a particular kind of quiet that settles over the Vale of Glamorgan in summer — long evenings, warm stone, and a sky that turns gold long before it thinks about getting dark. The Barn was made for exactly that: mornings by the pool, afternoons on the coast, and evenings that ask nothing of you at all."
           />
-          <Reveal delay={0.1} className="relative">
+          <Reveal delay={0.1}>
             <Photo
               src={sitePhotos.warmWelcome.src}
               alt={sitePhotos.warmWelcome.alt}
@@ -28,7 +40,6 @@ export default function HomePage() {
               label={sitePhotos.warmWelcome.label}
               className="max-h-[460px]"
             />
-            <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-20 bg-gradient-to-r from-cream to-transparent md:block" />
           </Reveal>
         </div>
       </section>
@@ -52,9 +63,11 @@ export default function HomePage() {
       {/* Gallery */}
       <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {galleryItems.map((item, i) => (
-            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
+
+        {/* Row 1 — two hero images */}
+        <div className="mt-14 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
+          {galleryItems.slice(0, 2).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
               <Photo
                 src={item.src}
                 alt={item.label}
@@ -65,6 +78,55 @@ export default function HomePage() {
               />
             </Reveal>
           ))}
+        </div>
+
+        {/* Row 2 — four medium images */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(2, 6).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Row 3 — three medium images, plus one stacked pair filling the fourth slot */}
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
+          {galleryItems.slice(6, 9).map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="aspect-square"
+              />
+            </Reveal>
+          ))}
+          <div className="flex h-full flex-col gap-3 sm:gap-4">
+            {galleryItems.slice(9, 11).map((item, i) => (
+              <Reveal key={item.label} delay={i * 0.05} className="min-h-0 flex-1">
+                <Photo
+                  src={item.src}
+                  alt={item.label}
+                  width={item.width}
+                  height={item.height}
+                  label={item.label}
+                  caption={item.caption}
+                  className="h-full"
+                />
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 

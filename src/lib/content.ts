@@ -373,17 +373,19 @@ export const exploreCategories: AreaCategory[] = [
         tags: ['Independent coffee', 'Delis', 'Picnic supplies'],
         tone: 'sand',
       },
-      {
-      name: 'Thomas',
-      description:
-      'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
-      image: {
-      src: '/images/Thomas.jpg',
-      width: 400,
-    height: 400,
-      alt: 'The exterior of Thomas restaurant',
-    },
-    },
+ {
+        name: 'Thomas',
+        description:
+          'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
+        tags: ['Fine dining', 'Date night', 'Book ahead'],
+        tone: 'gold',
+        image: {
+          src: '/images/Thomas.jpg',
+          width: 400,
+          height: 400,
+          alt: 'The exterior of Thomas restaurant',
+        },
+      },
       ],
   },
   {

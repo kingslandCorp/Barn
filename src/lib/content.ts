@@ -405,9 +405,15 @@ export const exploreCategories: AreaCategory[] = [
       {
         name: 'Cowbridge',
         description:
-          'A handsome Georgian market town with independent boutiques, excellent food, and genuine historic charm.',
-        tags: ['Boutiques', 'Food', 'Historic charm'],
+          'A proper Vale institution — independent boutiques, good coffee, and a market square that rewards a slow, unhurried wander.',
+        tags: ['Boutiques', 'Coffee', 'Market square'],
         tone: 'gold',
+        image: {
+          src: '/images/Cowbridge.jpg',
+          width: 723,
+          height: 423,
+          alt: 'Cowbridge high street lined with independent shops',
+        },
       },
       {
         name: 'Llantwit Major',
@@ -471,17 +477,6 @@ export const dayTrips: DayOutSpot[] = [
       width: 678,
       height: 452,
       alt: 'Kayakers on the rapids course at Cardiff International White Water',
-    },
-  },
-  {
-    name: 'Cowbridge',
-    description:
-      'A proper Vale institution — independent boutiques, good coffee, and a market square that rewards a slow, unhurried wander.',
-    image: {
-      src: '/images/Cowbridge.jpg',
-      width: 723,
-      height: 423,
-      alt: 'Cowbridge high street lined with independent shops',
     },
   },
   {

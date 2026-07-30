@@ -12,7 +12,7 @@ export default function HomePage() {
       <Hero />
 
       {/* A Warm Welcome */}
-      <section className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           <SectionHeading
             eyebrow="A Warm Welcome"

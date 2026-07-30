@@ -439,6 +439,108 @@ export const exploreCategories: AreaCategory[] = [
   },
 ];
 
+export type DayOutSpot = {
+  name: string;
+  description: string;
+  image: {
+    src: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
+};
+
+export const dayTrips: DayOutSpot[] = [
+  {
+    name: 'Cardiff',
+    description:
+      "Wales' compact, walkable capital — castle, waterfront, shopping arcades and a buzz that's easy to dip into for the day.",
+    image: {
+      src: '/images/Cardiff.jpg',
+      width: 597,
+      height: 335,
+      alt: 'Cardiff Bay waterfront with the Pierhead Building and the Wales Millennium Wheel',
+    },
+  },
+  {
+    name: 'Cardiff Castle Events',
+    description:
+      "From summer festivals to major touring concerts, the castle grounds come alive after dark — check what's on before you visit.",
+    image: {
+      src: '/images/Castle.jpg',
+      width: 547,
+      height: 365,
+      alt: 'A concert crowd at Cardiff Castle at dusk',
+    },
+  },
+  {
+    name: 'Cardiff International White Water',
+    description:
+      'White-water rafting and indoor surfing on a man-made rapids course — thrilling for adrenaline seekers of any age.',
+    image: {
+      src: '/images/CIWW.jpg',
+      width: 678,
+      height: 452,
+      alt: 'Kayakers on the rapids course at Cardiff International White Water',
+    },
+  },
+  {
+    name: 'Cowbridge',
+    description:
+      'A proper Vale institution — independent boutiques, good coffee, and a market square that rewards a slow, unhurried wander.',
+    image: {
+      src: '/images/Cowbridge.jpg',
+      width: 723,
+      height: 423,
+      alt: 'Cowbridge high street lined with independent shops',
+    },
+  },
+  {
+    name: 'Cardiff Devils',
+    description:
+      "Ice skating for the family, or catch the Devils live — Cardiff's ice hockey team play a fast, physical, surprisingly loud match.",
+    image: {
+      src: '/images/Devils.jpg',
+      width: 534,
+      height: 374,
+      alt: 'Cardiff Devils ice hockey players in action',
+    },
+  },
+  {
+    name: 'Llantwit Major',
+    description:
+      'One of the oldest settlements in Wales — a historic town centre paired with a Blue Flag beach just down the road.',
+    image: {
+      src: '/images/Llantwit.jpg',
+      width: 1200,
+      height: 600,
+      alt: 'The Old White Hart pub in the historic centre of Llantwit Major',
+    },
+  },
+  {
+    name: 'Techniquest',
+    description:
+      "Cardiff's hands-on science centre — genuinely brilliant for kids, with enough to fill a whole rainy afternoon.",
+    image: {
+      src: '/images/techniquest.jpg',
+      width: 738,
+      height: 414,
+      alt: 'Interactive science exhibits at Techniquest, Cardiff',
+    },
+  },
+  {
+    name: 'Thomas',
+    description:
+      'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
+    image: {
+      src: '/images/Thomas.jpg',
+      width: 400,
+      height: 400,
+      alt: 'The exterior of Thomas restaurant',
+    },
+  },
+];
+
 export const houseRules: { icon: string; title: string; description: string }[] = [
   {
     icon: 'CigaretteOff',

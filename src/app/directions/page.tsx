@@ -93,11 +93,10 @@ export default function DirectionsPage() {
           <h3 className="mt-4 font-display text-xl text-ink">What3Words</h3>
           <p className="mt-2 text-sm leading-relaxed text-ink/65">
             The precise entrance to The Barn:
-          </p>
-          <a
-            href={what3words.url}
+          </p>            
+          href={what3words.url}
             className="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
-          >
+          </a>
             {what3words.words}
         </Reveal>
 

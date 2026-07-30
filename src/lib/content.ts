@@ -3,7 +3,7 @@
 
 export const siteConfig = {
   name: 'The Barn',
-  fullName: 'Kingsland Barn',
+  fullName: '@ Kingsland',
   region: 'Vale of Glamorgan, Wales',
   email: 'Hello@Kingsland.co.uk',
   tagline:
@@ -84,7 +84,7 @@ export const stayHighlights: {
   },
   {
     icon: 'Wifi',
-    title: 'Fast Wi-Fi',
+    title: 'Wi-Fi',
     description: 'Stay connected if you need to, or switch off entirely. Your call.',
   },
   {
@@ -114,7 +114,7 @@ export const galleryItems: GalleryPhoto[] = [
     width: 1024,
     height: 576,
     label: 'The pool',
-    caption: 'Heated, and yours for the whole stay',
+    caption: 'Heated, and yours to use for the whole stay',
     span: true,
   },
   {
@@ -165,54 +165,53 @@ export const galleryItems: GalleryPhoto[] = [
     width: 1421,
     height: 988,
     label: 'The kitchen island',
-    caption: 'Marble, morning coffee, evening wine',
+    caption: 'Morning coffee, evening wine...good times all day',
   },
   {
     src: '/images/gallery-office-nook.jpg',
     width: 1024,
     height: 768,
     label: 'A quiet corner to work',
-    caption: 'If you must — fast Wi-Fi included',
+    caption: 'If you must — Wi-Fi included',
   },
 ];
 
 export const arrivalSteps: { step: number; title: string; description: string }[] = [
   {
     step: 1,
-    title: 'Through the first gate',
-    description: 'Drive through the first gate and continue onto the private track.',
+    title: 'Through the main gate',
+    description: 'Drive through the gate and onto the main drive.',
   },
   {
     step: 2,
     title: 'Follow the track left',
-    description: 'Turn left and follow the track around towards the barns.',
+    description: 'Turn left and follow the track in front of the barns.',
   },
   {
     step: 3,
     title: 'Park by the tree',
     description:
-      'Park between the old tree and the barns — there is plenty of space, no need to be precious about it.',
+      'Park between field and the barns — there is plenty of space, no need to be precious about it.',
   },
   {
     step: 4,
-    title: 'Face towards the barn',
-    description: 'Turn your car to face the barn, so you are ready for an easy departure.',
+    title: 'Face towards the barn or field',
+    description: 'Turn your car to face the barn, so we dont have run aways.',
   },
 ];
 
 export const what3words = {
-  words: '///example.words.here',
-  url: 'https://what3words.com/example.words.here',
-  note: 'Replace this with your exact ///what3words address before launch.',
-};
+  words: '///resurgent.nature.known',
+  url: 'https://what3words.com/resurgent.nature.known',
+ };
 
 export const mapEmbedSrc =
-  'https://www.google.com/maps?q=Llanmaes,Vale+of+Glamorgan,Wales&output=embed';
+"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d512.9055961806355!2d-3.409398255388703!3d51.43548252111549!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1785410635114!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
 
 export const parkingInfo = {
   title: 'Parking',
   description:
-    "There's informal parking for several cars between the tree and the barns. No permits, no restrictions — just leave enough room for anyone arriving after you.",
+    "There's informal parking for several cars between the field and the barns. No permits, no restrictions",
 };
 
 export const afterDarkInfo = {

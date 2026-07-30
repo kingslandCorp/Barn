@@ -248,7 +248,7 @@ export const arrivalSteps: { step: number; title: string; description: string }[
   },
   {
     step: 3,
-    title: 'Park by the tree',
+    title: 'Park up on the gravel',
     description:
       'Park between field and the barns — there is plenty of space, no need to be precious about it.',
   },

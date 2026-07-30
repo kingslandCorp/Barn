@@ -13,19 +13,18 @@ export default function HomePage() {
       <Hero />
 
       {/* A Warm Welcome */}
-      <section className="relative mx-auto max-w-content overflow-hidden px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        {/* Ambient colour wash — a soft, blurred echo of the photo bleeding behind the text */}
+      <section className="relative overflow-hidden py-8 sm:py-14">
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
             src={sitePhotos.warmWelcome.src}
             alt=""
             fill
-            className="scale-125 object-cover opacity-20 blur-3xl"
+            className="scale-150 object-cover opacity-40 blur-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/90 to-cream/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/50 via-45% to-cream/5" />
         </div>
 
-        <div className="relative z-10 grid gap-12 md:grid-cols-[3fr_2fr] md:gap-16">
+        <div className="relative z-10 mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-16 lg:px-12">
           <SectionHeading
             eyebrow="A Warm Welcome"
             title="Somewhere to properly switch off"
@@ -45,7 +44,7 @@ export default function HomePage() {
       </section>
 
       {/* Stay Highlights */}
-      <section className="bg-white/50 py-16 sm:py-24">
+      <section className="bg-white/50 py-8 sm:py-14">
         <div className="mx-auto max-w-content px-5 sm:px-8 lg:px-12">
           <SectionHeading
             eyebrow="Stay Highlights"
@@ -61,7 +60,7 @@ export default function HomePage() {
       </section>
 
       {/* Gallery */}
-      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
 
         {/* Row 1 — two hero images */}
@@ -131,7 +130,7 @@ export default function HomePage() {
       </section>
 
       {/* The Views */}
-      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
         <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
           {viewPhotos.map((item, i) => (
@@ -143,7 +142,6 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="h-40 w-full sm:h-52"
               />
             </Reveal>
           ))}
@@ -151,7 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* Discover the Vale */}
-      <section className="bg-coast py-16 text-cream sm:py-24">
+      <section className="bg-coast py-8 text-cream sm:py-14">
         <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
           <Reveal>
             <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-light">
@@ -185,7 +183,7 @@ export default function HomePage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="mx-auto max-w-content px-5 py-16 text-center sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
         <Reveal>
           <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
             Ready when you are.

@@ -62,7 +62,7 @@ export const sitePhotos = {
   },
 };
 
-
+export const amenities: {
   icon: string;
   title: string;
   description: string;

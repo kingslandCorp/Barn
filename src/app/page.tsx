@@ -1,142 +1,153 @@
-import Link from 'next/link';
-import Hero from '@/components/Hero';
-import SectionHeading from '@/components/SectionHeading';
-import IconCard from '@/components/IconCard';
-import Photo from '@/components/Photo';
+import type { Metadata } from 'next';
+import { MapPin, Compass, ParkingCircle, MoonStar } from 'lucide-react';
 import Reveal from '@/components/Reveal';
-import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
+import SectionHeading from '@/components/SectionHeading';
+import Photo from '@/components/Photo';
+import {
+  arrivalSteps,
+  what3words,
+  mapEmbedSrc,
+  parkingInfo,
+  afterDarkInfo,
+  sitePhotos,
+  siteConfig,
+} from '@/lib/content';
 
-export default function HomePage() {
+export const metadata: Metadata = {
+  title: 'Finding The Barn',
+  description: `Arrival instructions, parking and directions for ${siteConfig.fullName}, ${siteConfig.region}.`,
+};
+
+export default function DirectionsPage() {
   return (
-    <>
-      <Hero />
-
-      {/* A Warm Welcome */}
-      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <div className="grid gap-12 md:grid-cols-2 md:gap-16">
-          <SectionHeading
-            eyebrow="A Warm Welcome"
-            title="Somewhere to properly switch off"
-            subtitle="There's a particular kind of quiet that settles over the Vale of Glamorgan in summer — long evenings, warm stone, and a sky that turns gold long before it thinks about getting dark. The Barn was made for exactly that: mornings by the pool, afternoons on the coast, and evenings that ask nothing of you at all."
-          />
-          <Reveal delay={0.1} className="relative">
-            <Photo
-              src={sitePhotos.warmWelcome.src}
-              alt={sitePhotos.warmWelcome.alt}
-              width={sitePhotos.warmWelcome.width}
-              height={sitePhotos.warmWelcome.height}
-              label={sitePhotos.warmWelcome.label}
-              className="max-h-[460px]"
-            />
-            <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-20 bg-gradient-to-r from-cream to-transparent md:block" />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Stay Highlights */}
-      <section className="bg-white/50 py-14 sm:py-20">
-        <div className="mx-auto max-w-content px-5 sm:px-8 lg:px-12">
-          <SectionHeading
-            eyebrow="Stay Highlights"
-            title="Everything you need, nothing you don't"
-            align="center"
-          />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stayHighlights.map((item, i) => (
-              <IconCard key={item.title} delay={i * 0.06} {...item} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <SectionHeading eyebrow="Gallery" title="A closer look inside" />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {galleryItems.map((item, i) => (
-            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
-              <Photo
-                src={item.src}
-                alt={item.label}
-                width={item.width}
-                height={item.height}
-                label={item.label}
-                caption={item.caption}
-              />
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-{/* The Views */}
-      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <SectionHeading eyebrow="The Views" title="Right outside the door" />
-        <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
-          {viewPhotos.map((item, i) => (
-            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
-              <Photo
-                src={item.src}
-                alt={item.label}
-                width={item.width}
-                height={item.height}
-                label={item.label}
-                caption={item.caption}
-              />
-            </Reveal>
-          ))}
-        </div>
-      </section>
-      
-      {/* Discover the Vale */}
-      <section className="bg-coast py-14 text-cream sm:py-20">
-        <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
-          <Reveal>
-            <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-light">
-              Discover the Vale
-            </p>
-            <h2 className="font-display text-3xl leading-tight sm:text-4xl md:text-5xl">
-              Beyond the Barn, a whole coastline is waiting
-            </h2>
-           <p className="mt-5 max-w-xl text-base leading-relaxed text-cream/80 sm:text-lg">
-              Dramatic cliffs, surf beaches, sleepy market towns, cosy pubs and some of the best
-              sunsets in Wales — the Vale of Glamorgan rewards guests who venture just a little
-              further than the garden gate.
-            </p>
-            <Link
-              href="/explore"
-              className="mt-8 inline-block rounded-full bg-gold px-7 py-3.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
-            >
-              Explore The Area
-            </Link>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <Photo
-              src={sitePhotos.discoverTheVale.src}
-              alt={sitePhotos.discoverTheVale.alt}
-              width={sitePhotos.discoverTheVale.width}
-              height={sitePhotos.discoverTheVale.height}
-              label={sitePhotos.discoverTheVale.label}
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="mx-auto max-w-content px-5 py-14 text-center sm:px-8 sm:py-20 lg:px-12">
+    <div className="pb-24">
+      <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
         <Reveal>
-          <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
-            Ready when you are.
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-base text-ink/70">
-            Already booked? Find house and pool guidance in the Guests section, or reach us
-            directly at{' '}
-            <a href={`mailto:${siteConfig.email}`} className="text-coast underline">
-              {siteConfig.email}
-            </a>
-            .
+          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
+            Plan Your Stay
+          </p>
+          <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
+            Finding The Barn
+          </h1>
+          <p className="mt-5 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
+            Tucked down a quiet private track, The Barn is easy to reach and even easier to
+            settle into. Here's everything you need for a smooth arrival.
           </p>
         </Reveal>
       </section>
-    </>
+
+      {/* Map — first */}
+      <section className="mx-auto max-w-content px-5 py-10 sm:px-8 lg:px-12">
+        <SectionHeading eyebrow="Getting Here" title="Find us on the map" />
+        <Reveal delay={0.1} className="mt-8 overflow-hidden rounded-3xl shadow-card">
+          <iframe
+            title="Map to The Barn, Vale of Glamorgan"
+            src={mapEmbedSrc}
+            width="100%"
+            height="420"
+            style={{ border: 0 }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </Reveal>
+      </section>
+
+      {/* What3Words + Parking, side by side */}
+      <section className="mx-auto grid max-w-content gap-6 px-5 py-10 sm:px-8 md:grid-cols-2 lg:px-12">
+        <Reveal className="rounded-3xl bg-sage/15 p-7 shadow-card">
+          <MapPin className="text-sage-dark" size={26} strokeWidth={1.5} />
+          <h3 className="mt-4 font-display text-xl text-ink">What3Words</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink/65">
+            The precise entrance to The Barn:
+          </p>
+          <a
+            href={what3words.url}
+            className="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
+          >
+            {what3words.words}
+          </a>
+        </Reveal>
+
+        <Reveal delay={0.08} className="rounded-3xl bg-gold/15 p-7 shadow-card">
+          <ParkingCircle className="text-gold-deep" size={26} strokeWidth={1.5} />
+          <h3 className="mt-4 font-display text-xl text-ink">{parkingInfo.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-ink/65">{parkingInfo.description}</p>
+        </Reveal>
+      </section>
+
+      {/* Finding the barn — arrival steps */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 lg:px-12">
+        <SectionHeading eyebrow="Arrival" title="Finding the barn" />
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <div className="space-y-6">
+            {arrivalSteps.map((step, i) => (
+              <Reveal key={step.step} delay={i * 0.08}>
+                <div className="flex gap-5 rounded-3xl bg-white/70 p-5 shadow-card sm:p-6">
+                  <div className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-coast font-display text-base text-cream">
+                    {step.step}
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg text-ink sm:text-xl">{step.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-ink/65">{step.description}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal delay={0.15}>
+            <Photo
+              src={sitePhotos.directionsTrack.src}
+              alt={sitePhotos.directionsTrack.alt}
+              width={sitePhotos.directionsTrack.width}
+              height={sitePhotos.directionsTrack.height}
+              label="The track in"
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Arriving after dark — text box alongside photo */}
+      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 lg:px-12">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <Reveal className="rounded-3xl bg-coast/10 p-7 shadow-card">
+            <MoonStar className="text-coast" size={26} strokeWidth={1.5} />
+            <h3 className="mt-4 font-display text-xl text-ink sm:text-2xl">
+              {afterDarkInfo.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-ink/65 sm:text-base">
+              {afterDarkInfo.description}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Photo
+              src={sitePhotos.directionsAfterDark.src}
+              alt={sitePhotos.directionsAfterDark.alt}
+              width={sitePhotos.directionsAfterDark.width}
+              height={sitePhotos.directionsAfterDark.height}
+              label="Arriving after dark"
+              caption="The outside lights are on the moment you turn onto the track"
+              className="max-h-[420px]"
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-content px-5 pt-10 sm:px-8 lg:px-12">
+        <Reveal className="flex flex-col items-start gap-4 rounded-3xl bg-ink px-8 py-8 text-cream sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <Compass size={22} className="text-gold" />
+            <p className="text-sm sm:text-base">
+              Still unsure? We're always happy to talk you in.
+            </p>
+          </div>
+          <a
+            href={`mailto:${siteConfig.email}`}
+            className="rounded-full bg-gold px-6 py-3 text-sm font-medium text-ink"
+          >
+            {siteConfig.email}
+          </a>
+        </Reveal>
+      </section>
+    </div>
   );
 }

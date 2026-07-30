@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Static export so the whole site can be hosted on GitHub Pages
-  output: 'export',
 
   // GitHub Pages serves project sites from https://<user>.github.io/<repo>/
   // Set NEXT_PUBLIC_BASE_PATH="/<repo-name>" in your build environment (see README)

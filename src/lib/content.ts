@@ -501,11 +501,6 @@ export const dayTrips: DayOutSpot[] = [
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
   },
-  {
-    name: 'Dyffryn Gardens',
-    description:
-      'Grand Edwardian gardens with room to roam, a lovely stop for a slower family day.',
-  },
 ];
 
 export type CardiffEventCategory =
@@ -521,6 +516,12 @@ export type CardiffEvent = {
   venue: string;
   description: string;
   url: string;
+  image?: {
+    src: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
 };
 
 // Real events, checked at time of writing — dates for recurring annual events
@@ -551,6 +552,30 @@ export const cardiffEvents: CardiffEvent[] = [
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
   },
   {
+    name: 'UB40 feat. Ali Campbell',
+    category: 'Big Events & Concerts',
+    date: 'Wednesday 9 December 2026',
+    venue: 'Utilita Arena Cardiff',
+    description: 'The reggae legends bring their biggest hits to the arena stage.',
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+  },
+  {
+    name: 'Morrissey',
+    category: 'Big Events & Concerts',
+    date: 'Thursday 10 December 2026',
+    venue: 'Utilita Arena Cardiff',
+    description: 'The former Smiths frontman brings his solo tour to Cardiff.',
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+  },
+  {
+    name: 'Gabrielle',
+    category: 'Big Events & Concerts',
+    date: 'Saturday 17 April 2027',
+    venue: 'Utilita Arena Cardiff',
+    description: "The Brit Award-winning singer performs her classic hits live.",
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+  },
+  {
     name: "What's On at Cardiff Castle",
     category: 'Cardiff Castle',
     date: 'Ongoing — check current listings',
@@ -558,6 +583,12 @@ export const cardiffEvents: CardiffEvent[] = [
     description:
       'A rolling programme of summer concerts, family events and outdoor cinema in the castle grounds throughout the year.',
     url: 'https://www.cardiffcastle.com/events/',
+    image: {
+      src: '/images/Castle.jpg',
+      width: 547,
+      height: 365,
+      alt: 'A concert crowd at Cardiff Castle at dusk',
+    },
   },
   {
     name: 'Cardiff Half Marathon',
@@ -567,6 +598,12 @@ export const cardiffEvents: CardiffEvent[] = [
     description:
       "Wales' largest mass-participation event — a flat, fast route past the city's best-known landmarks.",
     url: 'https://www.cardiffhalfmarathon.co.uk/',
+    image: {
+      src: '/images/Cardiff.jpg',
+      width: 597,
+      height: 335,
+      alt: 'Cardiff Bay waterfront, part of the Half Marathon route',
+    },
   },
   {
     name: 'Cardiff Winter Wonderland',

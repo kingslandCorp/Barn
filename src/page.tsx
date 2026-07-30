@@ -13,19 +13,20 @@ export default function HomePage() {
       <Hero />
 
       {/* A Warm Welcome */}
-      <section className="relative mx-auto max-w-content overflow-hidden px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
-        {/* Ambient colour wash — a soft, blurred echo of the photo bleeding behind the text */}
+      <section className="relative overflow-hidden py-16 sm:py-24">
+        {/* Ambient colour wash — now full page width, sitting behind the constrained content below,
+            with a much stronger, genuinely visible blend of the photo's own colours */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
             src={sitePhotos.warmWelcome.src}
             alt=""
             fill
-            className="scale-125 object-cover opacity-20 blur-3xl"
+            className="scale-150 object-cover opacity-40 blur-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-cream via-cream/90 to-cream/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/50 via-45% to-cream/5" />
         </div>
 
-        <div className="relative z-10 grid gap-12 md:grid-cols-[3fr_2fr] md:gap-16">
+        <div className="relative z-10 mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-16 lg:px-12">
           <SectionHeading
             eyebrow="A Warm Welcome"
             title="Somewhere to properly switch off"
@@ -143,7 +144,6 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="h-40 w-full sm:h-52"
               />
             </Reveal>
           ))}

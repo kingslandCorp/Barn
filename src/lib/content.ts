@@ -540,7 +540,6 @@ export const dayTrips: DayOutSpot[] = [
     },
   },
   
-  },
 ];
 
 export const houseRules: { icon: string; title: string; description: string }[] = [

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Reveal from '@/components/Reveal';
 import AreaCard from '@/components/AreaCard';
 import PhotoPlaceholder from '@/components/PhotoPlaceholder';
@@ -106,6 +107,16 @@ export default function ExplorePage() {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={0.15}>
+            <div className="mt-10 flex justify-center">
+              <Link
+                href="/events"
+                className="inline-flex items-center gap-2 rounded-full bg-ink px-7 py-3.5 text-sm font-medium text-cream transition-transform hover:-translate-y-0.5"
+              >
+                Rugby, concerts & castle nights — what's actually on? →
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
     </div>

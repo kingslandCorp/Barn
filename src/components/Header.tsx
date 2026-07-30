@@ -24,7 +24,10 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8 lg:px-12">
-        <Link href="/" className="font-display text-xl tracking-wide text-ink sm:text-2xl">
+        <Link
+          href="/"
+          className="whitespace-nowrap font-display text-base tracking-wide text-ink sm:text-2xl"
+        >
           {siteConfig.name}
           <span className="ml-2 hidden text-sm italic text-coast sm:inline">
             {siteConfig.fullName}

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Reveal from '@/components/Reveal';
 import AreaCard from '@/components/AreaCard';
+import PhotoPlaceholder from '@/components/PhotoPlaceholder';
 import Image from 'next/image';
 import { exploreCategories, dayTrips, siteConfig } from '@/lib/content';
 
@@ -75,23 +76,26 @@ export default function ExplorePage() {
             </p>
             <h2 className="font-display text-3xl text-ink sm:text-4xl">Days Out</h2>
             <p className="mt-3 max-w-2xl text-base text-ink/65">
-              Just up the road, Wales' capital is an easy add-on to your stay — here are our
-              go-to picks.
+              Just around the corner adventures for everyone in the family
             </p>
           </Reveal>
           <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
             {dayTrips.map((spot, i) => (
               <Reveal key={spot.name} delay={i * 0.05} className="h-full">
                 <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white/70 shadow-card">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
-                      src={spot.image.src}
-                      alt={spot.image.alt}
-                      fill
-                      sizes="(min-width: 1024px) 25vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
+                  {spot.image ? (
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                      <Image
+                        src={spot.image.src}
+                        alt={spot.image.alt}
+                        fill
+                        sizes="(min-width: 1024px) 25vw, 50vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <PhotoPlaceholder tone="sand" ratio="aspect-[4/3]" />
+                  )}
                   <div className="flex flex-1 flex-col p-5">
                     <h3 className="font-display text-lg text-ink">{spot.name}</h3>
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/65">

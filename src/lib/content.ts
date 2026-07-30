@@ -16,6 +16,7 @@ export const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Directions', href: '/directions' },
   { label: 'Explore the Area', href: '/explore' },
+  { label: 'Events', href: '/events' },
   { label: 'Before You Leave', href: '/before-you-leave' },
 ];
 
@@ -411,9 +412,15 @@ export const exploreCategories: AreaCategory[] = [
       {
         name: 'Llantwit Major',
         description:
-          'One of the oldest settlements in Wales, with a Blue Flag beach and centuries of history to explore.',
+          'One of the oldest settlements in Wales — a historic town centre paired with a Blue Flag beach just down the road.',
         tags: ['Beach', 'History', 'Coastal walks'],
         tone: 'coast',
+        image: {
+          src: '/images/Llantwit.jpg',
+          width: 1200,
+          height: 600,
+          alt: 'The Old White Hart pub in the historic centre of Llantwit Major',
+        },
       },
       {
         name: 'Cardiff',
@@ -430,26 +437,12 @@ export const exploreCategories: AreaCategory[] = [
       },
     ],
   },
-  {
-    id: 'family-activities',
-    title: 'Family Activities',
-    intro: 'Grand gardens and gentle days out, perfect for slowing the pace right down.',
-    places: [
-      {
-        name: 'Dyffryn Gardens',
-        description:
-          'Grand Edwardian gardens with room to roam, a lovely stop for a slower family day.',
-        tags: ['Gardens', 'National Trust', 'Family friendly'],
-        tone: 'sand',
-      },
-    ],
-  },
 ];
 
 export type DayOutSpot = {
   name: string;
   description: string;
-  image: {
+  image?: {
     src: string;
     width: number;
     height: number;
@@ -503,17 +496,6 @@ export const dayTrips: DayOutSpot[] = [
     },
   },
   {
-    name: 'Llantwit Major',
-    description:
-      'One of the oldest settlements in Wales — a historic town centre paired with a Blue Flag beach just down the road.',
-    image: {
-      src: '/images/Llantwit.jpg',
-      width: 1200,
-      height: 600,
-      alt: 'The Old White Hart pub in the historic centre of Llantwit Major',
-    },
-  },
-  {
     name: 'Techniquest',
     description:
       "Cardiff's hands-on science centre — genuinely brilliant for kids, with enough to fill a whole rainy afternoon.",
@@ -523,6 +505,82 @@ export const dayTrips: DayOutSpot[] = [
       height: 414,
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
+  },
+  {
+    name: 'Dyffryn Gardens',
+    description:
+      'Grand Edwardian gardens with room to roam, a lovely stop for a slower family day.',
+  },
+];
+
+export type CardiffEventCategory =
+  | 'Rugby & Internationals'
+  | 'Cardiff Castle'
+  | 'Big Events & Concerts'
+  | 'Festivals';
+
+export type CardiffEvent = {
+  name: string;
+  category: CardiffEventCategory;
+  date: string;
+  venue: string;
+  description: string;
+  url: string;
+};
+
+// Real events, checked at time of writing — dates for recurring annual events
+// can shift, so it's worth a periodic re-check against each official site.
+export const cardiffEvents: CardiffEvent[] = [
+  {
+    name: 'Wales v Ireland',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 20 February 2027',
+    venue: 'Principality Stadium',
+    description: 'Six Nations Championship — Wales host Ireland in Cardiff.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+  },
+  {
+    name: 'Wales v England',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 6 March 2027',
+    venue: 'Principality Stadium',
+    description: 'Six Nations Championship — the Anglo-Welsh clash returns to Cardiff.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+  },
+  {
+    name: 'FA Community Shield',
+    category: 'Big Events & Concerts',
+    date: 'Sunday 16 August 2026',
+    venue: 'Principality Stadium',
+    description: "Arsenal v Manchester City — English football's traditional season curtain-raiser.",
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+  },
+  {
+    name: "What's On at Cardiff Castle",
+    category: 'Cardiff Castle',
+    date: 'Ongoing — check current listings',
+    venue: 'Cardiff Castle',
+    description:
+      'A rolling programme of summer concerts, family events and outdoor cinema in the castle grounds throughout the year.',
+    url: 'https://www.cardiffcastle.com/events/',
+  },
+  {
+    name: 'Cardiff Half Marathon',
+    category: 'Festivals',
+    date: 'Sunday 4 October 2026',
+    venue: 'Starts at Cardiff Castle',
+    description:
+      "Wales' largest mass-participation event — a flat, fast route past the city's best-known landmarks.",
+    url: 'https://www.cardiffhalfmarathon.co.uk/',
+  },
+  {
+    name: 'Cardiff Winter Wonderland',
+    category: 'Festivals',
+    date: 'Expected mid-November 2026 – early January 2027',
+    venue: 'Cardiff Bay & Cardiff Castle grounds',
+    description:
+      'An undercover ice rink, big wheel, funfair and festive market — a Cardiff Christmas tradition. Exact 2026/27 dates confirmed closer to the time.',
+    url: 'https://cardiffbay.co.uk/listings/cardiff-winter-wonderland/',
   },
 ];
 

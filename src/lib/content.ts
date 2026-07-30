@@ -528,16 +528,7 @@ export const dayTrips: DayOutSpot[] = [
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
   },
-  {
-    name: 'Thomas',
-    description:
-      'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
-    image: {
-      src: '/images/Thomas.jpg',
-      width: 400,
-      height: 400,
-      alt: 'The exterior of Thomas restaurant',
-    },
+  
   },
 ];
 

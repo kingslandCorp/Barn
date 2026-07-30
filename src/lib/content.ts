@@ -336,7 +336,7 @@ export const exploreCategories: AreaCategory[] = [
         name: 'Barry Island',
         description:
           'O...Whats Occurring! Sandcastles, fish and chips, and unmistakably Welsh charm — Barry Island is a family fave and home of the legendary Gavin & Stacey.',
-        tags: ['Sandcastles', 'Fish and chips', 'Gavin & Stacey' 'fairground'],
+        tags: ['Sandcastles', 'Fish and chips', 'Gavin & Stacey', 'fairground'],
         tone: 'sand',
         image: {
           src: '/images/Barryisland.jpg',

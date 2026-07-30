@@ -4,7 +4,7 @@ import SectionHeading from '@/components/SectionHeading';
 import IconCard from '@/components/IconCard';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
-import { stayHighlights, galleryItems, sitePhotos, siteConfig } from '@/lib/content';
+import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
 
 export default function HomePage() {
   return (

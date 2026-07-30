@@ -265,7 +265,8 @@ export const what3words = {
 };
 
 export const mapEmbedSrc =
-  'https://www.google.com/maps?q=51.43566713670784,-3.4426292770617644&z=13&output=embed';
+  'https://www.google.com/maps?q=51.435480,-3.409444&z=13&output=embed';
+
 export const parkingInfo = {
   title: 'Parking',
   description:
@@ -283,6 +284,12 @@ export type AreaPlace = {
   description: string;
   tags: string[];
   tone: Tone;
+  image?: {
+    src: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
 };
 
 export type AreaCategory = {
@@ -305,6 +312,12 @@ export const exploreCategories: AreaCategory[] = [
           'Dramatic limestone cliffs and a wide stretch of sand, best explored at low tide. One of the most photographed beaches in South Wales, and a favourite summer escape.',
         tags: ['Dramatic cliffs', 'Excellent for walks', 'Popular in summer'],
         tone: 'coast',
+        image: {
+          src: '/images/Heritage_coast.jpg',
+          width: 549,
+          height: 364,
+          alt: 'Layered limestone cliffs along the Heritage Coast near Southerndown',
+        },
       },
       {
         name: 'Nash Point',
@@ -312,6 +325,25 @@ export const exploreCategories: AreaCategory[] = [
           'Twin lighthouses standing above the cliffs, with coastal paths in both directions. Time it right and the sunsets here are unforgettable.',
         tags: ['Lighthouse', 'Coastal walks', 'Sunset views'],
         tone: 'gold',
+        image: {
+          src: '/images/Nashpoint.jpg',
+          width: 1024,
+          height: 640,
+          alt: 'Nash Point lighthouse at sunset, Vale of Glamorgan',
+        },
+      },
+      {
+        name: 'Barry Island',
+        description:
+          'O...Whats Occurring! Sandcastles, fish and chips, and unmistakably Welsh charm — Barry Island is a family fave and home of the legendary Gavin & Stacey.',
+        tags: ['Sandcastles', 'Fish and chips', 'Gavin & Stacey' 'fairground'],
+        tone: 'sand',
+        image: {
+          src: '/images/Barryisland.jpg',
+          width: 554,
+          height: 554,
+          alt: 'Barry Island beach and promenade on a sunny day',
+        },
       },
     ],
   },

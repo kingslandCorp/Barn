@@ -49,6 +49,15 @@ export default function ExplorePage() {
                 <AreaCard key={place.name} place={place} delay={pi * 0.08} />
               ))}
             </div>
+            {category.closingNote && (
+              <Reveal delay={0.2}>
+                <div className="mt-8 rounded-3xl bg-sand-light/50 px-6 py-5 text-center">
+                  <p className="font-display text-lg italic text-ink/80">
+                    {category.closingNote}
+                  </p>
+                </div>
+              </Reveal>
+            )}
           </div>
         </section>
       ))}

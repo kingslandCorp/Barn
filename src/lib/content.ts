@@ -206,7 +206,7 @@ export const what3words = {
  };
 
 export const mapEmbedSrc =
-"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d512.9055961806355!2d-3.409398255388703!3d51.43548252111549!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1785410635114!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d512.9055961806355!2d-3.409398255388703!3d51.43548252111549!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2suk!4v1785410635114!5m2!1sen!2suk"
 
 export const parkingInfo = {
   title: 'Parking',

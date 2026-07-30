@@ -48,7 +48,12 @@ export default function ExplorePage() {
               {category.places.map((place, pi) => (
                 <AreaCard key={place.name} place={place} delay={pi * 0.08} />
               ))}
-{/* A Day in Cardiff */}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      {/* A Day in Cardiff */}
       <section
         className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
           exploreCategories.length % 2 === 1 ? 'bg-white/40 max-w-none' : ''
@@ -90,12 +95,6 @@ export default function ExplorePage() {
           </div>
         </div>
       </section>
-
-              
-            </div>
-          </div>
-        </section>
-      ))}
     </div>
   );
 }

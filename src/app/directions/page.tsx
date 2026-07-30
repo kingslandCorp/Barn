@@ -99,8 +99,6 @@ export default function DirectionsPage() {
             className="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-medium text-cream"
           >
             {what3words.words}
-          </a>
-          <p className="mt-3 text-xs text-ink/40">{what3words.note}</p>
         </Reveal>
 
         <Reveal delay={0.08} className="rounded-3xl bg-gold/15 p-7 shadow-card">

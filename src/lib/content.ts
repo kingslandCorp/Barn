@@ -313,7 +313,7 @@ export const exploreCategories: AreaCategory[] = [
         tags: ['Dramatic cliffs', 'Excellent for walks', 'Popular in summer'],
         tone: 'coast',
         image: {
-          src: '/images/Heritage_coast.jpg',
+          src: '/images/southerndown.jpg',
           width: 549,
           height: 364,
           alt: 'Layered limestone cliffs along the Heritage Coast near Southerndown',

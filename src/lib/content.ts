@@ -296,6 +296,7 @@ export type AreaCategory = {
   id: string;
   title: string;
   intro: string;
+  closingNote?: string;
   places: AreaPlace[];
 };
 
@@ -351,28 +352,9 @@ export const exploreCategories: AreaCategory[] = [
     id: 'food-drink',
     title: 'Food & Drink',
     intro: 'From village pubs to independent cafés, the Vale does not go hungry.',
+    closingNote:
+      'Great beer, welcoming pubs and hidden gems await throughout the Vale — far too many to fit into one list. Get exploring!',
     places: [
-      {
-        name: 'The Blacksmith Arms',
-        description:
-          'A cosy village pub in Llanmaes, a short drive from the Barn, known for its warm welcome and honest, seasonal food.',
-        tags: ['Llanmaes', 'Village pub', 'Seasonal menu'],
-        tone: 'sage',
-      },
-      {
-        name: 'The Duke of Wellington',
-        description:
-          'A Cowbridge favourite for a relaxed pint or a proper Sunday lunch after a morning at the coast.',
-        tags: ['Cowbridge', 'Sunday lunch', 'Local favourite'],
-        tone: 'stone',
-      },
-      {
-        name: 'Cowbridge Cafés',
-        description:
-          'Independent coffee shops and delis line the high street — perfect for slow mornings and picnic supplies.',
-        tags: ['Independent coffee', 'Delis', 'Picnic supplies'],
-        tone: 'sand',
-      },
       {
         name: 'Thomas',
         description:
@@ -384,6 +366,32 @@ export const exploreCategories: AreaCategory[] = [
           width: 400,
           height: 400,
           alt: 'The exterior of Thomas restaurant',
+        },
+      },
+      {
+        name: 'BaffleHaus',
+        description:
+          "Great beer, proper burgers, and a must-visit if you're a petrolhead — expect classic cars parked right outside.",
+        tags: ['Craft beer', 'Burgers', 'Petrolhead favourite'],
+        tone: 'stone',
+        image: {
+          src: '/images/bAFFLE.jpg',
+          width: 547,
+          height: 365,
+          alt: 'BaffleHaus pub with a classic sports car parked outside',
+        },
+      },
+      {
+        name: 'Thai Elephant',
+        description:
+          'Genuinely great Thai food and takeaway — no elephants involved, just proper flavour.',
+        tags: ['Thai food', 'Takeaway', 'Local favourite'],
+        tone: 'sage',
+        image: {
+          src: '/images/tHAI.jpg',
+          width: 335,
+          height: 597,
+          alt: 'The Thai Elephant restaurant frontage',
         },
       },
     ],

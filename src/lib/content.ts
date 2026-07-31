@@ -487,6 +487,7 @@ export const dayTrips: DayOutSpot[] = [
       height: 163,
       alt: 'Cefn Mably Farm Park, aerial view',
     },
+    url: 'https://www.cefnmablyfarmpark.com/',
   },
   {
     name: 'Cardiff International White Water',
@@ -498,6 +499,7 @@ export const dayTrips: DayOutSpot[] = [
       height: 452,
       alt: 'Kayakers on the rapids course at Cardiff International White Water',
     },
+    url: 'https://www.ciww.com/',
   },
   {
     name: 'Cardiff Devils',
@@ -509,6 +511,7 @@ export const dayTrips: DayOutSpot[] = [
       height: 374,
       alt: 'Cardiff Devils ice hockey players in action',
     },
+    url: 'https://www.cardiffdevils.com/',
   },
   {
     name: 'Techniquest',
@@ -520,6 +523,7 @@ export const dayTrips: DayOutSpot[] = [
       height: 414,
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
+    url: 'https://www.techniquest.org/',
   },
   {
     name: 'Riding on the Beach, Ogmore',

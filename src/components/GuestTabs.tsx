@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import * as LucideIcons from 'lucide-react';
 import { MapPin, BookOpen, LogOut } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
 import DepartureChecklist from '@/components/DepartureChecklist';
+import Icon from './Icon';
 import {
   arrivalSteps,
   afterDarkInfo,
@@ -34,12 +34,10 @@ function RuleTile({
   description: string;
   delay: number;
 }) {
-  const Icon = (LucideIcons[icon as keyof typeof LucideIcons] ??
-    LucideIcons.Info) as LucideIcons.LucideIcon;
   return (
     <Reveal delay={delay} className="rounded-3xl bg-white/70 p-6 shadow-card">
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-coast/10 text-coast">
-        <Icon size={18} strokeWidth={1.75} />
+        <Icon name={icon} size={18} strokeWidth={1.75} />
       </div>
       <h4 className="mt-4 font-display text-base text-ink">{title}</h4>
       <p className="mt-2 text-sm leading-relaxed text-ink/65">{description}</p>

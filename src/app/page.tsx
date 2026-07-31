@@ -279,6 +279,26 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Booking */}
+      <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
+        <Reveal>
+          <SectionHeading eyebrow="Book Your Stay" title="Check your dates" align="center" />
+        </Reveal>
+        <Reveal delay={0.1} className="mx-auto mt-8 max-w-xl text-left">
+          <BookingEnquiry />
+        </Reveal>
+        <Reveal delay={0.15}>
+          <p className="mx-auto mt-6 max-w-md text-sm text-ink/60">
+            Already booked? Find house and pool guidance in the Guests section, or reach us
+            directly at{' '}
+            <a href={`mailto:${siteConfig.email}`} className="text-coast underline">
+              {siteConfig.email}
+            </a>
+            .
+          </p>
+        </Reveal>
+      </section>
+
       {/* Discover the Vale */}
       <section className="bg-coast py-8 text-cream sm:py-14">
         <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
@@ -311,26 +331,6 @@ export default function HomePage() {
             />
           </Reveal>
         </div>
-      </section>
-
-      {/* Booking */}
-      <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
-        <Reveal>
-          <SectionHeading eyebrow="Book Your Stay" title="Check your dates" align="center" />
-        </Reveal>
-        <Reveal delay={0.1} className="mx-auto mt-8 max-w-xl text-left">
-          <BookingEnquiry />
-        </Reveal>
-        <Reveal delay={0.15}>
-          <p className="mx-auto mt-6 max-w-md text-sm text-ink/60">
-            Already booked? Find house and pool guidance in the Guests section, or reach us
-            directly at{' '}
-            <a href={`mailto:${siteConfig.email}`} className="text-coast underline">
-              {siteConfig.email}
-            </a>
-            .
-          </p>
-        </Reveal>
       </section>
     </>
   );

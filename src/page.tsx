@@ -1,11 +1,70 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Waves, Flame, Trees, Wifi, PawPrint } from 'lucide-react';
 import Hero from '@/components/Hero';
 import SectionHeading from '@/components/SectionHeading';
-import IconCard from '@/components/IconCard';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
 import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
+
+const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
+
+function WoodlandArt() {
+  return (
+    <svg viewBox="0 0 400 300" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#cfe8c8" />
+          <stop offset="100%" stopColor="#eef6e6" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="300" fill="url(#skyGrad)" />
+      <circle cx="320" cy="60" r="34" className="fill-gold/60" />
+      {[70, 150, 230, 310].map((x, i) => (
+        <g key={x}>
+          <rect x={x - 6} y={120 + (i % 2) * 10} width="12" height={180 - (i % 2) * 10} className="fill-stone/60" />
+          <ellipse cx={x} cy={110 + (i % 2) * 10} rx="55" ry="70" className="fill-sage/70" />
+        </g>
+      ))}
+      <ellipse cx="200" cy="120" rx="90" ry="60" className="fill-sage/50" />
+      {Array.from({ length: 10 }).map((_, i) => (
+        <circle
+          key={i}
+          cx={40 + i * 35}
+          cy={90 + (i % 3) * 14}
+          r="3"
+          className="fill-gold/50"
+        />
+      ))}
+      <rect x="0" y="270" width="400" height="30" className="fill-sage/30" />
+    </svg>
+  );
+}
+
+function IconTile({
+  icon,
+  title,
+  description,
+  delay,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  delay: number;
+}) {
+  const Icon = iconMap[icon as keyof typeof iconMap];
+  return (
+    <Reveal delay={delay}>
+      <div className="flex h-full flex-col rounded-3xl bg-white/80 p-6 shadow-card">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-coast/10 text-coast">
+          <Icon size={20} strokeWidth={1.75} />
+        </div>
+        <h3 className="mt-4 font-display text-lg text-ink">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-ink/65">{description}</p>
+      </div>
+    </Reveal>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -13,17 +72,15 @@ export default function HomePage() {
       <Hero />
 
       {/* A Warm Welcome */}
-      <section className="relative overflow-hidden py-16 sm:py-24">
-        {/* Ambient colour wash — now full page width, sitting behind the constrained content below,
-            with a much stronger, genuinely visible blend of the photo's own colours */}
+      <section className="relative overflow-hidden py-8 sm:py-14">
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
             src={sitePhotos.warmWelcome.src}
             alt=""
             fill
-            className="scale-150 object-cover opacity-40 blur-3xl"
+            className="scale-150 object-cover opacity-65 blur-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/50 via-45% to-cream/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/35 via-45% to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-16 lg:px-12">
@@ -46,23 +103,60 @@ export default function HomePage() {
       </section>
 
       {/* Stay Highlights */}
-      <section className="bg-white/50 py-16 sm:py-24">
+      <section className="bg-white/50 py-8 sm:py-14">
         <div className="mx-auto max-w-content px-5 sm:px-8 lg:px-12">
           <SectionHeading
             eyebrow="Stay Highlights"
             title="Everything you need, nothing you don't"
             align="center"
           />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stayHighlights.map((item, i) => (
-              <IconCard key={item.title} delay={i * 0.06} {...item} />
-            ))}
+          <div className="mt-14 grid gap-6 sm:grid-cols-3">
+            {stayHighlights.map((item, i) => {
+              if (item.image) {
+                return (
+                  <Reveal key={item.title} delay={i * 0.06}>
+                    <Photo
+                      src={item.image.src}
+                      alt={item.image.alt}
+                      width={item.image.width}
+                      height={item.image.height}
+                      label={item.title}
+                      caption={item.description}
+                      className="h-64 w-full"
+                    />
+                  </Reveal>
+                );
+              }
+              if (item.useArt) {
+                return (
+                  <Reveal key={item.title} delay={i * 0.06}>
+                    <div className="relative h-64 w-full overflow-hidden rounded-3xl">
+                      <WoodlandArt />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/0" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <p className="font-display text-lg italic text-cream">{item.title}</p>
+                        <p className="text-xs text-cream/80">{item.description}</p>
+                      </div>
+                    </div>
+                  </Reveal>
+                );
+              }
+              return (
+                <IconTile
+                  key={item.title}
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.description}
+                  delay={i * 0.06}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Gallery */}
-      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
 
         {/* Row 1 — two hero images */}
@@ -132,7 +226,7 @@ export default function HomePage() {
       </section>
 
       {/* The Views */}
-      <section className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
         <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
           {viewPhotos.map((item, i) => (
@@ -144,6 +238,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
+                className="h-40 w-full sm:h-52"
               />
             </Reveal>
           ))}
@@ -151,7 +246,7 @@ export default function HomePage() {
       </section>
 
       {/* Discover the Vale */}
-      <section className="bg-coast py-16 text-cream sm:py-24">
+      <section className="bg-coast py-8 text-cream sm:py-14">
         <div className="mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-2 lg:px-12">
           <Reveal>
             <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-light">
@@ -185,7 +280,7 @@ export default function HomePage() {
       </section>
 
       {/* Closing CTA */}
-      <section className="mx-auto max-w-content px-5 py-16 text-center sm:px-8 sm:py-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
         <Reveal>
           <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
             Ready when you are.

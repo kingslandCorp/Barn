@@ -262,7 +262,7 @@ export default function HomePage() {
       {/* The Views */}
       <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
-        <div className="mt-14 grid grid-cols-3 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
           {viewPhotos.map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
               <Photo

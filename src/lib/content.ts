@@ -789,6 +789,11 @@ export const cardiffEvents: CardiffEvent[] = [
 
 export const houseRules: { icon: string; title: string; description: string }[] = [
   {
+    icon: 'Wifi',
+    title: 'Wi-Fi',
+    description: 'Network: Kingslandbarn — Password: K!ngl@nd26',
+  },
+  {
     icon: 'CigaretteOff',
     title: 'No smoking indoors',
     description: 'Please smoke outside only, away from open doors and windows.',
@@ -800,8 +805,8 @@ export const houseRules: { icon: string; title: string; description: string }[] 
   },
   {
     icon: 'UserCheck',
-    title: 'Registered guests only',
-    description: 'Please let us know in advance if anyone will be joining you.',
+    title: 'Only booked guests in the house',
+    description: 'Please let us know in advance if anyone else will be joining you or staying over.',
   },
   {
     icon: 'Moon',
@@ -814,6 +819,11 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: 'Well-behaved dogs are very welcome. Please clean up after them.',
   },
   {
+    icon: 'PawPrint',
+    title: 'No dogs upstairs',
+    description: 'Dogs are very welcome downstairs, but please keep them out of the bedrooms.',
+  },
+  {
     icon: 'Home',
     title: 'Respect neighbouring properties',
     description: 'Our neighbours live here year-round — please be considerate of noise and privacy.',
@@ -823,39 +833,84 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     title: 'Report any damage',
     description: "Accidents happen — just let us know as soon as possible so we can sort it.",
   },
+  {
+    icon: 'Clock',
+    title: 'Check-in from 4pm, check-out by 10am',
+    description: "This gives us time to get the Barn ready and looking its best for the next guests.",
+  },
+  {
+    icon: 'Footprints',
+    title: 'Shoes off, please',
+    description: 'Boots and wellies at the door — we just ask that muddy footwear stays outside.',
+  },
+  {
+    icon: 'Heart',
+    title: 'Treat the Barn like home',
+    description: "We've furnished it with care — please treat it the same way you'd treat your own place.",
+  },
 ];
 
 export const poolRules: { icon: string; title: string; description: string }[] = [
   {
-    icon: 'ShieldAlert',
-    title: 'No lifeguard on duty',
-    description: 'The pool is unsupervised. All guests swim entirely at their own risk.',
-  },
-  {
     icon: 'Users',
-    title: 'Supervise children at all times',
-    description: 'Children must be closely supervised by an adult whenever they are near the pool.',
+    title: 'Maximum occupancy: 6 people',
+    description: "It's a 14' x 28' pool — please keep numbers in the water at any one time to 6 or fewer, so it stays comfortable and safe.",
   },
   {
     icon: 'ArrowDownToLine',
-    title: 'No diving',
-    description: 'The pool is not designed for diving or jumping in. Please enter carefully.',
+    title: 'No diving anywhere in the pool',
+    description:
+      "The pool is 6'6\" at its deepest point — plenty for swimming, but not necessarily safe for diving depending on entry point and approach.",
+  },
+  {
+    icon: 'AlertTriangle',
+    title: 'No jumping into the deep end',
+    description: 'Please enter the water carefully rather than jumping in, especially at the deep end.',
+  },
+  {
+    icon: 'UserCheck',
+    title: 'Children must be supervised by an adult at all times',
+    description: 'Please keep a close eye on children whenever they are in or around the pool.',
+  },
+  {
+    icon: 'Waves',
+    title: 'Non-swimmers: stay in the shallow end',
+    description: 'The shallow end is nearest the house — non-swimmers should stay there unless accompanied by a confident swimmer.',
   },
   {
     icon: 'UserX',
-    title: 'Never swim alone',
+    title: 'No swimming alone',
     description: 'Always have someone else with you when using the pool, even during the day.',
   },
   {
     icon: 'Wine',
-    title: 'No glass around the pool',
-    description: 'Please use the provided plastic or reusable cups in the pool area.',
+    title: 'No alcohol or glass poolside',
+    description: 'Please save the drinks (and any glassware) for after your swim — plastic or reusable cups only in the pool area.',
   },
   {
-    icon: 'PhoneCall',
-    title: 'Emergency procedures',
-    description:
-      'In a genuine emergency, call 999 immediately. For anything else pool-related, contact us at Hello@Kingsland.co.uk.',
+    icon: 'Footprints',
+    title: 'No running or rough play',
+    description: 'Wet tiles can be slippery — please keep things calm in and around the pool.',
+  },
+  {
+    icon: 'Droplets',
+    title: 'Shower before entering',
+    description: 'A quick rinse before you get in keeps the water clean and clear for everyone.',
+  },
+  {
+    icon: 'Clock',
+    title: 'Pool closed outside advertised hours',
+    description: "Please stick to the pool's advertised opening hours — let us know if these aren't clear.",
+  },
+  {
+    icon: 'CloudLightning',
+    title: 'Closed during thunderstorms or unsafe weather',
+    description: 'Please stay out of the pool during storms, high winds, or any other unsafe conditions.',
+  },
+  {
+    icon: 'ShieldAlert',
+    title: 'No lifeguard on duty',
+    description: 'The pool is unsupervised — all guests swim entirely at their own risk. In a genuine emergency, call 999 immediately.',
   },
 ];
 
@@ -864,8 +919,17 @@ export const departureChecklist: { icon: string; title: string; description: str
   { icon: 'Lightbulb', title: 'Lights', description: 'Turn off all lights around the property.' },
   { icon: 'DoorClosed', title: 'Doors', description: 'Lock all external doors on your way out.' },
   { icon: 'AppWindow', title: 'Windows', description: 'Close and secure every window.' },
-  { icon: 'Waves', title: 'Pool cover', description: 'Please replace the pool cover if you were the last to swim.' },
+  {
+    icon: 'BookOpen',
+    title: 'Sign the guest book',
+    description: 'Leave us a note about your stay — future guests (and we!) love reading them.',
+  },
   { icon: 'Shirt', title: 'Towels', description: 'Leave used towels in the bathroom, not packed in your bags.' },
   { icon: 'Recycle', title: 'Recycling', description: 'Sort recycling into the bins provided outside.' },
-  { icon: 'KeyRound', title: 'Keys', description: 'Return the keys to the lockbox before you leave.' },
+  {
+    icon: 'KeyRound',
+    title: 'Keys',
+    description:
+      "Take one last cheeky look around — under the bed, behind the sofa — then pop the keys back in the lockbox before you head off.",
+  },
 ];

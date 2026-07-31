@@ -513,8 +513,7 @@ export type CardiffEvent = {
   name: string;
   category: CardiffEventCategory;
   date: string;
-  // Used purely to sort this list chronologically — not displayed.
-  sortDate: string; // ISO format YYYY-MM-DD
+  sortDate: string; // ISO format YYYY-MM-DD, used only for ordering this list
   venue: string;
   description: string;
   url: string;
@@ -524,8 +523,6 @@ export type CardiffEvent = {
     height: number;
     alt: string;
   };
-  // Filename to add to public/images once a properly licensed photo is available —
-  // shown as a clearly labelled placeholder in the meantime rather than a broken image.
   placeholderImage?: string;
 };
 
@@ -541,7 +538,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: "Arsenal v Manchester City — English football's traditional season curtain-raiser.",
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead1.jpg',
+    image: {
+      src: '/images/jamhead1.jpg',
+      width: 600,
+      height: 450,
+      alt: 'FA Community Shield at Principality Stadium',
+    },
   },
   {
     name: 'Cardiff Half Marathon',
@@ -567,7 +569,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: 'Nations Championship — the first of three home autumn fixtures for Wales.',
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead2.jpg',
+    image: {
+      src: '/images/jamhead2.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Wales v Japan, Nations Championship',
+    },
   },
   {
     name: 'Wales v New Zealand',
@@ -577,7 +584,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: 'Nations Championship — Wales take on the All Blacks in Cardiff.',
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead3.jpg',
+    image: {
+      src: '/images/jamhead3.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Wales v New Zealand, Nations Championship',
+    },
   },
   {
     name: 'Cardiff Winter Wonderland',
@@ -589,7 +601,7 @@ export const cardiffEvents: CardiffEvent[] = [
       'An undercover ice rink, big wheel, funfair and festive market — a Cardiff Christmas tradition. Exact 2026/27 dates confirmed closer to the time.',
     url: 'https://cardiffbay.co.uk/listings/cardiff-winter-wonderland/',
     image: {
-      src: '/images/winter.jpg',
+      src: '/images/Winter.jpg',
       width: 600,
       height: 450,
       alt: 'Cardiff Winter Wonderland ice rink and festive lights',
@@ -603,7 +615,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: "Nations Championship — Wales close out their home autumn series against the Wallabies.",
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead4.jpg',
+    image: {
+      src: '/images/jamhead4.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Wales v Australia, Nations Championship',
+    },
   },
   {
     name: 'UB40 feat. Ali Campbell',
@@ -613,7 +630,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Utilita Arena Cardiff',
     description: 'The reggae legends bring their biggest hits to the arena stage.',
     url: 'https://www.utilitaarenacardiff.co.uk/',
-    placeholderImage: 'jamhead5.jpg',
+    image: {
+      src: '/images/jamhead5.jpg',
+      width: 600,
+      height: 450,
+      alt: 'UB40 feat. Ali Campbell at Utilita Arena Cardiff',
+    },
   },
   {
     name: 'Morrissey',
@@ -623,7 +645,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Utilita Arena Cardiff',
     description: 'The former Smiths frontman brings his solo tour to Cardiff.',
     url: 'https://www.utilitaarenacardiff.co.uk/',
-    placeholderImage: 'jamhead6.jpg',
+    image: {
+      src: '/images/jamhead6.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Morrissey at Utilita Arena Cardiff',
+    },
   },
   {
     name: 'Wales v Ireland',
@@ -633,7 +660,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: 'Six Nations Championship — Wales host Ireland in Cardiff.',
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead7.jpg',
+    image: {
+      src: '/images/jamhead7.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Wales v Ireland, Six Nations Championship',
+    },
   },
   {
     name: 'Wales v England',
@@ -643,7 +675,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Principality Stadium',
     description: 'Six Nations Championship — the Anglo-Welsh clash returns to Cardiff.',
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-    placeholderImage: 'jamhead8.jpg',
+    image: {
+      src: '/images/jamhead8.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Wales v England, Six Nations Championship',
+    },
   },
   {
     name: 'Gabrielle',
@@ -653,7 +690,12 @@ export const cardiffEvents: CardiffEvent[] = [
     venue: 'Utilita Arena Cardiff',
     description: "The Brit Award-winning singer performs her classic hits live.",
     url: 'https://www.utilitaarenacardiff.co.uk/',
-    placeholderImage: 'jamhead9.jpg',
+    image: {
+      src: '/images/jamhead9.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Gabrielle at Utilita Arena Cardiff',
+    },
   },
   {
     name: "What's On at Cardiff Castle",

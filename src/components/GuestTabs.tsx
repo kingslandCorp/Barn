@@ -92,7 +92,7 @@ export default function GuestTabs() {
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex flex-wrap gap-2 border-b border-stone/20 pb-2">
+      <div className="mx-auto flex max-w-xl flex-wrap justify-center gap-3 border-b border-stone/20 pb-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = active === tab.id;
@@ -100,7 +100,7 @@ export default function GuestTabs() {
             <button
               key={tab.id}
               onClick={() => setActive(tab.id)}
-              className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 py-3 text-sm font-medium transition-colors ${
                 isActive ? 'bg-ink text-cream' : 'bg-white/70 text-ink/70 hover:bg-white'
               }`}
             >

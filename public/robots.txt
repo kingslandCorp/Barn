@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /guests/
-
-Sitemap: https://kingsland.co.uk/sitemap.xml
+Sitemap: https://kingslandbarn.co.uk/sitemap.xml

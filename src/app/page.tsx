@@ -19,9 +19,9 @@ export default function HomePage() {
             src={sitePhotos.warmWelcome.src}
             alt=""
             fill
-            className="scale-150 object-cover opacity-40 blur-3xl"
+            className="scale-150 object-cover opacity-65 blur-3xl"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/50 via-45% to-cream/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/35 via-45% to-transparent" />
         </div>
 
         <div className="relative z-10 mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-16 lg:px-12">
@@ -142,6 +142,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
+                className="h-40 w-full sm:h-52"
               />
             </Reveal>
           ))}

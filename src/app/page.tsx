@@ -1,11 +1,104 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Waves, Flame, Trees, Wifi, PawPrint } from 'lucide-react';
 import Hero from '@/components/Hero';
 import SectionHeading from '@/components/SectionHeading';
-import IconCard from '@/components/IconCard';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
+import BookingEnquiry from '@/components/BookingEnquiry';
 import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
+
+const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
+
+function HighlightPhotoTile({
+  src,
+  alt,
+  width,
+  height,
+  label,
+  caption,
+  icon,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  label: string;
+  caption: string;
+  icon: string;
+}) {
+  const Icon = iconMap[icon as keyof typeof iconMap];
+  return (
+    <div className="relative h-64 w-full overflow-hidden rounded-3xl bg-stone/20">
+      <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/0" />
+      <div className="absolute left-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-coast shadow-sm">
+        <Icon size={18} strokeWidth={1.75} />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <p className="font-display text-lg italic text-cream">{label}</p>
+        <p className="text-xs text-cream/80">{caption}</p>
+      </div>
+    </div>
+  );
+}
+
+function WoodlandArt() {
+  return (
+    <svg viewBox="0 0 400 300" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#cfe8c8" />
+          <stop offset="100%" stopColor="#eef6e6" />
+        </linearGradient>
+      </defs>
+      <rect width="400" height="300" fill="url(#skyGrad)" />
+      <circle cx="320" cy="60" r="34" className="fill-gold/60" />
+      {[70, 150, 230, 310].map((x, i) => (
+        <g key={x}>
+          <rect x={x - 6} y={120 + (i % 2) * 10} width="12" height={180 - (i % 2) * 10} className="fill-stone/60" />
+          <ellipse cx={x} cy={110 + (i % 2) * 10} rx="55" ry="70" className="fill-sage/70" />
+        </g>
+      ))}
+      <ellipse cx="200" cy="120" rx="90" ry="60" className="fill-sage/50" />
+      {Array.from({ length: 10 }).map((_, i) => (
+        <circle
+          key={i}
+          cx={40 + i * 35}
+          cy={90 + (i % 3) * 14}
+          r="3"
+          className="fill-gold/50"
+        />
+      ))}
+      <rect x="0" y="270" width="400" height="30" className="fill-sage/30" />
+    </svg>
+  );
+}
+
+function IconTile({
+  icon,
+  title,
+  description,
+  delay,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  delay: number;
+}) {
+  const Icon = iconMap[icon as keyof typeof iconMap];
+  return (
+    <Reveal delay={delay}>
+      <div className="flex h-full flex-col rounded-3xl bg-white/80 p-6 shadow-card">
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-coast/10 text-coast">
+          <Icon size={20} strokeWidth={1.75} />
+        </div>
+        <h3 className="mt-4 font-display text-lg text-ink">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-ink/65">{description}</p>
+      </div>
+    </Reveal>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -51,10 +144,47 @@ export default function HomePage() {
             title="Everything you need, nothing you don't"
             align="center"
           />
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stayHighlights.map((item, i) => (
-              <IconCard key={item.title} delay={i * 0.06} {...item} />
-            ))}
+          <div className="mt-14 grid gap-6 sm:grid-cols-3">
+            {stayHighlights.map((item, i) => {
+              if (item.image) {
+                return (
+                  <Reveal key={item.title} delay={i * 0.06}>
+                    <HighlightPhotoTile
+                      src={item.image.src}
+                      alt={item.image.alt}
+                      width={item.image.width}
+                      height={item.image.height}
+                      label={item.title}
+                      caption={item.description}
+                      icon={item.icon}
+                    />
+                  </Reveal>
+                );
+              }
+              if (item.useArt) {
+                return (
+                  <Reveal key={item.title} delay={i * 0.06}>
+                    <div className="relative h-64 w-full overflow-hidden rounded-3xl">
+                      <WoodlandArt />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/0" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <p className="font-display text-lg italic text-cream">{item.title}</p>
+                        <p className="text-xs text-cream/80">{item.description}</p>
+                      </div>
+                    </div>
+                  </Reveal>
+                );
+              }
+              return (
+                <IconTile
+                  key={item.title}
+                  icon={item.icon}
+                  title={item.title}
+                  description={item.description}
+                  delay={i * 0.06}
+                />
+              );
+            })}
           </div>
         </div>
       </section>
@@ -183,13 +313,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Closing CTA */}
+      {/* Booking */}
       <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
         <Reveal>
-          <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
-            Ready when you are.
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-base text-ink/70">
+          <SectionHeading eyebrow="Book Your Stay" title="Check your dates" align="center" />
+        </Reveal>
+        <Reveal delay={0.1} className="mx-auto mt-8 max-w-xl text-left">
+          <BookingEnquiry />
+        </Reveal>
+        <Reveal delay={0.15}>
+          <p className="mx-auto mt-6 max-w-md text-sm text-ink/60">
             Already booked? Find house and pool guidance in the Guests section, or reach us
             directly at{' '}
             <a href={`mailto:${siteConfig.email}`} className="text-coast underline">

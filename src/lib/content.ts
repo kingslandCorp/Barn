@@ -14,10 +14,9 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: 'Home', href: '/' },
-  { label: 'Directions', href: '/directions' },
+  { label: 'Location', href: '/directions' },
   { label: 'Explore the Area', href: '/explore' },
   { label: 'Events', href: '/events' },
-  { label: 'Before You Leave', href: '/before-you-leave' },
 ];
 
 export type Tone = 'coast' | 'sage' | 'gold' | 'stone' | 'sand';
@@ -474,6 +473,7 @@ export type DayOutSpot = {
     height: number;
     alt: string;
   };
+  url?: string;
 };
 
 export const dayTrips: DayOutSpot[] = [
@@ -520,6 +520,54 @@ export const dayTrips: DayOutSpot[] = [
       height: 414,
       alt: 'Interactive science exhibits at Techniquest, Cardiff',
     },
+  },
+  {
+    name: 'Riding on the Beach, Ogmore',
+    description:
+      'Trek by horseback along the River Ewenny and out onto the open sand at Ogmore — suitable for beginners and experienced riders alike.',
+    image: {
+      src: '/images/horse.jpg',
+      width: 540,
+      height: 370,
+      alt: 'Riders on horseback along Ogmore beach',
+    },
+    url: 'https://www.rideonthebeach.co.uk/',
+  },
+  {
+    name: 'Surf Lessons, Porthcawl',
+    description:
+      'Beginner-friendly surf lessons at Rest Bay — boards, wetsuits and qualified instructors all included.',
+    image: {
+      src: '/images/surf.jpg',
+      width: 638,
+      height: 480,
+      alt: 'A surfer riding a wave at Porthcawl',
+    },
+    url: 'https://www.porthcawlsurf.co.uk/',
+  },
+  {
+    name: 'Mountain Biking, BikePark Wales',
+    description:
+      "The UK's biggest mountain bike park — graded trails for every level, plus a minibus uplift so it's downhill all the way back.",
+    image: {
+      src: '/images/bike.jpg',
+      width: 547,
+      height: 365,
+      alt: 'A mountain biker riding a forest trail at BikePark Wales',
+    },
+    url: 'https://www.bikeparkwales.com',
+  },
+  {
+    name: 'Hiking Pen y Fan',
+    description:
+      "The highest peak in South Wales — a rewarding, well-marked summit walk with some of the best views the Beacons have to offer.",
+    image: {
+      src: '/images/hike.jpg',
+      width: 518,
+      height: 386,
+      alt: 'Hikers on the summit path to Pen y Fan',
+    },
+    url: 'https://bannaubrycheiniog.org/',
   },
 ];
 

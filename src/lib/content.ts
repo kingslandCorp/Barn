@@ -203,21 +203,41 @@ export const stayHighlights: {
   icon: string;
   title: string;
   description: string;
+  image?: { src: string; width: number; height: number; alt: string };
+  useArt?: boolean; // show original illustrated artwork instead of a photo or icon
 }[] = [
   {
     icon: 'Waves',
     title: 'Heated outdoor pool',
     description: 'Warm water waiting for you, whatever the Welsh weather decides to do.',
+    image: {
+      src: '/images/Poolmain.avif',
+      width: 1200,
+      height: 900,
+      alt: 'The heated outdoor pool at The Barn',
+    },
   },
   {
     icon: 'Flame',
     title: 'Wood burner',
     description: 'Curl up beside the fire once the sun dips and the evening cools.',
+    image: {
+      src: '/images/fireplace.jpg',
+      width: 1071,
+      height: 1428,
+      alt: 'The wood burner, lit, with a basket of logs beside it',
+    },
   },
   {
-    icon: 'PawPrint',
-    title: 'Dog friendly',
-    description: 'Bring the whole family along — four legs are always welcome here.',
+    icon: 'Trees',
+    title: 'Woodland walks',
+    description: 'A leaf-strewn path through the woodland right around The Barn.',
+    image: {
+      src: '/images/walk.jpg',
+      width: 615,
+      height: 410,
+      alt: 'A woodland walking path near The Family Barn at Kingsland',
+    },
   },
   {
     icon: 'Wifi',
@@ -230,9 +250,9 @@ export const stayHighlights: {
     description: 'Rolling fields, quiet lanes and hedgerows, right from the front door.',
   },
   {
-    icon: 'Umbrella',
-    title: 'Coastal beaches nearby',
-    description: "Wales' dramatic Heritage Coast is just a short drive away.",
+    icon: 'PawPrint',
+    title: 'Dog friendly',
+    description: 'Bring the whole family along — four legs are always welcome here.',
   },
 ];
 

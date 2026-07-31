@@ -5,9 +5,43 @@ import Hero from '@/components/Hero';
 import SectionHeading from '@/components/SectionHeading';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
+import BookingEnquiry from '@/components/BookingEnquiry';
 import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
 
 const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
+
+function HighlightPhotoTile({
+  src,
+  alt,
+  width,
+  height,
+  label,
+  caption,
+  icon,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  label: string;
+  caption: string;
+  icon: string;
+}) {
+  const Icon = iconMap[icon as keyof typeof iconMap];
+  return (
+    <div className="relative h-64 w-full overflow-hidden rounded-3xl bg-stone/20">
+      <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/0" />
+      <div className="absolute left-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-coast shadow-sm">
+        <Icon size={18} strokeWidth={1.75} />
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 p-4">
+        <p className="font-display text-lg italic text-cream">{label}</p>
+        <p className="text-xs text-cream/80">{caption}</p>
+      </div>
+    </div>
+  );
+}
 
 function WoodlandArt() {
   return (
@@ -115,14 +149,14 @@ export default function HomePage() {
               if (item.image) {
                 return (
                   <Reveal key={item.title} delay={i * 0.06}>
-                    <Photo
+                    <HighlightPhotoTile
                       src={item.image.src}
                       alt={item.image.alt}
                       width={item.image.width}
                       height={item.image.height}
                       label={item.title}
                       caption={item.description}
-                      className="h-64 w-full"
+                      icon={item.icon}
                     />
                   </Reveal>
                 );
@@ -279,13 +313,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Closing CTA */}
+      {/* Booking */}
       <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
         <Reveal>
-          <h2 className="font-display text-3xl italic text-ink sm:text-4xl">
-            Ready when you are.
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-base text-ink/70">
+          <SectionHeading eyebrow="Book Your Stay" title="Check your dates" align="center" />
+        </Reveal>
+        <Reveal delay={0.1} className="mx-auto mt-8 max-w-xl text-left">
+          <BookingEnquiry />
+        </Reveal>
+        <Reveal delay={0.15}>
+          <p className="mx-auto mt-6 max-w-md text-sm text-ink/60">
             Already booked? Find house and pool guidance in the Guests section, or reach us
             directly at{' '}
             <a href={`mailto:${siteConfig.email}`} className="text-coast underline">

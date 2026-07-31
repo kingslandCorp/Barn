@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import * as LucideIcons from 'lucide-react';
 import { MapPin, BookOpen, LogOut } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
@@ -11,7 +11,8 @@ import {
   afterDarkInfo,
   sitePhotos,
   siteConfig,
-  stayHighlights,
+  houseRules,
+  poolRules,
 } from '@/lib/content';
 
 type TabId = 'finding-us' | 'handbook' | 'before-you-leave';
@@ -21,6 +22,30 @@ const tabs: { id: TabId; label: string; icon: typeof MapPin }[] = [
   { id: 'handbook', label: 'Welcome handbook', icon: BookOpen },
   { id: 'before-you-leave', label: 'Before You Leave', icon: LogOut },
 ];
+
+function RuleTile({
+  icon,
+  title,
+  description,
+  delay,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+  delay: number;
+}) {
+  const Icon = (LucideIcons[icon as keyof typeof LucideIcons] ??
+    LucideIcons.Info) as LucideIcons.LucideIcon;
+  return (
+    <Reveal delay={delay} className="rounded-3xl bg-white/70 p-6 shadow-card">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-coast/10 text-coast">
+        <Icon size={18} strokeWidth={1.75} />
+      </div>
+      <h4 className="mt-4 font-display text-base text-ink">{title}</h4>
+      <p className="mt-2 text-sm leading-relaxed text-ink/65">{description}</p>
+    </Reveal>
+  );
+}
 
 export default function GuestTabs() {
   const [active, setActive] = useState<TabId>('finding-us');
@@ -55,24 +80,36 @@ export default function GuestTabs() {
               <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">Arrival</p>
               <h2 className="font-display text-2xl text-ink sm:text-3xl">Finding the barn</h2>
             </Reveal>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {arrivalSteps.map((step) => (
-                <Reveal
-                  key={step.step}
-                  delay={step.step * 0.06}
-                  className="rounded-3xl bg-white/70 p-6 shadow-card"
-                >
-                  <p className="font-display text-3xl text-gold-deep">
-                    {String(step.step).padStart(2, '0')}
-                  </p>
-                  <h3 className="mt-2 font-display text-lg text-ink">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/65">{step.description}</p>
-                </Reveal>
-              ))}
+
+            <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-stretch">
+              <div className="grid grid-cols-2 gap-6">
+                {arrivalSteps.map((step) => (
+                  <Reveal
+                    key={step.step}
+                    delay={step.step * 0.06}
+                    className="rounded-3xl bg-white/70 p-6 shadow-card"
+                  >
+                    <p className="font-display text-3xl text-gold-deep">
+                      {String(step.step).padStart(2, '0')}
+                    </p>
+                    <h3 className="mt-2 font-display text-lg text-ink">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-ink/65">{step.description}</p>
+                  </Reveal>
+                ))}
+              </div>
+              <Reveal delay={0.1} className="h-full">
+                <Photo
+                  src={sitePhotos.directionsTrack.src}
+                  alt={sitePhotos.directionsTrack.alt}
+                  width={sitePhotos.directionsTrack.width}
+                  height={sitePhotos.directionsTrack.height}
+                  className="h-full min-h-[320px] w-full"
+                />
+              </Reveal>
             </div>
 
-            <div className="mt-14 grid items-center gap-10 sm:grid-cols-2">
-              <Reveal>
+            <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2">
+              <Reveal className="flex flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card">
                 <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
                   {afterDarkInfo.title}
                 </p>
@@ -86,6 +123,7 @@ export default function GuestTabs() {
                   alt={sitePhotos.directionsAfterDark.alt}
                   width={sitePhotos.directionsAfterDark.width}
                   height={sitePhotos.directionsAfterDark.height}
+                  className="h-64 w-full sm:h-full"
                 />
               </Reveal>
             </div>
@@ -102,24 +140,42 @@ export default function GuestTabs() {
                 Everything for your stay
               </h2>
               <p className="mt-3 max-w-2xl text-base text-ink/65">
-                A quick reference for while you're here — the essentials, all in one place.
+                A quick reference for while you're here — the house rules, the Wi-Fi details, and
+                everything you need to know about the pool.
               </p>
             </Reveal>
-            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {stayHighlights.map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.06} className="rounded-3xl bg-white/70 p-6 shadow-card">
-                  <h3 className="font-display text-lg text-ink">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/65">{item.description}</p>
-                </Reveal>
-              ))}
+
+            {/* House Rules & Wi-Fi */}
+            <div className="mt-10">
+              <h3 className="font-display text-xl text-ink">House Rules &amp; Wi-Fi</h3>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                {houseRules.map((item, i) => (
+                  <RuleTile
+                    key={item.title}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    delay={i * 0.04}
+                  />
+                ))}
+              </div>
             </div>
-            <Reveal delay={0.2}>
-              <p className="mt-8 rounded-3xl bg-sand-light/50 px-6 py-5 text-sm text-ink/60">
-                This handbook is a starting point — let us know what else you'd like added here
-                (Wi-Fi password, appliance guides, local emergency contacts, anything else worth
-                including) and we'll build it out properly.
-              </p>
-            </Reveal>
+
+            {/* Pool Rules */}
+            <div className="mt-14">
+              <h3 className="font-display text-xl text-ink">Pool Rules</h3>
+              <div className="mt-6 grid gap-5 sm:grid-cols-2">
+                {poolRules.map((item, i) => (
+                  <RuleTile
+                    key={item.title}
+                    icon={item.icon}
+                    title={item.title}
+                    description={item.description}
+                    delay={i * 0.04}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 

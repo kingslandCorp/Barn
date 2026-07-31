@@ -3,8 +3,7 @@ import { Fraunces, Work_Sans } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { siteConfig } from '@/lib/content';
-
+import { siteConfig, sitePhotos } from '@/lib/content';
 const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
@@ -12,16 +11,14 @@ const fraunces = Fraunces({
   style: ['normal', 'italic'],
   display: 'swap',
 });
-
 const workSans = Work_Sans({
   subsets: ['latin'],
   variable: '--font-work-sans',
   weight: ['400', '500', '600'],
   display: 'swap',
 });
-
-const siteUrl = 'https://kingsland.co.uk';
-
+const siteUrl = 'https://kingslandbarn.co.uk';
+const businessName = `${siteConfig.name} ${siteConfig.fullName}`;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
@@ -35,7 +32,21 @@ export const metadata: Metadata = {
     'Kingsland Barn',
     'holiday cottage with pool Wales',
     'Welsh coast holiday let',
+    'South Wales holiday cottage',
+    'dog friendly holiday cottage Wales',
+    'self catering Vale of Glamorgan',
   ],
+  alternates: {
+    canonical: siteUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   openGraph: {
     title: `${siteConfig.name} — Luxury Countryside Holiday Let`,
     description: siteConfig.metaDescription,
@@ -43,11 +54,20 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: 'en_GB',
     type: 'website',
+    images: [
+      {
+        url: sitePhotos.hero.src,
+        width: sitePhotos.hero.width,
+        height: sitePhotos.hero.height,
+        alt: sitePhotos.hero.alt,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${siteConfig.name} — ${siteConfig.region}`,
     description: siteConfig.metaDescription,
+    images: [sitePhotos.hero.src],
   },
   icons: {
     icon: [
@@ -59,12 +79,13 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
 };
-
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LodgingBusiness',
-  name: siteConfig.fullName,
+  name: businessName,
   description: siteConfig.metaDescription,
+  url: siteUrl,
+  image: `${siteUrl}${sitePhotos.hero.src}`,
   email: siteConfig.email,
   address: {
     '@type': 'PostalAddress',
@@ -73,11 +94,13 @@ const jsonLd = {
   },
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: 'Heated outdoor pool', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Wood burner', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Woodland walks', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Countryside views', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Dog friendly', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Wi-Fi', value: true },
   ],
 };
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-GB" className={`${fraunces.variable} ${workSans.variable}`}>

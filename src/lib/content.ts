@@ -914,6 +914,43 @@ export const poolRules: { icon: string; title: string; description: string }[] =
   },
 ];
 
+export const localSupermarkets: {
+  name: string;
+  mapQuery: string;
+  image?: { src: string; width: number; height: number; alt: string };
+}[] = [
+  {
+    name: 'Waitrose, Cowbridge',
+    mapQuery: 'Waitrose, Cowbridge, Wales',
+    image: {
+      src: '/images/waitrose-cowbridge.jpg',
+      width: 800,
+      height: 600,
+      alt: 'Waitrose supermarket in Cowbridge',
+    },
+  },
+  {
+    name: 'Co-op, St Athan',
+    mapQuery: 'Co-op, St Athan, Wales',
+    image: {
+      src: '/images/coop-st-athan.jpg',
+      width: 800,
+      height: 600,
+      alt: 'Co-op supermarket in St Athan',
+    },
+  },
+  {
+    name: 'Filco, Llantwit Major',
+    mapQuery: 'Filco, Llantwit Major, Wales',
+    image: {
+      src: '/images/filco-llantwit.jpg',
+      width: 800,
+      height: 600,
+      alt: 'Filco Foodhall in Llantwit Major',
+    },
+  },
+];
+
 export const departureChecklist: { icon: string; title: string; description: string }[] = [
   { icon: 'Utensils', title: 'Dishwasher', description: 'Please empty it and leave it switched off.' },
   { icon: 'Lightbulb', title: 'Lights', description: 'Turn off all lights around the property.' },

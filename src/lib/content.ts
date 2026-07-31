@@ -588,6 +588,12 @@ export const cardiffEvents: CardiffEvent[] = [
     description:
       'An undercover ice rink, big wheel, funfair and festive market — a Cardiff Christmas tradition. Exact 2026/27 dates confirmed closer to the time.',
     url: 'https://cardiffbay.co.uk/listings/cardiff-winter-wonderland/',
+    image: {
+      src: '/images/winter.jpg',
+      width: 600,
+      height: 450,
+      alt: 'Cardiff Winter Wonderland ice rink and festive lights',
+    },
   },
   {
     name: 'Wales v Australia',

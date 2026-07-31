@@ -81,9 +81,9 @@ export default function ExplorePage() {
             </p>
           </Reveal>
           <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {dayTrips.map((spot, i) => (
-              <Reveal key={spot.name} delay={i * 0.05} className="h-full">
-                <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white/70 shadow-card">
+            {dayTrips.map((spot, i) => {
+              const cardInner = (
+                <div className="flex h-full flex-col overflow-hidden rounded-3xl bg-white/70 shadow-card transition-transform hover:-translate-y-1">
                   {spot.image ? (
                     <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Image
@@ -102,10 +102,25 @@ export default function ExplorePage() {
                     <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/65">
                       {spot.description}
                     </p>
+                    {spot.url && (
+                      <p className="mt-3 text-xs font-medium text-coast">Find out more →</p>
+                    )}
                   </div>
                 </div>
-              </Reveal>
-            ))}
+              );
+
+              return (
+                <Reveal key={spot.name} delay={i * 0.05} className="h-full">
+                  {spot.url ? (
+                    <a href={spot.url} target="_blank" rel="noopener noreferrer" className="block h-full">
+                      {cardInner}
+                    </a>
+                  ) : (
+                    cardInner
+                  )}
+                </Reveal>
+              );
+            })}
           </div>
           <Reveal delay={0.15}>
             <div className="mt-10 flex justify-center">

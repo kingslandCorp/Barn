@@ -458,14 +458,14 @@ export type DayOutSpot = {
 
 export const dayTrips: DayOutSpot[] = [
   {
-    name: 'Cardiff Castle Events',
+    name: 'Cefn Mably Farm Park',
     description:
-      "From summer festivals to major touring concerts, the castle grounds come alive after dark — check what's on before you visit.",
+      'A big hit with younger ones — friendly farm animals, an indoor fun house, and plenty of space to run around whatever the weather.',
     image: {
-      src: '/images/Castle.jpg',
-      width: 547,
-      height: 365,
-      alt: 'A concert crowd at Cardiff Castle at dusk',
+      src: '/images/Cefn.jpg',
+      width: 307,
+      height: 163,
+      alt: 'Cefn Mably Farm Park, aerial view',
     },
   },
   {
@@ -513,6 +513,8 @@ export type CardiffEvent = {
   name: string;
   category: CardiffEventCategory;
   date: string;
+  // Used purely to sort this list chronologically — not displayed.
+  sortDate: string; // ISO format YYYY-MM-DD
   venue: string;
   description: string;
   url: string;
@@ -522,78 +524,30 @@ export type CardiffEvent = {
     height: number;
     alt: string;
   };
+  // Filename to add to public/images once a properly licensed photo is available —
+  // shown as a clearly labelled placeholder in the meantime rather than a broken image.
+  placeholderImage?: string;
 };
 
 // Real events, checked at time of writing — dates for recurring annual events
 // can shift, so it's worth a periodic re-check against each official site.
+// Kept in chronological order by sortDate.
 export const cardiffEvents: CardiffEvent[] = [
-  {
-    name: 'Wales v Ireland',
-    category: 'Rugby & Internationals',
-    date: 'Saturday 20 February 2027',
-    venue: 'Principality Stadium',
-    description: 'Six Nations Championship — Wales host Ireland in Cardiff.',
-    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-  },
-  {
-    name: 'Wales v England',
-    category: 'Rugby & Internationals',
-    date: 'Saturday 6 March 2027',
-    venue: 'Principality Stadium',
-    description: 'Six Nations Championship — the Anglo-Welsh clash returns to Cardiff.',
-    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-  },
   {
     name: 'FA Community Shield',
     category: 'Big Events & Concerts',
     date: 'Sunday 16 August 2026',
+    sortDate: '2026-08-16',
     venue: 'Principality Stadium',
     description: "Arsenal v Manchester City — English football's traditional season curtain-raiser.",
     url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
-  },
-  {
-    name: 'UB40 feat. Ali Campbell',
-    category: 'Big Events & Concerts',
-    date: 'Wednesday 9 December 2026',
-    venue: 'Utilita Arena Cardiff',
-    description: 'The reggae legends bring their biggest hits to the arena stage.',
-    url: 'https://www.utilitaarenacardiff.co.uk/',
-  },
-  {
-    name: 'Morrissey',
-    category: 'Big Events & Concerts',
-    date: 'Thursday 10 December 2026',
-    venue: 'Utilita Arena Cardiff',
-    description: 'The former Smiths frontman brings his solo tour to Cardiff.',
-    url: 'https://www.utilitaarenacardiff.co.uk/',
-  },
-  {
-    name: 'Gabrielle',
-    category: 'Big Events & Concerts',
-    date: 'Saturday 17 April 2027',
-    venue: 'Utilita Arena Cardiff',
-    description: "The Brit Award-winning singer performs her classic hits live.",
-    url: 'https://www.utilitaarenacardiff.co.uk/',
-  },
-  {
-    name: "What's On at Cardiff Castle",
-    category: 'Cardiff Castle',
-    date: 'Ongoing — check current listings',
-    venue: 'Cardiff Castle',
-    description:
-      'A rolling programme of summer concerts, family events and outdoor cinema in the castle grounds throughout the year.',
-    url: 'https://www.cardiffcastle.com/events/',
-    image: {
-      src: '/images/Castle.jpg',
-      width: 547,
-      height: 365,
-      alt: 'A concert crowd at Cardiff Castle at dusk',
-    },
+    placeholderImage: 'jamhead1.jpg',
   },
   {
     name: 'Cardiff Half Marathon',
     category: 'Festivals',
     date: 'Sunday 4 October 2026',
+    sortDate: '2026-10-04',
     venue: 'Starts at Cardiff Castle',
     description:
       "Wales' largest mass-participation event — a flat, fast route past the city's best-known landmarks.",
@@ -606,13 +560,110 @@ export const cardiffEvents: CardiffEvent[] = [
     },
   },
   {
+    name: 'Wales v Japan',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 7 November 2026',
+    sortDate: '2026-11-07',
+    venue: 'Principality Stadium',
+    description: 'Nations Championship — the first of three home autumn fixtures for Wales.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+    placeholderImage: 'jamhead2.jpg',
+  },
+  {
+    name: 'Wales v New Zealand',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 14 November 2026',
+    sortDate: '2026-11-14',
+    venue: 'Principality Stadium',
+    description: 'Nations Championship — Wales take on the All Blacks in Cardiff.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+    placeholderImage: 'jamhead3.jpg',
+  },
+  {
     name: 'Cardiff Winter Wonderland',
     category: 'Festivals',
     date: 'Expected mid-November 2026 – early January 2027',
+    sortDate: '2026-11-15',
     venue: 'Cardiff Bay & Cardiff Castle grounds',
     description:
       'An undercover ice rink, big wheel, funfair and festive market — a Cardiff Christmas tradition. Exact 2026/27 dates confirmed closer to the time.',
     url: 'https://cardiffbay.co.uk/listings/cardiff-winter-wonderland/',
+  },
+  {
+    name: 'Wales v Australia',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 21 November 2026',
+    sortDate: '2026-11-21',
+    venue: 'Principality Stadium',
+    description: "Nations Championship — Wales close out their home autumn series against the Wallabies.",
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+    placeholderImage: 'jamhead4.jpg',
+  },
+  {
+    name: 'UB40 feat. Ali Campbell',
+    category: 'Big Events & Concerts',
+    date: 'Wednesday 9 December 2026',
+    sortDate: '2026-12-09',
+    venue: 'Utilita Arena Cardiff',
+    description: 'The reggae legends bring their biggest hits to the arena stage.',
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+    placeholderImage: 'jamhead5.jpg',
+  },
+  {
+    name: 'Morrissey',
+    category: 'Big Events & Concerts',
+    date: 'Thursday 10 December 2026',
+    sortDate: '2026-12-10',
+    venue: 'Utilita Arena Cardiff',
+    description: 'The former Smiths frontman brings his solo tour to Cardiff.',
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+    placeholderImage: 'jamhead6.jpg',
+  },
+  {
+    name: 'Wales v Ireland',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 20 February 2027',
+    sortDate: '2027-02-20',
+    venue: 'Principality Stadium',
+    description: 'Six Nations Championship — Wales host Ireland in Cardiff.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+    placeholderImage: 'jamhead7.jpg',
+  },
+  {
+    name: 'Wales v England',
+    category: 'Rugby & Internationals',
+    date: 'Saturday 6 March 2027',
+    sortDate: '2027-03-06',
+    venue: 'Principality Stadium',
+    description: 'Six Nations Championship — the Anglo-Welsh clash returns to Cardiff.',
+    url: 'https://www.principalitystadium.wales/events-and-ticket-information/',
+    placeholderImage: 'jamhead8.jpg',
+  },
+  {
+    name: 'Gabrielle',
+    category: 'Big Events & Concerts',
+    date: 'Saturday 17 April 2027',
+    sortDate: '2027-04-17',
+    venue: 'Utilita Arena Cardiff',
+    description: "The Brit Award-winning singer performs her classic hits live.",
+    url: 'https://www.utilitaarenacardiff.co.uk/',
+    placeholderImage: 'jamhead9.jpg',
+  },
+  {
+    name: "What's On at Cardiff Castle",
+    category: 'Cardiff Castle',
+    date: 'Ongoing — check current listings',
+    sortDate: '9999-12-31',
+    venue: 'Cardiff Castle',
+    description:
+      'A rolling programme of summer concerts, family events and outdoor cinema in the castle grounds throughout the year.',
+    url: 'https://www.cardiffcastle.com/events/',
+    image: {
+      src: '/images/Castle.jpg',
+      width: 547,
+      height: 365,
+      alt: 'A concert crowd at Cardiff Castle at dusk',
+    },
   },
 ];
 

@@ -245,7 +245,7 @@ export const stayHighlights: {
   },
   {
     icon: 'Trees',
-    title: 'Countryside walks',
+    title: 'Countryside views',
     description: 'Rolling fields, quiet lanes and hedgerows, right from the front door.',
   },
   {

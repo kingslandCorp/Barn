@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { MapPin, BookOpen, LogOut } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
@@ -13,6 +14,7 @@ import {
   siteConfig,
   houseRules,
   poolRules,
+  localSupermarkets,
 } from '@/lib/content';
 
 type TabId = 'finding-us' | 'handbook' | 'before-you-leave';
@@ -41,6 +43,45 @@ function RuleTile({
       </div>
       <h4 className="mt-4 font-display text-base text-ink">{title}</h4>
       <p className="mt-2 text-sm leading-relaxed text-ink/65">{description}</p>
+    </Reveal>
+  );
+}
+
+function SupermarketTile({
+  name,
+  mapQuery,
+  image,
+  delay,
+}: {
+  name: string;
+  mapQuery: string;
+  image?: { src: string; width: number; height: number; alt: string };
+  delay: number;
+}) {
+  const href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+  return (
+    <Reveal delay={delay}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative block h-48 w-full overflow-hidden rounded-3xl bg-stone/20 shadow-card"
+      >
+        {image && (
+          <Image
+            src={image.src}
+            alt={image.alt}
+            fill
+            sizes="(min-width: 640px) 33vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-ink/0" />
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <p className="font-display text-lg italic text-cream">{name}</p>
+          <p className="text-xs text-cream/75">Tap to open in Maps</p>
+        </div>
+      </a>
     </Reveal>
   );
 }
@@ -153,6 +194,23 @@ export default function GuestTabs() {
                     icon={item.icon}
                     title={item.title}
                     description={item.description}
+                    delay={i * 0.04}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Supermarkets */}
+            <div className="mt-14">
+              <h3 className="font-display text-xl text-ink">Nearby Supermarkets</h3>
+              <p className="mt-2 text-sm text-ink/60">Tap a tile to open directions in Maps.</p>
+              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3">
+                {localSupermarkets.map((shop, i) => (
+                  <SupermarketTile
+                    key={shop.name}
+                    name={shop.name}
+                    mapQuery={shop.mapQuery}
+                    image={shop.image}
                     delay={i * 0.04}
                   />
                 ))}

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { Trophy, Landmark, Music, PartyPopper, ArrowUpRight } from 'lucide-react';
+import { Trophy, Landmark, Music, PartyPopper, ArrowUpRight, ImageOff } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import { cardiffEvents, siteConfig, type CardiffEventCategory } from '@/lib/content';
 
@@ -20,7 +20,7 @@ const categoryStyles: Record<
 };
 
 // Original, generic abstract artwork — no real people, teams or branding —
-// used only when an event doesn't have one of our own photos attached.
+// used only when an event has neither a real photo nor a named placeholder yet.
 function EventArt({ category }: { category: CardiffEventCategory }) {
   if (category === 'Rugby & Internationals') {
     return (
@@ -53,7 +53,6 @@ function EventArt({ category }: { category: CardiffEventCategory }) {
       </svg>
     );
   }
-  // Festivals (e.g. Winter Wonderland)
   return (
     <svg viewBox="0 0 400 300" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
       <rect width="400" height="300" className="fill-ink" />
@@ -81,6 +80,21 @@ function EventArt({ category }: { category: CardiffEventCategory }) {
       </g>
       <rect x="0" y="260" width="400" height="40" className="fill-cream/95" />
     </svg>
+  );
+}
+
+// A clearly designed "photo pending" tile — shows exactly which file to add,
+// rather than a browser's default broken-image icon.
+function PlaceholderArt({ filename }: { filename: string }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-2 bg-stone/10 px-4 text-center">
+      <ImageOff size={26} strokeWidth={1.5} className="text-ink/25" />
+      <p className="text-xs text-ink/40">
+        Add <span className="font-mono text-ink/55">{filename}</span> to
+        <br />
+        <span className="font-mono text-ink/55">public/images</span>
+      </p>
+    </div>
   );
 }
 
@@ -125,6 +139,8 @@ export default function EventsPage() {
                         sizes="(min-width: 1024px) 33vw, 50vw"
                         className="object-cover"
                       />
+                    ) : event.placeholderImage ? (
+                      <PlaceholderArt filename={event.placeholderImage} />
                     ) : (
                       <EventArt category={event.category} />
                     )}

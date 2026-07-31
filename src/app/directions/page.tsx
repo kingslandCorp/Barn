@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Reveal from '@/components/Reveal';
-import SectionHeading from '@/components/SectionHeading';
 import { mapEmbedSrc, what3words, parkingInfo, siteConfig } from '@/lib/content';
 
 export const metadata: Metadata = {
@@ -22,8 +21,7 @@ export default function LocationPage() {
 
       {/* Map */}
       <section className="mx-auto mt-10 max-w-content px-5 sm:px-8 lg:px-12">
-        <SectionHeading eyebrow="Getting Here" title="Find us on the map" />
-        <Reveal delay={0.1} className="mt-8 overflow-hidden rounded-3xl shadow-card">
+        <Reveal delay={0.1} className="overflow-hidden rounded-3xl shadow-card">
           <iframe
             src={mapEmbedSrc}
             width="100%"

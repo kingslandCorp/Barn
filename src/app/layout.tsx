@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Fraunces, Work_Sans } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -113,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Header />
         <main>{children}</main>
         <Footer />
+        <GoogleAnalytics gaId="G-W2MC7V6CZE" />
       </body>
     </html>
   );

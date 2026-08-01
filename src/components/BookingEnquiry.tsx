@@ -1,44 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { CalendarCheck } from 'lucide-react';
+import AvailabilityCalendar from './AvailabilityCalendar';
+
+function formatDate(iso: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 
 export default function BookingEnquiry() {
-  const [checkIn, setCheckIn] = useState('');
-  const [checkOut, setCheckOut] = useState('');
+  const [checkIn, setCheckIn] = useState<string | null>(null);
+  const [checkOut, setCheckOut] = useState<string | null>(null);
   const [name, setName] = useState('');
+
+  const handleDatesChange = useCallback((newCheckIn: string | null, newCheckOut: string | null) => {
+    setCheckIn(newCheckIn);
+    setCheckOut(newCheckOut);
+  }, []);
 
   const subject = encodeURIComponent('Booking enquiry — The Family Barn');
   const body = encodeURIComponent(
     `Hi,\n\nI'd like to enquire about availability for:\n\nCheck-in: ${
-      checkIn || '(please add)'
-    }\nCheck-out: ${checkOut || '(please add)'}\nName: ${name || '(please add)'}\n\nThanks!`
+      formatDate(checkIn) || '(please add)'
+    }\nCheck-out: ${formatDate(checkOut) || '(please add)'}\nName: ${name || '(please add)'}\n\nThanks!`
   );
   const mailtoHref = `mailto:booking@kingslandbarn.co.uk?subject=${subject}&body=${body}`;
 
   return (
     <div className="rounded-3xl bg-white/80 p-6 shadow-card sm:p-8">
-      <div className="grid gap-5 sm:grid-cols-2">
-        <label className="block min-w-0">
-          <span className="text-sm font-medium text-ink/70">Check-in</span>
-          <input
-            type="date"
-            value={checkIn}
-            onChange={(e) => setCheckIn(e.target.value)}
-            className="mt-1 w-full min-w-0 rounded-xl border border-stone/30 bg-white px-4 py-2.5 text-sm text-ink"
-          />
-        </label>
-        <label className="block min-w-0">
-          <span className="text-sm font-medium text-ink/70">Check-out</span>
-          <input
-            type="date"
-            value={checkOut}
-            onChange={(e) => setCheckOut(e.target.value)}
-            className="mt-1 w-full min-w-0 rounded-xl border border-stone/30 bg-white px-4 py-2.5 text-sm text-ink"
-          />
-        </label>
+      <p className="text-sm font-medium text-ink/70">Select your dates</p>
+      <div className="mt-2">
+        <AvailabilityCalendar onChange={handleDatesChange} />
       </div>
-      <label className="mt-5 block min-w-0">
+
+      <label className="mt-6 block min-w-0">
         <span className="text-sm font-medium text-ink/70">Your name</span>
         <input
           type="text"

@@ -251,7 +251,7 @@ export default function HomePage() {
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
           <video
             ref={dayBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[20px]"
             src="/videos/day-to-sunset.mp4"
             preload="auto"
             muted
@@ -313,7 +313,7 @@ export default function HomePage() {
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
           <video
             ref={nightBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[20px]"
             src="/videos/sunset-to-night.mp4"
             preload="auto"
             muted

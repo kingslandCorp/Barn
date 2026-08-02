@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Waves, Flame, Trees, Wifi, PawPrint } from 'lucide-react';
@@ -113,6 +113,52 @@ function IconTile({
 
 export default function HomePage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const dayVideoRef = useRef<HTMLVideoElement>(null);
+  const nightVideoRef = useRef<HTMLVideoElement>(null);
+
+  // Keep the two videos locked to the same clock: wait until both can actually
+  // play, start them together, and force both back to frame 0 in lockstep every
+  // time the day video finishes — rather than trusting two independent native
+  // autoplay/loop timers not to drift apart from each other over time.
+  useEffect(() => {
+    const day = dayVideoRef.current;
+    const night = nightVideoRef.current;
+    if (!day || !night) return;
+
+    let dayReady = false;
+    let nightReady = false;
+
+    const startTogether = () => {
+      if (!dayReady || !nightReady) return;
+      day.currentTime = 0;
+      night.currentTime = 0;
+      Promise.all([day.play(), night.play()]).catch(() => {});
+    };
+
+    const onDayReady = () => {
+      dayReady = true;
+      startTogether();
+    };
+    const onNightReady = () => {
+      nightReady = true;
+      startTogether();
+    };
+    const resync = () => {
+      day.currentTime = 0;
+      night.currentTime = 0;
+      Promise.all([day.play(), night.play()]).catch(() => {});
+    };
+
+    day.addEventListener('canplay', onDayReady, { once: true });
+    night.addEventListener('canplay', onNightReady, { once: true });
+    day.addEventListener('ended', resync);
+
+    return () => {
+      day.removeEventListener('canplay', onDayReady);
+      night.removeEventListener('canplay', onNightReady);
+      day.removeEventListener('ended', resync);
+    };
+  }, []);
 
   const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
     const photos: LightboxPhoto[] = [];
@@ -177,24 +223,13 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* Video showcase — full-bleed, day film then night film stacked beneath it */}
+      {/* Day video — full-bleed */}
       <section className="w-full">
-        <div className="h-64 w-full sm:h-80 md:h-[460px]">
+        <div className="h-[205px] w-full sm:h-[256px] md:h-[368px]">
           <video
+            ref={dayVideoRef}
             className="h-full w-full object-cover"
             src="/videos/day-to-sunset.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-          />
-        </div>
-        <div className="h-64 w-full sm:h-80 md:h-[460px]">
-          <video
-            className="h-full w-full object-cover"
-            src="/videos/sunset-to-night.mp4"
-            autoPlay
-            loop
             muted
             playsInline
           />
@@ -229,6 +264,19 @@ export default function HomePage() {
               onClick={() => setLightboxIndex(photoIndex(sitePhotos.warmWelcome.src))}
             />
           </Reveal>
+        </div>
+      </section>
+
+      {/* Night video — full-bleed, sits right after "Somewhere to properly switch off" */}
+      <section className="w-full">
+        <div className="h-[205px] w-full sm:h-[256px] md:h-[368px]">
+          <video
+            ref={nightVideoRef}
+            className="h-full w-full object-cover"
+            src="/videos/sunset-to-night.mp4"
+            muted
+            playsInline
+          />
         </div>
       </section>
 

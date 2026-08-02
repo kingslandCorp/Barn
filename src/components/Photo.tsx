@@ -10,6 +10,7 @@ export default function Photo({
   className = '',
   priority = false,
   sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
+  onClick,
 }: {
   src: string;
   alt: string;
@@ -20,11 +21,30 @@ export default function Photo({
   className?: string;
   priority?: boolean;
   sizes?: string;
+  onClick?: () => void;
 }) {
+  const clickable = Boolean(onClick);
+
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl bg-stone/20 ${className}`}
+      className={`group relative overflow-hidden rounded-3xl bg-stone/20 ${
+        clickable ? 'cursor-pointer' : ''
+      } ${className}`}
       style={{ aspectRatio: `${width} / ${height}` }}
+      onClick={onClick}
+      role={clickable ? 'button' : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      aria-label={clickable ? `View ${label || alt} full size` : undefined}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick?.();
+              }
+            }
+          : undefined
+      }
     >
       <Image
         src={src}
@@ -32,7 +52,9 @@ export default function Photo({
         fill
         priority={priority}
         sizes={sizes}
-        className="object-cover"
+        className={`object-cover ${
+          clickable ? 'transition-transform duration-500 group-hover:scale-105' : ''
+        }`}
       />
       {(label || caption) && (
         <>

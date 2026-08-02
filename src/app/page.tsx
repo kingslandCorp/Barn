@@ -10,7 +10,7 @@ import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
 import BookingEnquiry from '@/components/BookingEnquiry';
 import Lightbox, { type LightboxPhoto } from '@/components/Lightbox';
-import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
+import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig, poolPhotos } from '@/lib/content';
 
 const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
 
@@ -116,10 +116,12 @@ export default function HomePage() {
   const dayVideoRef = useRef<HTMLVideoElement>(null);
   const nightVideoRef = useRef<HTMLVideoElement>(null);
 
-  // Keep the two videos locked to the same clock: wait until both can actually
-  // play, start them together, and force both back to frame 0 in lockstep every
-  // time the day video finishes — rather than trusting two independent native
-  // autoplay/loop timers not to drift apart from each other over time.
+  // Keep the two videos locked to the same clock. The day video (near the top)
+  // buffers fast; the night video sits further down the page and browsers are
+  // slower to fetch video that isn't near the viewport yet — so we let the day
+  // video start on its own as soon as it's ready (no dead black box up top),
+  // then hard-resync both to frame 0 together the moment the night video catches
+  // up. After that, every loop boundary forces both back to 0 in lockstep.
   useEffect(() => {
     const day = dayVideoRef.current;
     const night = nightVideoRef.current;
@@ -128,8 +130,7 @@ export default function HomePage() {
     let dayReady = false;
     let nightReady = false;
 
-    const startTogether = () => {
-      if (!dayReady || !nightReady) return;
+    const syncBoth = () => {
       day.currentTime = 0;
       night.currentTime = 0;
       Promise.all([day.play(), night.play()]).catch(() => {});
@@ -137,17 +138,14 @@ export default function HomePage() {
 
     const onDayReady = () => {
       dayReady = true;
-      startTogether();
+      if (nightReady) syncBoth();
+      else day.play().catch(() => {});
     };
     const onNightReady = () => {
       nightReady = true;
-      startTogether();
+      if (dayReady) syncBoth();
     };
-    const resync = () => {
-      day.currentTime = 0;
-      night.currentTime = 0;
-      Promise.all([day.play(), night.play()]).catch(() => {});
-    };
+    const resync = () => syncBoth();
 
     day.addEventListener('canplay', onDayReady, { once: true });
     night.addEventListener('canplay', onNightReady, { once: true });
@@ -181,6 +179,20 @@ export default function HomePage() {
           label: item.title,
           caption: item.description,
         });
+        // Extra pool angles aren't shown as their own tile on the page, but
+        // browsing forward from the pool photo in the gallery reveals them.
+        if (item.image.src === poolPhotos.main.src) {
+          poolPhotos.minor.forEach((extra) => {
+            photos.push({
+              src: extra.src,
+              alt: extra.alt,
+              width: extra.width,
+              height: extra.height,
+              label: item.title,
+              caption: 'Another angle of the pool',
+            });
+          });
+        }
       }
     });
 
@@ -230,6 +242,7 @@ export default function HomePage() {
             ref={dayVideoRef}
             className="h-full w-full object-cover"
             src="/videos/day-to-sunset.mp4"
+            preload="auto"
             muted
             playsInline
           />
@@ -274,6 +287,7 @@ export default function HomePage() {
             ref={nightVideoRef}
             className="h-full w-full object-cover"
             src="/videos/sunset-to-night.mp4"
+            preload="auto"
             muted
             playsInline
           />

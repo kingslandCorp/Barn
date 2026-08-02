@@ -1,16 +1,36 @@
 import type { Metadata } from 'next';
 import Reveal from '@/components/Reveal';
-import { mapEmbedSrc, what3words, parkingInfo, siteConfig } from '@/lib/content';
-
+import SectionHeading from '@/components/SectionHeading';
+import Photo from '@/components/Photo';
+import { mapEmbedSrc, what3words, parkingInfo, siteConfig, viewPhotos } from '@/lib/content';
 export const metadata: Metadata = {
   title: 'Location',
   description: `Find ${siteConfig.fullName} on the map, plus what3words and parking.`,
 };
-
 export default function LocationPage() {
   return (
     <div className="pb-24">
+      {/* The Views */}
       <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
+        <SectionHeading eyebrow="The Views" title="Right outside the door" />
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
+          {viewPhotos.map((item, i) => (
+            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
+              <Photo
+                src={item.src}
+                alt={item.label}
+                width={item.width}
+                height={item.height}
+                label={item.label}
+                caption={item.caption}
+                className="h-40 sm:h-52"
+              />
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto mt-14 max-w-content px-5 sm:mt-20 sm:px-8 lg:px-12">
         <Reveal>
           <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">Location</p>
           <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
@@ -18,7 +38,6 @@ export default function LocationPage() {
           </h1>
         </Reveal>
       </section>
-
       {/* Map */}
       <section className="mx-auto mt-10 max-w-content px-5 sm:px-8 lg:px-12">
         <Reveal delay={0.1} className="overflow-hidden rounded-3xl shadow-card">
@@ -32,7 +51,6 @@ export default function LocationPage() {
           />
         </Reveal>
       </section>
-
       {/* What3Words + Parking */}
       <section className="mx-auto mt-12 max-w-content px-5 sm:px-8 lg:px-12">
         <div className="grid gap-6 sm:grid-cols-2">

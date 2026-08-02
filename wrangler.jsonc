@@ -23,7 +23,7 @@
   "kv_namespaces": [
     {
       "binding": "GUEST_LOGS",
-      "id": "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+      "id": "guest-logs"
     }
   ]
 }

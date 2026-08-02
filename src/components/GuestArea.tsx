@@ -40,6 +40,16 @@ export default function GuestArea() {
     } catch {
       // ignore storage failures — still unlock for this session
     }
+
+    // Log this login server-side. Fire-and-forget: logging failing (or being
+    // unconfigured) should never stop a guest getting into the information
+    // they need.
+    fetch('/api/guest-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: trimmed }),
+    }).catch(() => {});
+
     setGuestEmail(trimmed);
   };
 

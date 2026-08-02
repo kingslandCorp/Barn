@@ -15,7 +15,8 @@
     "react-dom": "19.0.0",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
-    "@next/third-parties": "latest"
+    "@next/third-parties": "latest",
+    "@opennextjs/cloudflare": "^1.20.2"
   },
   "devDependencies": {
     "typescript": "^5.7.3",

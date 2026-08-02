@@ -35,18 +35,11 @@ function HighlightPhotoTile({
 }) {
   const Icon = iconMap[icon as keyof typeof iconMap];
   return (
-    <div
-      className="group relative h-64 w-full cursor-pointer overflow-hidden rounded-3xl bg-stone/20"
+    <button
+      type="button"
       onClick={onClick}
-      role="button"
-      tabIndex={0}
       aria-label={`View ${label} full size`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick?.();
-        }
-      }}
+      className="group relative block h-64 w-full cursor-pointer appearance-none overflow-hidden rounded-3xl border-0 bg-stone/20 p-0 text-left"
     >
       <Image
         src={src}
@@ -63,7 +56,7 @@ function HighlightPhotoTile({
         <p className="font-display text-lg italic text-cream">{label}</p>
         <p className="text-xs text-cream/80">{caption}</p>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -86,13 +79,7 @@ function WoodlandArt() {
       ))}
       <ellipse cx="200" cy="120" rx="90" ry="60" className="fill-sage/50" />
       {Array.from({ length: 10 }).map((_, i) => (
-        <circle
-          key={i}
-          cx={40 + i * 35}
-          cy={90 + (i % 3) * 14}
-          r="3"
-          className="fill-gold/50"
-        />
+        <circle key={i} cx={40 + i * 35} cy={90 + (i % 3) * 14} r="3" className="fill-gold/50" />
       ))}
       <rect x="0" y="270" width="400" height="30" className="fill-sage/30" />
     </svg>
@@ -127,8 +114,6 @@ function IconTile({
 export default function HomePage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Every real photo on the homepage, in page order, feeding one continuous browsable gallery.
-  // Icon-only tiles and the illustrated woodland artwork are deliberately excluded — no real photo behind them.
   const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
     const photos: LightboxPhoto[] = [];
 
@@ -192,8 +177,32 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* A Warm Welcome */}
-      <section className="relative overflow-hidden py-8 sm:py-14">
+      {/* Video showcase — full-bleed, day film then night film stacked beneath it */}
+      <section className="w-full">
+        <div className="h-64 w-full sm:h-80 md:h-[460px]">
+          <video
+            className="h-full w-full object-cover"
+            src="/videos/day-to-sunset.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        </div>
+        <div className="h-64 w-full sm:h-80 md:h-[460px]">
+          <video
+            className="h-full w-full object-cover"
+            src="/videos/sunset-to-night.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+        </div>
+      </section>
+
+      {/* A Warm Welcome — height now driven by the text, photo reduced and unlabelled */}
+      <section className="relative overflow-hidden py-8 sm:py-10">
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
             src={sitePhotos.warmWelcome.src}
@@ -204,7 +213,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/35 via-45% to-transparent" />
         </div>
 
-        <div className="relative z-10 mx-auto grid max-w-content gap-12 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-16 lg:px-12">
+        <div className="relative z-10 mx-auto grid max-w-content items-center gap-8 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-12 lg:px-12">
           <SectionHeading
             eyebrow="A Warm Welcome"
             title="Somewhere to properly switch off"
@@ -216,8 +225,7 @@ export default function HomePage() {
               alt={sitePhotos.warmWelcome.alt}
               width={sitePhotos.warmWelcome.width}
               height={sitePhotos.warmWelcome.height}
-              label={sitePhotos.warmWelcome.label}
-              className="max-h-[460px]"
+              className="max-h-[220px]"
               onClick={() => setLightboxIndex(photoIndex(sitePhotos.warmWelcome.src))}
             />
           </Reveal>
@@ -282,7 +290,6 @@ export default function HomePage() {
       <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
         <SectionHeading eyebrow="Gallery" title="A closer look inside" />
 
-        {/* Row 1 — two hero images */}
         <div className="mt-14 grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
           {galleryItems.slice(0, 2).map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
@@ -299,7 +306,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Row 2 — four medium images, all matched height */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
           {galleryItems.slice(2, 6).map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
@@ -310,14 +316,13 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="h-56 w-full sm:h-64"
+                className="h-56 sm:h-64"
                 onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
           ))}
         </div>
 
-        {/* Row 3 — three matched-height images, plus one stacked pair filling the fourth slot */}
         <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4">
           {galleryItems.slice(6, 9).map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
@@ -328,7 +333,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="h-56 w-full sm:h-64"
+                className="h-56 sm:h-64"
                 onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
@@ -343,7 +348,7 @@ export default function HomePage() {
                   height={item.height}
                   label={item.label}
                   caption={item.caption}
-                  className="h-[106px] w-full sm:h-[120px]"
+                  className="h-[106px] sm:h-[120px]"
                   onClick={() => setLightboxIndex(photoIndex(item.src))}
                 />
               </Reveal>
@@ -365,7 +370,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
-                className="h-40 w-full sm:h-52"
+                className="h-40 sm:h-52"
                 onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>

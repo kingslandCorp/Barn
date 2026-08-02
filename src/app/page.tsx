@@ -242,7 +242,7 @@ export default function HomePage() {
             ref={dayBlurRef}
             className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/day-to-sunset.mp4"
-            preload="auto"
+            preload="metadata"
             muted
             playsInline
             aria-hidden="true"
@@ -304,7 +304,7 @@ export default function HomePage() {
             ref={nightBlurRef}
             className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/sunset-to-night.mp4"
-            preload="auto"
+            preload="metadata"
             muted
             playsInline
             aria-hidden="true"

@@ -23,38 +23,15 @@ export default function Photo({
   sizes?: string;
   onClick?: () => void;
 }) {
-  const clickable = Boolean(onClick);
-
-  return (
-    <div
-      className={`group relative overflow-hidden rounded-3xl bg-stone/20 ${
-        clickable ? 'cursor-pointer' : ''
-      } ${className}`}
-      style={{ aspectRatio: `${width} / ${height}` }}
-      onClick={onClick}
-      role={clickable ? 'button' : undefined}
-      tabIndex={clickable ? 0 : undefined}
-      aria-label={clickable ? `View ${label || alt} full size` : undefined}
-      onKeyDown={
-        clickable
-          ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onClick?.();
-              }
-            }
-          : undefined
-      }
-    >
+  const content = (
+    <>
       <Image
         src={src}
         alt={alt}
         fill
         priority={priority}
         sizes={sizes}
-        className={`object-cover ${
-          clickable ? 'transition-transform duration-500 group-hover:scale-105' : ''
-        }`}
+        className={`object-cover ${onClick ? 'transition-transform duration-500 group-hover:scale-105' : ''}`}
       />
       {(label || caption) && (
         <>
@@ -65,6 +42,28 @@ export default function Photo({
           </div>
         </>
       )}
+    </>
+  );
+
+  const sharedClassName = `group relative block w-full overflow-hidden rounded-3xl bg-stone/20 ${className}`;
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`View ${label || alt} full size`}
+        className={`${sharedClassName} cursor-pointer appearance-none border-0 p-0 text-left`}
+        style={{ aspectRatio: `${width} / ${height}` }}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <div className={sharedClassName} style={{ aspectRatio: `${width} / ${height}` }}>
+      {content}
     </div>
   );
 }

@@ -114,6 +114,13 @@ export const viewPhotos: GalleryPhoto[] = [
     label: 'The fields',
     caption: 'Fields and hedgerows, right from the garden',
   },
+  {
+    src: '/images/llantwit-beach.jpg',
+    width: 678,
+    height: 452,
+    label: 'Llantwit beach',
+    caption: 'Layered cliffs and golden sand along the coast',
+  },
 ];
 
 export const galleryItems: GalleryPhoto[] = [

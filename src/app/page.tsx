@@ -114,7 +114,9 @@ function IconTile({
 export default function HomePage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const dayVideoRef = useRef<HTMLVideoElement>(null);
+  const dayBlurRef = useRef<HTMLVideoElement>(null);
   const nightVideoRef = useRef<HTMLVideoElement>(null);
+  const nightBlurRef = useRef<HTMLVideoElement>(null);
 
   // Keep the two videos locked to the same clock. The day video (near the top)
   // buffers fast; the night video sits further down the page and browsers are
@@ -122,24 +124,33 @@ export default function HomePage() {
   // video start on its own as soon as it's ready (no dead black box up top),
   // then hard-resync both to frame 0 together the moment the night video catches
   // up. After that, every loop boundary forces both back to 0 in lockstep.
+  // Each blurred background copy just tags along with its sharp counterpart —
+  // it's a soft, blurred fill, so it doesn't need frame-perfect alignment.
   useEffect(() => {
     const day = dayVideoRef.current;
+    const dayBlur = dayBlurRef.current;
     const night = nightVideoRef.current;
-    if (!day || !night) return;
+    const nightBlur = nightBlurRef.current;
+    if (!day || !night || !dayBlur || !nightBlur) return;
 
     let dayReady = false;
     let nightReady = false;
 
     const syncBoth = () => {
-      day.currentTime = 0;
-      night.currentTime = 0;
-      Promise.all([day.play(), night.play()]).catch(() => {});
+      [day, dayBlur, night, nightBlur].forEach((v) => {
+        v.currentTime = 0;
+      });
+      [day, dayBlur, night, nightBlur].forEach((v) => v.play().catch(() => {}));
     };
 
     const onDayReady = () => {
       dayReady = true;
-      if (nightReady) syncBoth();
-      else day.play().catch(() => {});
+      if (nightReady) {
+        syncBoth();
+      } else {
+        day.play().catch(() => {});
+        dayBlur.play().catch(() => {});
+      }
     };
     const onNightReady = () => {
       nightReady = true;
@@ -235,12 +246,21 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* Day video — full-bleed */}
+      {/* Day video — full-bleed, full frame visible, blurred stretched copy fills the sides */}
       <section className="w-full">
-        <div className="h-[205px] w-full sm:h-[256px] md:h-[368px]">
+        <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
+          <video
+            ref={dayBlurRef}
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+            src="/videos/day-to-sunset.mp4"
+            preload="auto"
+            muted
+            playsInline
+            aria-hidden="true"
+          />
           <video
             ref={dayVideoRef}
-            className="h-full w-full object-cover"
+            className="relative z-10 h-full w-full object-contain"
             src="/videos/day-to-sunset.mp4"
             preload="auto"
             muted
@@ -282,10 +302,19 @@ export default function HomePage() {
 
       {/* Night video — full-bleed, sits right after "Somewhere to properly switch off" */}
       <section className="w-full">
-        <div className="h-[205px] w-full sm:h-[256px] md:h-[368px]">
+        <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
+          <video
+            ref={nightBlurRef}
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl"
+            src="/videos/sunset-to-night.mp4"
+            preload="auto"
+            muted
+            playsInline
+            aria-hidden="true"
+          />
           <video
             ref={nightVideoRef}
-            className="h-full w-full object-cover"
+            className="relative z-10 h-full w-full object-contain"
             src="/videos/sunset-to-night.mp4"
             preload="auto"
             muted

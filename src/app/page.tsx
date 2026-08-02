@@ -10,7 +10,7 @@ import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
 import BookingEnquiry from '@/components/BookingEnquiry';
 import Lightbox, { type LightboxPhoto } from '@/components/Lightbox';
-import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig, poolPhotos } from '@/lib/content';
+import { stayHighlights, galleryItems, sitePhotos, siteConfig, poolPhotos } from '@/lib/content';
 
 const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
 
@@ -218,17 +218,6 @@ export default function HomePage() {
       });
     });
 
-    viewPhotos.forEach((item) => {
-      photos.push({
-        src: item.src,
-        alt: item.label,
-        width: item.width,
-        height: item.height,
-        label: item.label,
-        caption: item.caption,
-      });
-    });
-
     photos.push({
       src: sitePhotos.discoverTheVale.src,
       alt: sitePhotos.discoverTheVale.alt,
@@ -251,7 +240,7 @@ export default function HomePage() {
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
           <video
             ref={dayBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[20px]"
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/day-to-sunset.mp4"
             preload="auto"
             muted
@@ -313,7 +302,7 @@ export default function HomePage() {
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
           <video
             ref={nightBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[20px]"
+            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/sunset-to-night.mp4"
             preload="auto"
             muted
@@ -461,27 +450,6 @@ export default function HomePage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* The Views */}
-      <section className="mx-auto max-w-content px-5 py-8 sm:px-8 sm:py-14 lg:px-12">
-        <SectionHeading eyebrow="The Views" title="Right outside the door" />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
-          {viewPhotos.map((item, i) => (
-            <Reveal key={item.label} delay={i * 0.05} className={item.span ? 'col-span-2' : ''}>
-              <Photo
-                src={item.src}
-                alt={item.label}
-                width={item.width}
-                height={item.height}
-                label={item.label}
-                caption={item.caption}
-                className="h-40 sm:h-52"
-                onClick={() => setLightboxIndex(photoIndex(item.src))}
-              />
-            </Reveal>
-          ))}
         </div>
       </section>
 

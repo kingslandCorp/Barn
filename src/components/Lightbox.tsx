@@ -25,6 +25,9 @@ export default function Lightbox({ photos, index, onClose, onIndexChange }: Prop
   const isOpen = index !== null;
   const photo = isOpen ? photos[index] : null;
 
+  // eslint-disable-next-line no-console
+  console.log('[lightbox debug] Lightbox rendered — index prop:', index, '/ isOpen:', isOpen, '/ photo found:', Boolean(photo));
+
   const goNext = () => {
     if (index === null) return;
     onIndexChange((index + 1) % photos.length);

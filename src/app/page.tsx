@@ -1,3 +1,6 @@
+'use client';
+
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Waves, Flame, Trees, Wifi, PawPrint } from 'lucide-react';
@@ -6,6 +9,7 @@ import SectionHeading from '@/components/SectionHeading';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
 import BookingEnquiry from '@/components/BookingEnquiry';
+import Lightbox, { type LightboxPhoto } from '@/components/Lightbox';
 import { stayHighlights, galleryItems, viewPhotos, sitePhotos, siteConfig } from '@/lib/content';
 
 const iconMap = { Waves, Flame, Trees, Wifi, PawPrint };
@@ -18,6 +22,7 @@ function HighlightPhotoTile({
   label,
   caption,
   icon,
+  onClick,
 }: {
   src: string;
   alt: string;
@@ -26,11 +31,30 @@ function HighlightPhotoTile({
   label: string;
   caption: string;
   icon: string;
+  onClick?: () => void;
 }) {
   const Icon = iconMap[icon as keyof typeof iconMap];
   return (
-    <div className="relative h-64 w-full overflow-hidden rounded-3xl bg-stone/20">
-      <Image src={src} alt={alt} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
+    <div
+      className="group relative h-64 w-full cursor-pointer overflow-hidden rounded-3xl bg-stone/20"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={`View ${label} full size`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 33vw, 100vw"
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+      />
       <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/0 to-ink/0" />
       <div className="absolute left-2 top-2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-coast shadow-sm">
         <Icon size={18} strokeWidth={1.75} />
@@ -101,6 +125,69 @@ function IconTile({
 }
 
 export default function HomePage() {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  // Every real photo on the homepage, in page order, feeding one continuous browsable gallery.
+  // Icon-only tiles and the illustrated woodland artwork are deliberately excluded — no real photo behind them.
+  const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
+    const photos: LightboxPhoto[] = [];
+
+    photos.push({
+      src: sitePhotos.warmWelcome.src,
+      alt: sitePhotos.warmWelcome.alt,
+      width: sitePhotos.warmWelcome.width,
+      height: sitePhotos.warmWelcome.height,
+      label: sitePhotos.warmWelcome.label,
+    });
+
+    stayHighlights.forEach((item) => {
+      if (item.image) {
+        photos.push({
+          src: item.image.src,
+          alt: item.image.alt,
+          width: item.image.width,
+          height: item.image.height,
+          label: item.title,
+          caption: item.description,
+        });
+      }
+    });
+
+    galleryItems.forEach((item) => {
+      photos.push({
+        src: item.src,
+        alt: item.label,
+        width: item.width,
+        height: item.height,
+        label: item.label,
+        caption: item.caption,
+      });
+    });
+
+    viewPhotos.forEach((item) => {
+      photos.push({
+        src: item.src,
+        alt: item.label,
+        width: item.width,
+        height: item.height,
+        label: item.label,
+        caption: item.caption,
+      });
+    });
+
+    photos.push({
+      src: sitePhotos.discoverTheVale.src,
+      alt: sitePhotos.discoverTheVale.alt,
+      width: sitePhotos.discoverTheVale.width,
+      height: sitePhotos.discoverTheVale.height,
+      label: sitePhotos.discoverTheVale.label,
+    });
+
+    return photos;
+  }, []);
+
+  const photoIndex = (src: string) => lightboxPhotos.findIndex((p) => p.src === src);
+
   return (
     <>
       <Hero />
@@ -131,6 +218,7 @@ export default function HomePage() {
               height={sitePhotos.warmWelcome.height}
               label={sitePhotos.warmWelcome.label}
               className="max-h-[460px]"
+              onClick={() => setLightboxIndex(photoIndex(sitePhotos.warmWelcome.src))}
             />
           </Reveal>
         </div>
@@ -157,6 +245,7 @@ export default function HomePage() {
                       label={item.title}
                       caption={item.description}
                       icon={item.icon}
+                      onClick={() => setLightboxIndex(photoIndex(item.image!.src))}
                     />
                   </Reveal>
                 );
@@ -204,6 +293,7 @@ export default function HomePage() {
                 height={item.height}
                 label={item.label}
                 caption={item.caption}
+                onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
           ))}
@@ -221,6 +311,7 @@ export default function HomePage() {
                 label={item.label}
                 caption={item.caption}
                 className="h-56 w-full sm:h-64"
+                onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
           ))}
@@ -238,6 +329,7 @@ export default function HomePage() {
                 label={item.label}
                 caption={item.caption}
                 className="h-56 w-full sm:h-64"
+                onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
           ))}
@@ -252,6 +344,7 @@ export default function HomePage() {
                   label={item.label}
                   caption={item.caption}
                   className="h-[106px] w-full sm:h-[120px]"
+                  onClick={() => setLightboxIndex(photoIndex(item.src))}
                 />
               </Reveal>
             ))}
@@ -273,6 +366,7 @@ export default function HomePage() {
                 label={item.label}
                 caption={item.caption}
                 className="h-40 w-full sm:h-52"
+                onClick={() => setLightboxIndex(photoIndex(item.src))}
               />
             </Reveal>
           ))}
@@ -328,10 +422,18 @@ export default function HomePage() {
               width={sitePhotos.discoverTheVale.width}
               height={sitePhotos.discoverTheVale.height}
               label={sitePhotos.discoverTheVale.label}
+              onClick={() => setLightboxIndex(photoIndex(sitePhotos.discoverTheVale.src))}
             />
           </Reveal>
         </div>
       </section>
+
+      <Lightbox
+        photos={lightboxPhotos}
+        index={lightboxIndex}
+        onClose={() => setLightboxIndex(null)}
+        onIndexChange={setLightboxIndex}
+      />
     </>
   );
 }

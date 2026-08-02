@@ -261,6 +261,12 @@ export default function HomePage() {
           <video
             ref={dayVideoRef}
             className="relative z-10 h-full w-full object-contain"
+            style={{
+              transform: 'scaleX(1.15)',
+              maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+            }}
             src="/videos/day-to-sunset.mp4"
             preload="auto"
             muted
@@ -315,6 +321,12 @@ export default function HomePage() {
           <video
             ref={nightVideoRef}
             className="relative z-10 h-full w-full object-contain"
+            style={{
+              transform: 'scaleX(1.15)',
+              maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)',
+            }}
             src="/videos/sunset-to-night.mp4"
             preload="auto"
             muted

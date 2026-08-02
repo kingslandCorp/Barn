@@ -86,14 +86,6 @@ export const poolPhotos = {
 
 export const viewPhotos: GalleryPhoto[] = [
   {
-    src: '/images/views.avif',
-    width: 1200,
-    height: 853,
-    label: 'The view',
-    caption: 'Rolling countryside, right from the garden',
-    span: true,
-  },
-  {
     src: '/images/patio1.avif',
     width: 720,
     height: 540,
@@ -101,11 +93,11 @@ export const viewPhotos: GalleryPhoto[] = [
     caption: 'Morning coffee with a view',
   },
   {
-    src: '/images/gallery-sunset.jpg',
-    width: 1428,
-    height: 1071,
-    label: 'Sunset over the Vale',
-    caption: 'The best hour of the day, every day',
+    src: '/images/views.avif',
+    width: 1200,
+    height: 853,
+    label: 'The view',
+    caption: 'Rolling countryside, right from the garden',
   },
   {
     src: '/images/gallery-fields.jpg',
@@ -113,6 +105,13 @@ export const viewPhotos: GalleryPhoto[] = [
     height: 960,
     label: 'The fields',
     caption: 'Fields and hedgerows, right from the garden',
+  },
+  {
+    src: '/images/gallery-sunset.jpg',
+    width: 1428,
+    height: 1071,
+    label: 'Sunset over the Vale',
+    caption: 'The best hour of the day, every day',
   },
   {
     src: '/images/llantwit-beach.jpg',

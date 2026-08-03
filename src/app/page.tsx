@@ -133,6 +133,14 @@ export default function HomePage() {
     const nightBlur = nightBlurRef.current;
     if (!day || !night || !dayBlur || !nightBlur) return;
 
+    // iOS Safari checks whether a video is muted at the exact moment .play() is
+    // called — the JSX `muted` attribute can land a beat too late for that check.
+    // Forcing it here, before anything else, is the reliable fix.
+    [day, dayBlur, night, nightBlur].forEach((v) => {
+      v.muted = true;
+      v.defaultMuted = true;
+    });
+
     let dayReady = false;
     let nightReady = false;
 
@@ -248,20 +256,25 @@ export default function HomePage() {
             aria-hidden="true"
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <video
-              ref={dayVideoRef}
-              className="h-full w-auto"
+            <div
+              className="h-full overflow-hidden"
               style={{
+                aspectRatio: '16 / 9',
                 transform: 'scaleX(1.265)',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                 WebkitMaskImage:
                   'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
               }}
-              src="/videos/day-to-sunset.mp4"
-              preload="auto"
-              muted
-              playsInline
-            />
+            >
+              <video
+                ref={dayVideoRef}
+                className="h-full w-full object-cover"
+                src="/videos/day-to-sunset.mp4"
+                preload="auto"
+                muted
+                playsInline
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -310,20 +323,25 @@ export default function HomePage() {
             aria-hidden="true"
           />
           <div className="absolute inset-0 flex items-center justify-center">
-            <video
-              ref={nightVideoRef}
-              className="h-full w-auto"
+            <div
+              className="h-full overflow-hidden"
               style={{
+                aspectRatio: '16 / 9',
                 transform: 'scaleX(1.265)',
                 maskImage: 'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
                 WebkitMaskImage:
                   'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
               }}
-              src="/videos/sunset-to-night.mp4"
-              preload="auto"
-              muted
-              playsInline
-            />
+            >
+              <video
+                ref={nightVideoRef}
+                className="h-full w-full object-cover"
+                src="/videos/sunset-to-night.mp4"
+                preload="auto"
+                muted
+                playsInline
+              />
+            </div>
           </div>
         </div>
       </section>

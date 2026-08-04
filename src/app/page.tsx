@@ -118,14 +118,12 @@ export default function HomePage() {
   const nightVideoRef = useRef<HTMLVideoElement>(null);
   const nightBlurRef = useRef<HTMLVideoElement>(null);
 
-  // Keep the two videos locked to the same clock. The day video (near the top)
-  // buffers fast; the night video sits further down the page and browsers are
-  // slower to fetch video that isn't near the viewport yet — so we let the day
-  // video start on its own as soon as it's ready (no dead black box up top),
-  // then hard-resync both to frame 0 together the moment the night video catches
-  // up. After that, every loop boundary forces both back to 0 in lockstep.
-  // Each blurred background copy just tags along with its sharp counterpart —
-  // it's a soft, blurred fill, so it doesn't need frame-perfect alignment.
+  // The browser's own native `autoplay` handles actually starting these videos —
+  // that's the mechanism Apple built and tests specifically for muted, inline
+  // video, and it's far more reliable on iOS than anything driven by hand-written
+  // JS. This effect only handles keeping the two videos in sync: every time the
+  // day video finishes, snap all four (day, night, and their blurred copies)
+  // back to frame 0 together and resume, so they can't drift apart over time.
   useEffect(() => {
     const day = dayVideoRef.current;
     const dayBlur = dayBlurRef.current;
@@ -141,38 +139,16 @@ export default function HomePage() {
       v.defaultMuted = true;
     });
 
-    let dayReady = false;
-    let nightReady = false;
-
-    const syncBoth = () => {
+    const resync = () => {
       [day, dayBlur, night, nightBlur].forEach((v) => {
         v.currentTime = 0;
       });
       [day, dayBlur, night, nightBlur].forEach((v) => v.play().catch(() => {}));
     };
 
-    const onDayReady = () => {
-      dayReady = true;
-      if (nightReady) {
-        syncBoth();
-      } else {
-        day.play().catch(() => {});
-        dayBlur.play().catch(() => {});
-      }
-    };
-    const onNightReady = () => {
-      nightReady = true;
-      if (dayReady) syncBoth();
-    };
-    const resync = () => syncBoth();
-
-    day.addEventListener('canplay', onDayReady, { once: true });
-    night.addEventListener('canplay', onNightReady, { once: true });
     day.addEventListener('ended', resync);
 
     return () => {
-      day.removeEventListener('canplay', onDayReady);
-      night.removeEventListener('canplay', onNightReady);
       day.removeEventListener('ended', resync);
     };
   }, []);
@@ -251,6 +227,7 @@ export default function HomePage() {
             className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/day-to-sunset.mp4"
             preload="metadata"
+            autoPlay
             muted
             playsInline
             aria-hidden="true"
@@ -271,6 +248,7 @@ export default function HomePage() {
                 className="h-full w-full object-cover"
                 src="/videos/day-to-sunset.mp4"
                 preload="auto"
+                autoPlay
                 muted
                 playsInline
               />
@@ -318,6 +296,7 @@ export default function HomePage() {
             className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
             src="/videos/sunset-to-night.mp4"
             preload="metadata"
+            autoPlay
             muted
             playsInline
             aria-hidden="true"
@@ -338,6 +317,7 @@ export default function HomePage() {
                 className="h-full w-full object-cover"
                 src="/videos/sunset-to-night.mp4"
                 preload="auto"
+                autoPlay
                 muted
                 playsInline
               />

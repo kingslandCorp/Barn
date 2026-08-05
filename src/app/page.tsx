@@ -257,8 +257,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* A Warm Welcome — height now driven by the text, photo reduced and unlabelled */}
-      <section className="relative overflow-hidden py-8 sm:py-10">
+      {/* A Warm Welcome — centered text only, photo lives in the gallery */}
+      <section className="relative overflow-hidden py-6 sm:py-[30px]">
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
             src={sitePhotos.warmWelcome.src}
@@ -269,22 +269,13 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-cream from-10% via-cream/35 via-45% to-transparent" />
         </div>
 
-        <div className="relative z-10 mx-auto grid max-w-content items-center gap-8 px-5 sm:px-8 md:grid-cols-[3fr_2fr] md:gap-12 lg:px-12">
+        <div className="relative z-10 mx-auto max-w-content px-5 sm:px-8 lg:px-12">
           <SectionHeading
+            align="center"
             eyebrow="A Warm Welcome"
             title="Somewhere to properly switch off"
             subtitle="There's a particular kind of quiet that settles over the Vale of Glamorgan in summer — long evenings, warm stone, and a sky that turns gold long before it thinks about getting dark. The Barn was made for exactly that: mornings by the pool, afternoons on the coast, and evenings that ask nothing of you at all."
           />
-          <Reveal delay={0.1}>
-            <Photo
-              src={sitePhotos.warmWelcome.src}
-              alt={sitePhotos.warmWelcome.alt}
-              width={sitePhotos.warmWelcome.width}
-              height={sitePhotos.warmWelcome.height}
-              className="max-h-[220px]"
-              onClick={() => setLightboxIndex(photoIndex(sitePhotos.warmWelcome.src))}
-            />
-          </Reveal>
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Reveal from '@/components/Reveal';
+import GuestGate from '@/components/GuestGate';
 import GuestTabs from '@/components/GuestTabs';
 import { siteConfig } from '@/lib/content';
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default function GuestsPage() {
         </Reveal>
       </section>
       <section className="mx-auto mt-10 max-w-content px-5 sm:px-8 lg:px-12">
-        <GuestTabs />
+        <GuestGate>
+          <GuestTabs />
+        </GuestGate>
       </section>
     </div>
   );

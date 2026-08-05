@@ -220,6 +220,15 @@ export default function GuestTabs() {
             {/* Pool Rules */}
             <div className="mt-14">
               <h3 className="font-display text-xl text-ink">Pool Rules</h3>
+              <div className="mt-6 max-w-2xl">
+                <Photo
+                  src={sitePhotos.poolSafety.src}
+                  alt={sitePhotos.poolSafety.alt}
+                  width={sitePhotos.poolSafety.width}
+                  height={sitePhotos.poolSafety.height}
+                  className="max-h-[320px]"
+                />
+              </div>
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
                 {poolRules.map((item, i) => (
                   <RuleTile
@@ -230,6 +239,14 @@ export default function GuestTabs() {
                     delay={i * 0.04}
                   />
                 ))}
+              </div>
+              <div className="mt-6 rounded-3xl bg-red-50 p-6 text-sm text-red-900">
+                <strong>In a genuine emergency, always call 999 first.</strong> For anything else,
+                reach us at{' '}
+                <a href={`mailto:${siteConfig.email}`} className="underline">
+                  {siteConfig.email}
+                </a>
+                .
               </div>
             </div>
           </div>

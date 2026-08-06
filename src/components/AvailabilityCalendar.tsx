@@ -43,11 +43,10 @@ export default function AvailabilityCalendar({ onChange }: Props) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    fetch('/api/availability')
+    const controller = new AbortController();
+    fetch('/api/availability', { signal: controller.signal })
       .then((r) => r.json())
       .then((data: { ranges?: { start: string; end: string }[] }) => {
-        if (cancelled) return;
         const set = new Set<string>();
         for (const r of data.ranges || []) {
           const start = fromISODate(r.start);
@@ -59,9 +58,11 @@ export default function AvailabilityCalendar({ onChange }: Props) {
         setBusy(set);
         setLoaded(true);
       })
-      .catch(() => setLoaded(true));
+      .catch((err) => {
+        if (err.name !== 'AbortError') setLoaded(true);
+      });
     return () => {
-      cancelled = true;
+      controller.abort();
     };
   }, []);
 

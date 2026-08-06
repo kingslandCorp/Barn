@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
-// Refresh at most once an hour — booking calendars don't need second-by-second freshness,
-// and this avoids hammering Airbnb's server on every visitor.
-export const revalidate = 3600;
+// Refresh at most every 3 minutes — keeps the calendar close to real-time
+// without hammering Airbnb's server on every visitor.
+export const revalidate = 180;
 
 type BusyRange = { start: string; end: string }; // ISO YYYY-MM-DD, end is exclusive (checkout day)
 
@@ -55,7 +55,7 @@ export async function GET() {
   }
 
   try {
-    const res = await fetch(feedUrl, { next: { revalidate: 3600 } });
+    const res = await fetch(feedUrl, { next: { revalidate: 180 } });
     if (!res.ok) {
       return NextResponse.json({ error: 'fetch failed', ranges: [] });
     }

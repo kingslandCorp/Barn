@@ -128,7 +128,7 @@ export default function GuestTabs() {
                 href={what3words.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 rounded-full bg-coast/10 px-6 py-3 text-base font-medium text-coast shadow-card transition-colors hover:bg-coast/15"
+                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-coast/10 px-6 py-3 text-base font-medium text-coast shadow-card transition-colors hover:bg-coast/15 sm:w-auto"
               >
                 <MapPin size={18} strokeWidth={1.75} />
                 what3words: {what3words.words}

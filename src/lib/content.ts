@@ -276,13 +276,12 @@ export const arrivalSteps: { step: number; title: string; description: string }[
   {
     step: 3,
     title: 'Park up on the gravel',
-    description:
-      'Park between field and the barns — there is plenty of space, no need to be precious about it.',
+    description: 'Park between field and the barns — there is plenty of space.',
   },
   {
     step: 4,
     title: 'Face towards the barn or field',
-    description: "Turn your car to face the barn, so we don't have any runaways.",
+    description: "Turn your car to face the barn, so we don't have any runaways downhill.",
   },
 ];
 

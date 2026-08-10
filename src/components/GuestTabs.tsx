@@ -123,23 +123,23 @@ export default function GuestTabs() {
               <h2 className="font-display text-2xl text-ink sm:text-3xl">Finding the barn</h2>
             </Reveal>
 
-            <Reveal delay={0.05} className="mt-4 flex flex-wrap gap-3">
+            <Reveal delay={0.05} className="mt-4 flex flex-wrap justify-center gap-5">
               <a
                 href={what3words.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+                className="inline-flex items-center gap-2.5 rounded-full bg-white/70 px-6 py-3 text-base font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
               >
-                <MapPin size={15} strokeWidth={1.75} />
+                <MapPin size={18} strokeWidth={1.75} />
                 what3words: {what3words.words}
               </a>
               <a
                 href={directionsMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+                className="inline-flex items-center gap-2.5 rounded-full bg-white/70 px-6 py-3 text-base font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
               >
-                <Map size={15} strokeWidth={1.75} />
+                <Map size={18} strokeWidth={1.75} />
                 Open in Maps
               </a>
             </Reveal>
@@ -172,13 +172,20 @@ export default function GuestTabs() {
             </div>
 
             <div className="mt-14 grid items-center gap-6 sm:grid-cols-2">
-              <Reveal className="flex flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card">
-                <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-                  {afterDarkInfo.title}
-                </p>
-                <p className="text-base leading-relaxed text-ink/70">
-                  {afterDarkInfo.description}
-                </p>
+              <Reveal>
+                <div
+                  className="flex h-full flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card"
+                  style={{
+                    aspectRatio: `${sitePhotos.directionsAfterDark.width} / ${Math.round(sitePhotos.directionsAfterDark.height / 2)}`,
+                  }}
+                >
+                  <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
+                    {afterDarkInfo.title}
+                  </p>
+                  <p className="text-base leading-relaxed text-ink/70">
+                    {afterDarkInfo.description}
+                  </p>
+                </div>
               </Reveal>
               <Reveal delay={0.1}>
                 <Photo

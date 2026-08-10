@@ -859,9 +859,29 @@ export const houseRules: { icon: string; title: string; description: string }[] 
 
 export const poolRules: { icon: string; title: string; description: string }[] = [
   {
-    icon: 'Users',
-    title: 'Maximum occupancy: 6 people',
-    description: "It's a 14' x 28' pool — please keep numbers in the water at any one time to 6 or fewer, so it stays comfortable and safe.",
+    icon: 'Clock',
+    title: 'Opening hours: 10am – 5pm',
+    description: 'The pool is closed outside of these hours — please keep out of the water before 10am and after 5pm.',
+  },
+  {
+    icon: 'ShieldAlert',
+    title: 'No lifeguard on duty',
+    description: 'The pool is unsupervised — all guests swim entirely at their own risk. In a genuine emergency, call 999 immediately.',
+  },
+  {
+    icon: 'UserCheck',
+    title: 'Children must be supervised by an adult at all times',
+    description: 'Please keep a close eye on children whenever they are in or around the pool.',
+  },
+  {
+    icon: 'UserX',
+    title: 'No swimming alone',
+    description: 'Always have someone else with you when using the pool, even during the day.',
+  },
+  {
+    icon: 'Waves',
+    title: 'Non-swimmers: stay in the shallow end',
+    description: 'The shallow end is nearest the house — non-swimmers should stay there unless accompanied by a confident swimmer.',
   },
   {
     icon: 'ArrowDownToLine',
@@ -875,19 +895,9 @@ export const poolRules: { icon: string; title: string; description: string }[] =
     description: 'Please enter the water carefully rather than jumping in, especially at the deep end.',
   },
   {
-    icon: 'UserCheck',
-    title: 'Children must be supervised by an adult at all times',
-    description: 'Please keep a close eye on children whenever they are in or around the pool.',
-  },
-  {
-    icon: 'Waves',
-    title: 'Non-swimmers: stay in the shallow end',
-    description: 'The shallow end is nearest the house — non-swimmers should stay there unless accompanied by a confident swimmer.',
-  },
-  {
-    icon: 'UserX',
-    title: 'No swimming alone',
-    description: 'Always have someone else with you when using the pool, even during the day.',
+    icon: 'CloudLightning',
+    title: 'Closed during thunderstorms or unsafe weather',
+    description: 'Please stay out of the pool during storms, high winds, or any other unsafe conditions.',
   },
   {
     icon: 'Wine',
@@ -900,24 +910,14 @@ export const poolRules: { icon: string; title: string; description: string }[] =
     description: 'Wet tiles can be slippery — please keep things calm in and around the pool.',
   },
   {
+    icon: 'Users',
+    title: 'Maximum occupancy: 6 people',
+    description: "It's a 14' x 28' pool — please keep numbers in the water at any one time to 6 or fewer, so it stays comfortable and safe.",
+  },
+  {
     icon: 'Droplets',
     title: 'Shower before entering',
     description: 'A quick rinse before you get in keeps the water clean and clear for everyone.',
-  },
-  {
-    icon: 'Clock',
-    title: 'Pool closed outside advertised hours',
-    description: "Please stick to the pool's advertised opening hours — let us know if these aren't clear.",
-  },
-  {
-    icon: 'CloudLightning',
-    title: 'Closed during thunderstorms or unsafe weather',
-    description: 'Please stay out of the pool during storms, high winds, or any other unsafe conditions.',
-  },
-  {
-    icon: 'ShieldAlert',
-    title: 'No lifeguard on duty',
-    description: 'The pool is unsupervised — all guests swim entirely at their own risk. In a genuine emergency, call 999 immediately.',
   },
 ];
 

@@ -11,6 +11,7 @@ import {
   arrivalSteps,
   afterDarkInfo,
   sitePhotos,
+  poolPhotos,
   siteConfig,
   houseRules,
   poolRules,
@@ -220,12 +221,19 @@ export default function GuestTabs() {
             {/* Pool Rules */}
             <div className="mt-14">
               <h3 className="font-display text-xl text-ink">Pool Rules</h3>
-              <div className="mt-6 max-w-2xl">
+              <div className="mt-6 grid max-w-3xl grid-cols-2 gap-4">
                 <Photo
                   src={sitePhotos.poolSafety.src}
                   alt={sitePhotos.poolSafety.alt}
                   width={sitePhotos.poolSafety.width}
                   height={sitePhotos.poolSafety.height}
+                  className="max-h-[320px]"
+                />
+                <Photo
+                  src={poolPhotos.minor[0].src}
+                  alt={poolPhotos.minor[0].alt}
+                  width={poolPhotos.minor[0].width}
+                  height={poolPhotos.minor[0].height}
                   className="max-h-[320px]"
                 />
               </div>

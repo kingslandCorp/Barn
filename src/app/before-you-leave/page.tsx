@@ -19,8 +19,9 @@ export default function BeforeYouLeavePage() {
           Leaving The Barn
         </h1>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
-          No rush — just a few small things before you head off, so the Barn is ready for
-          whoever's coming next. Tap each one off as you go.
+          No rush — just a few small things before you head off. Please remember this is our
+          home, not a hotel — leave things as you found them. Feel free to tick off this
+          checklist as you go.
         </p>
       </Reveal>
 

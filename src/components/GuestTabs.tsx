@@ -260,8 +260,9 @@ export default function GuestTabs() {
               </p>
               <h2 className="font-display text-2xl text-ink sm:text-3xl">Leaving The Barn</h2>
               <p className="mt-3 max-w-2xl text-base text-ink/65">
-                No rush — just a few small things before you head off, so the Barn is ready for
-                whoever's coming next. Tap each one off as you go.
+                No rush — just a few small things before you head off. Please remember this is
+                our home, not a hotel — leave things as you found them. Feel free to tick off
+                this checklist as you go.
               </p>
             </Reveal>
             <div className="mt-10">

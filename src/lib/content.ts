@@ -14,6 +14,7 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: 'Home', href: '/' },
+  { label: 'The Barn at Winter', href: '/winter' },
   { label: 'Location', href: '/directions' },
   { label: 'Explore the Area', href: '/explore' },
   { label: 'Events', href: '/events' },
@@ -958,21 +959,30 @@ export const localSupermarkets: {
 ];
 
 export const departureChecklist: { icon: string; title: string; description: string }[] = [
-  { icon: 'Utensils', title: 'Dishwasher', description: 'Please empty it and leave it switched off.' },
+  {
+    icon: 'Utensils',
+    title: 'Dishwasher',
+    description:
+      'Please put all dirty dishes and cutlery in the dishwasher and set it going. The tablets are there for your use.',
+  },
   { icon: 'Lightbulb', title: 'Lights', description: 'Turn off all lights around the property.' },
-  { icon: 'DoorClosed', title: 'Doors', description: 'Lock all external doors on your way out.' },
+  { icon: 'DoorClosed', title: 'Doors', description: 'Please leave the door unlocked.' },
   { icon: 'AppWindow', title: 'Windows', description: 'Close and secure every window.' },
   {
     icon: 'BookOpen',
     title: 'Sign the guest book',
     description: 'Leave us a note about your stay — future guests (and we!) love reading them.',
   },
-  { icon: 'Shirt', title: 'Towels', description: 'Leave used towels in the bathroom, not packed in your bags.' },
+  {
+    icon: 'Shirt',
+    title: 'Towels',
+    description: 'Just drop these into the bath or shower if they have been used. Thank you!',
+  },
   { icon: 'Recycle', title: 'Recycling', description: 'Sort recycling into the bins provided outside.' },
   {
     icon: 'KeyRound',
     title: 'Keys',
     description:
-      "Take one last cheeky look around — under the bed, behind the sofa — then pop the keys back in the lockbox before you head off.",
+      'Take one last look around — under the bed, behind the sofa — then leave the two sets of keys on the worktop.',
   },
 ];

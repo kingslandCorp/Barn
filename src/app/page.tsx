@@ -443,7 +443,7 @@ export default function HomePage() {
       </section>
 
       {/* Booking */}
-      <section className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
+      <section id="book" className="mx-auto max-w-content px-5 py-8 text-center sm:px-8 sm:py-14 lg:px-12">
         <Reveal>
           <SectionHeading eyebrow="Book Your Stay" title="Check your dates" align="center" />
         </Reveal>

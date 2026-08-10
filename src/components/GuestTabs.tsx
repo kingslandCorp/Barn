@@ -123,12 +123,12 @@ export default function GuestTabs() {
               <h2 className="font-display text-2xl text-ink sm:text-3xl">Finding the barn</h2>
             </Reveal>
 
-            <Reveal delay={0.05} className="mt-4 flex flex-wrap justify-center gap-5">
+            <Reveal delay={0.05} className="mt-4 flex flex-wrap justify-center gap-[60px]">
               <a
                 href={what3words.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 rounded-full bg-white/70 px-6 py-3 text-base font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+                className="inline-flex items-center gap-2.5 rounded-full bg-coast/10 px-6 py-3 text-base font-medium text-coast shadow-card transition-colors hover:bg-coast/15"
               >
                 <MapPin size={18} strokeWidth={1.75} />
                 what3words: {what3words.words}
@@ -137,7 +137,7 @@ export default function GuestTabs() {
                 href={directionsMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 rounded-full bg-white/70 px-6 py-3 text-base font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+                className="inline-flex items-center gap-2.5 rounded-full bg-coast/10 px-6 py-3 text-base font-medium text-coast shadow-card transition-colors hover:bg-coast/15"
               >
                 <Map size={18} strokeWidth={1.75} />
                 Open in Maps

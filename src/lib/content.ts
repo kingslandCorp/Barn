@@ -293,6 +293,9 @@ export const what3words = {
 export const mapEmbedSrc =
   'https://www.google.com/maps?q=51.435480,-3.409444&z=13&output=embed';
 
+export const directionsMapsUrl =
+  'https://www.google.com/maps/search/?api=1&query=51.435480,-3.409444';
+
 export const parkingInfo = {
   title: 'Parking',
   description:

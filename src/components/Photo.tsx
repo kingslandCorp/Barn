@@ -10,6 +10,7 @@ export default function Photo({
   className = '',
   priority = false,
   sizes = '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw',
+  objectPosition = 'center',
   onClick,
 }: {
   src: string;
@@ -21,6 +22,7 @@ export default function Photo({
   className?: string;
   priority?: boolean;
   sizes?: string;
+  objectPosition?: string;
   onClick?: () => void;
 }) {
   const content = (
@@ -31,6 +33,7 @@ export default function Photo({
         fill
         priority={priority}
         sizes={sizes}
+        style={{ objectPosition }}
         className={`object-cover ${onClick ? 'transition-transform duration-500 group-hover:scale-105' : ''}`}
       />
       {(label || caption) && (

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { MapPin, BookOpen, LogOut } from 'lucide-react';
+import { MapPin, BookOpen, LogOut, Map } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
 import DepartureChecklist from '@/components/DepartureChecklist';
@@ -16,6 +16,8 @@ import {
   houseRules,
   poolRules,
   localSupermarkets,
+  what3words,
+  directionsMapsUrl,
 } from '@/lib/content';
 
 type TabId = 'finding-us' | 'handbook' | 'before-you-leave';
@@ -121,6 +123,27 @@ export default function GuestTabs() {
               <h2 className="font-display text-2xl text-ink sm:text-3xl">Finding the barn</h2>
             </Reveal>
 
+            <Reveal delay={0.05} className="mt-4 flex flex-wrap gap-3">
+              <a
+                href={what3words.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+              >
+                <MapPin size={15} strokeWidth={1.75} />
+                what3words: {what3words.words}
+              </a>
+              <a
+                href={directionsMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-ink/80 shadow-card transition-colors hover:bg-white"
+              >
+                <Map size={15} strokeWidth={1.75} />
+                Open in Maps
+              </a>
+            </Reveal>
+
             <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-stretch">
               <div className="grid grid-cols-2 gap-6">
                 {arrivalSteps.map((step) => (
@@ -148,7 +171,7 @@ export default function GuestTabs() {
               </Reveal>
             </div>
 
-            <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2">
+            <div className="mt-14 grid items-center gap-6 sm:grid-cols-2">
               <Reveal className="flex flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card">
                 <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
                   {afterDarkInfo.title}
@@ -162,8 +185,9 @@ export default function GuestTabs() {
                   src={sitePhotos.directionsAfterDark.src}
                   alt={sitePhotos.directionsAfterDark.alt}
                   width={sitePhotos.directionsAfterDark.width}
-                  height={sitePhotos.directionsAfterDark.height}
-                  className="h-64 w-full sm:h-full"
+                  height={Math.round(sitePhotos.directionsAfterDark.height / 2)}
+                  objectPosition="top"
+                  className="w-full"
                 />
               </Reveal>
             </div>

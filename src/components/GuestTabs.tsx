@@ -145,7 +145,7 @@ export default function GuestTabs() {
             </Reveal>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-stretch">
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {arrivalSteps.map((step) => (
                   <Reveal
                     key={step.step}

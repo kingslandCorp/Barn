@@ -150,7 +150,7 @@ export default function GuestTabs() {
                   <Reveal
                     key={step.step}
                     delay={step.step * 0.06}
-                    className="rounded-3xl bg-white/70 p-6 shadow-card"
+                    className="w-full rounded-3xl bg-white/70 p-6 shadow-card"
                   >
                     <p className="font-display text-3xl text-gold-deep">
                       {String(step.step).padStart(2, '0')}

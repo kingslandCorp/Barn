@@ -145,7 +145,7 @@ export default function GuestTabs() {
             </Reveal>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-stretch">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2">
                 {arrivalSteps.map((step) => (
                   <Reveal
                     key={step.step}
@@ -171,14 +171,9 @@ export default function GuestTabs() {
               </Reveal>
             </div>
 
-            <div className="mt-14 grid items-center gap-6 sm:grid-cols-2">
+            <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2">
               <Reveal>
-                <div
-                  className="flex h-full flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card"
-                  style={{
-                    aspectRatio: `${sitePhotos.directionsAfterDark.width} / ${Math.round(sitePhotos.directionsAfterDark.height / 2)}`,
-                  }}
-                >
+                <div className="flex h-full min-w-0 flex-col justify-center rounded-3xl bg-white/70 p-8 shadow-card">
                   <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
                     {afterDarkInfo.title}
                   </p>
@@ -187,14 +182,14 @@ export default function GuestTabs() {
                   </p>
                 </div>
               </Reveal>
-              <Reveal delay={0.1}>
+              <Reveal delay={0.1} className="min-w-0">
                 <Photo
                   src={sitePhotos.directionsAfterDark.src}
                   alt={sitePhotos.directionsAfterDark.alt}
                   width={sitePhotos.directionsAfterDark.width}
                   height={Math.round(sitePhotos.directionsAfterDark.height / 2)}
                   objectPosition="top"
-                  className="w-full"
+                  className="h-full w-full"
                 />
               </Reveal>
             </div>

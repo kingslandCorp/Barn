@@ -11,7 +11,15 @@ export const metadata: Metadata = {
   description: `A local guide to the Vale of Glamorgan around ${siteConfig.fullName} — coast, food, towns and family days out.`,
 };
 
-function CategorySection({ category, index }: { category: AreaCategory; index: number }) {
+function CategorySection({
+  category,
+  index,
+  cols = 3,
+}: {
+  category: AreaCategory;
+  index: number;
+  cols?: 3 | 4;
+}) {
   return (
     <section
       id={category.id}
@@ -27,7 +35,9 @@ function CategorySection({ category, index }: { category: AreaCategory; index: n
           <h2 className="font-display text-3xl text-ink sm:text-4xl">{category.title}</h2>
           <p className="mt-3 max-w-2xl text-base text-ink/65">{category.intro}</p>
         </Reveal>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`mt-10 grid gap-6 sm:grid-cols-2 ${cols === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}
+        >
           {category.places.map((place, pi) => (
             <AreaCard key={place.name} place={place} delay={pi * 0.08} />
           ))}
@@ -135,7 +145,7 @@ export default function ExplorePage() {
         </div>
       </section>
 
-      <CategorySection category={food} index={3} />
+      <CategorySection category={food} index={3} cols={4} />
     </div>
   );
 }

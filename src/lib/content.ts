@@ -520,7 +520,7 @@ export const dayTrips: DayOutSpot[] = [
       height: 600,
       alt: 'The lake and medieval village at Cosmeston Lakes Country Park',
     },
-    url: 'https://www.cosmestonlakes.co.uk/',
+    url: 'https://www.valeofglamorgan.gov.uk/en/enjoying/Coast-and-Countryside/cosmeston-lakes-country-park/Cosmeston-Lakes-Country-Park.aspx',
   },
   {
     name: 'Margam Park',

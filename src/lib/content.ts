@@ -487,54 +487,6 @@ export type DayOutSpot = {
 
 export const dayTrips: DayOutSpot[] = [
   {
-    name: 'Cefn Mably Farm Park',
-    description:
-      'A big hit with younger ones — friendly farm animals, an indoor fun house, and plenty of space to run around whatever the weather.',
-    image: {
-      src: '/images/Cefn.jpg',
-      width: 307,
-      height: 163,
-      alt: 'Cefn Mably Farm Park, aerial view',
-    },
-    url: 'https://www.cefnmablyfarmpark.com/',
-  },
-  {
-    name: 'Cardiff International White Water',
-    description:
-      'White-water rafting and indoor surfing on a man-made rapids course — thrilling for adrenaline seekers of any age.',
-    image: {
-      src: '/images/CIWW.jpg',
-      width: 678,
-      height: 452,
-      alt: 'Kayakers on the rapids course at Cardiff International White Water',
-    },
-    url: 'https://www.ciww.com/',
-  },
-  {
-    name: 'Cardiff Devils',
-    description:
-      "Ice skating for the family, or catch the Devils live — Cardiff's ice hockey team play a fast, physical, surprisingly loud match.",
-    image: {
-      src: '/images/Devils.jpg',
-      width: 534,
-      height: 374,
-      alt: 'Cardiff Devils ice hockey players in action',
-    },
-    url: 'https://www.cardiffdevils.com/',
-  },
-  {
-    name: 'Techniquest',
-    description:
-      "Cardiff's hands-on science centre — genuinely brilliant for kids, with enough to fill a whole rainy afternoon.",
-    image: {
-      src: '/images/techniquest.jpg',
-      width: 738,
-      height: 414,
-      alt: 'Interactive science exhibits at Techniquest, Cardiff',
-    },
-    url: 'https://www.techniquest.org/',
-  },
-  {
     name: 'Riding on the Beach, Ogmore',
     description:
       'Trek by horseback along the River Ewenny and out onto the open sand at Ogmore — suitable for beginners and experienced riders alike.',
@@ -581,6 +533,54 @@ export const dayTrips: DayOutSpot[] = [
       alt: 'Hikers on the summit path to Pen y Fan',
     },
     url: 'https://bannaubrycheiniog.org/',
+  },
+  {
+    name: 'Cefn Mably Farm Park',
+    description:
+      'A big hit with younger ones — friendly farm animals, an indoor fun house, and plenty of space to run around whatever the weather.',
+    image: {
+      src: '/images/Cefn.jpg',
+      width: 307,
+      height: 163,
+      alt: 'Cefn Mably Farm Park, aerial view',
+    },
+    url: 'https://www.cefnmablyfarmpark.com/',
+  },
+  {
+    name: 'Cardiff International White Water',
+    description:
+      'White-water rafting and indoor surfing on a man-made rapids course — thrilling for adrenaline seekers of any age.',
+    image: {
+      src: '/images/CIWW.jpg',
+      width: 678,
+      height: 452,
+      alt: 'Kayakers on the rapids course at Cardiff International White Water',
+    },
+    url: 'https://www.ciww.com/',
+  },
+  {
+    name: 'Cardiff Devils',
+    description:
+      "Ice skating for the family, or catch the Devils live — Cardiff's ice hockey team play a fast, physical, surprisingly loud match.",
+    image: {
+      src: '/images/Devils.jpg',
+      width: 534,
+      height: 374,
+      alt: 'Cardiff Devils ice hockey players in action',
+    },
+    url: 'https://www.cardiffdevils.com/',
+  },
+  {
+    name: 'Techniquest',
+    description:
+      "Cardiff's hands-on science centre — genuinely brilliant for kids, with enough to fill a whole rainy afternoon.",
+    image: {
+      src: '/images/techniquest.jpg',
+      width: 738,
+      height: 414,
+      alt: 'Interactive science exhibits at Techniquest, Cardiff',
+    },
+    url: 'https://www.techniquest.org/',
   },
 ];
 

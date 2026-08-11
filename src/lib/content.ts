@@ -523,16 +523,16 @@ export const dayTrips: DayOutSpot[] = [
     url: 'https://www.cosmestonlakes.co.uk/',
   },
   {
-    name: 'Llanerch Vineyard',
+    name: 'Margam Park',
     description:
-      'A working Welsh vineyard with guided tastings, a lovely restaurant, and vine-lined grounds to wander at your own pace.',
+      'A grand Tudor-Gothic castle, orangery and deer park with miles of level paths — easy walking with plenty to look at along the way.',
     image: {
       src: '/images/pic4.jpg',
       width: 800,
       height: 600,
-      alt: 'Rows of vines at Llanerch Vineyard',
+      alt: 'Margam Castle and grounds at Margam Country Park',
     },
-    url: 'https://llanerch-vineyard.co.uk/',
+    url: 'https://www.margamcountrypark.co.uk/',
   },
   {
     name: 'Riding on the Beach, Ogmore',

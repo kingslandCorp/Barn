@@ -378,54 +378,6 @@ export const exploreCategories: AreaCategory[] = [
     ],
   },
   {
-    id: 'food-drink',
-    title: 'Food & Drink',
-    intro: 'From village pubs to independent cafés, the Vale does not go hungry.',
-    closingNote:
-      'Great beer, welcoming pubs and hidden gems await throughout the Vale — far too many to fit into one list. Get exploring!',
-    places: [
-      {
-        name: 'Thomas',
-        description:
-          'Our top recommendation for a proper night out — thoughtful, elegant fine dining worth booking well ahead for.',
-        tags: ['Fine dining', 'Date night', 'Book ahead'],
-        tone: 'gold',
-        image: {
-          src: '/images/Thomas.jpg',
-          width: 400,
-          height: 400,
-          alt: 'The exterior of Thomas restaurant',
-        },
-      },
-      {
-        name: 'BaffleHaus',
-        description:
-          "Great beer, proper burgers, and a must-visit if you're a petrolhead — expect classic cars parked right outside.",
-        tags: ['Craft beer', 'Burgers', 'Petrolhead favourite'],
-        tone: 'stone',
-        image: {
-          src: '/images/bAFFLE.jpg',
-          width: 547,
-          height: 365,
-          alt: 'BaffleHaus pub with a classic sports car parked outside',
-        },
-      },
-      {
-        name: 'Thai Elephant',
-        description:
-          'Genuinely great Thai food and takeaway — no elephants involved, just proper flavour.',
-        tags: ['Thai food', 'Takeaway', 'Local favourite'],
-        tone: 'sage',
-        image: {
-          src: '/images/tHAI.jpg',
-          width: 335,
-          height: 597,
-          alt: 'The Thai Elephant restaurant frontage',
-        },
-      },
-    ],
-  },
-  {
     id: 'towns-villages',
     title: 'City and Towns',
     intro: 'Market towns, coastal villages, and the capital itself — all within easy reach.',
@@ -467,6 +419,66 @@ export const exploreCategories: AreaCategory[] = [
           width: 597,
           height: 335,
           alt: 'Cardiff Bay waterfront with the Pierhead Building and the Wales Millennium Wheel',
+        },
+      },
+    ],
+  },
+  {
+    id: 'food-drink',
+    title: 'Food & Drink',
+    intro: 'From village pubs to independent cafés, the Vale does not go hungry.',
+    closingNote:
+      'Great beer, welcoming pubs and hidden gems await throughout the Vale — far too many to fit into one list. Get exploring!',
+    places: [
+      {
+        name: 'The Bear, Cowbridge',
+        description:
+          'A historic old coaching inn right on the high street — hearty pub classics, real ales, and a proper log fire in winter.',
+        tags: ['Pub classics', 'Real ale', 'Historic'],
+        tone: 'gold',
+        image: {
+          src: '/images/Bear1.jpg',
+          width: 600,
+          height: 400,
+          alt: 'The Bear, Cowbridge',
+        },
+      },
+      {
+        name: 'BaffleHaus',
+        description:
+          "Great beer, proper burgers, and a must-visit if you're a petrolhead — expect classic cars parked right outside.",
+        tags: ['Craft beer', 'Burgers', 'Petrolhead favourite'],
+        tone: 'stone',
+        image: {
+          src: '/images/bAFFLE.jpg',
+          width: 547,
+          height: 365,
+          alt: 'BaffleHaus pub with a classic sports car parked outside',
+        },
+      },
+      {
+        name: 'Thai Elephant',
+        description:
+          'Genuinely great Thai food and takeaway — no elephants involved, just proper flavour.',
+        tags: ['Thai food', 'Takeaway', 'Local favourite'],
+        tone: 'sage',
+        image: {
+          src: '/images/tHAI.jpg',
+          width: 335,
+          height: 597,
+          alt: 'The Thai Elephant restaurant frontage',
+        },
+      },
+      {
+        name: 'Forage, Cowbridge',
+        description: 'A lovely spot on the high street for good coffee and fresh, simple food.',
+        tags: ['Café', 'Coffee', 'Cowbridge high street'],
+        tone: 'sand',
+        image: {
+          src: '/images/Forage1.jpg',
+          width: 600,
+          height: 400,
+          alt: 'Forage, Cowbridge',
         },
       },
     ],

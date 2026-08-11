@@ -4,14 +4,49 @@ import Reveal from '@/components/Reveal';
 import AreaCard from '@/components/AreaCard';
 import PhotoPlaceholder from '@/components/PhotoPlaceholder';
 import Image from 'next/image';
-import { exploreCategories, dayTrips, siteConfig } from '@/lib/content';
+import { exploreCategories, dayTrips, siteConfig, type AreaCategory } from '@/lib/content';
 
 export const metadata: Metadata = {
   title: 'Explore The Area',
   description: `A local guide to the Vale of Glamorgan around ${siteConfig.fullName} — coast, food, towns and family days out.`,
 };
 
+function CategorySection({ category, index }: { category: AreaCategory; index: number }) {
+  return (
+    <section
+      id={category.id}
+      className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
+        index % 2 === 1 ? 'bg-white/40 max-w-none' : ''
+      }`}
+    >
+      <div className={index % 2 === 1 ? 'mx-auto max-w-content' : ''}>
+        <Reveal>
+          <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
+            {String(index + 1).padStart(2, '0')} — {category.title}
+          </p>
+          <h2 className="font-display text-3xl text-ink sm:text-4xl">{category.title}</h2>
+          <p className="mt-3 max-w-2xl text-base text-ink/65">{category.intro}</p>
+        </Reveal>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {category.places.map((place, pi) => (
+            <AreaCard key={place.name} place={place} delay={pi * 0.08} />
+          ))}
+        </div>
+        {category.closingNote && (
+          <Reveal delay={0.2}>
+            <div className="mt-8 rounded-3xl bg-sand-light/50 px-6 py-5 text-center">
+              <p className="font-display text-lg italic text-ink/80">{category.closingNote}</p>
+            </div>
+          </Reveal>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function ExplorePage() {
+  const [coast, towns, food] = exploreCategories;
+
   return (
     <div className="pb-24">
       <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
@@ -30,50 +65,15 @@ export default function ExplorePage() {
         </Reveal>
       </section>
 
-      {exploreCategories.map((category, ci) => (
-        <section
-          key={category.id}
-          id={category.id}
-          className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
-            ci % 2 === 1 ? 'bg-white/40 max-w-none' : ''
-          }`}
-        >
-          <div className={ci % 2 === 1 ? 'mx-auto max-w-content' : ''}>
-            <Reveal>
-              <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-                {String(ci + 1).padStart(2, '0')} — {category.title}
-              </p>
-              <h2 className="font-display text-3xl text-ink sm:text-4xl">{category.title}</h2>
-              <p className="mt-3 max-w-2xl text-base text-ink/65">{category.intro}</p>
-            </Reveal>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {category.places.map((place, pi) => (
-                <AreaCard key={place.name} place={place} delay={pi * 0.08} />
-              ))}
-            </div>
-            {category.closingNote && (
-              <Reveal delay={0.2}>
-                <div className="mt-8 rounded-3xl bg-sand-light/50 px-6 py-5 text-center">
-                  <p className="font-display text-lg italic text-ink/80">
-                    {category.closingNote}
-                  </p>
-                </div>
-              </Reveal>
-            )}
-          </div>
-        </section>
-      ))}
+      <CategorySection category={coast} index={0} />
+      <CategorySection category={towns} index={1} />
 
       {/* Days Out */}
-      <section
-        className={`mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12 ${
-          exploreCategories.length % 2 === 1 ? 'bg-white/40 max-w-none' : ''
-        }`}
-      >
-        <div className={exploreCategories.length % 2 === 1 ? 'mx-auto max-w-content' : ''}>
+      <section className="mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12">
+        <div>
           <Reveal>
             <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">
-              {String(exploreCategories.length + 1).padStart(2, '0')} — Days Out
+              03 — Days Out
             </p>
             <h2 className="font-display text-3xl text-ink sm:text-4xl">Days Out</h2>
             <p className="mt-3 max-w-2xl text-base text-ink/65">
@@ -134,6 +134,8 @@ export default function ExplorePage() {
           </Reveal>
         </div>
       </section>
+
+      <CategorySection category={food} index={3} />
     </div>
   );
 }

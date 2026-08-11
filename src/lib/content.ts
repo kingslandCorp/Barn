@@ -487,6 +487,54 @@ export type DayOutSpot = {
 
 export const dayTrips: DayOutSpot[] = [
   {
+    name: 'Dyffryn Gardens',
+    description:
+      'Fifty-five acres of National Trust gardens and grand Edwardian glasshouses — level paths throughout, with a lovely café for a leisurely afternoon.',
+    image: {
+      src: '/images/pic1.jpg',
+      width: 800,
+      height: 600,
+      alt: 'The Edwardian glasshouses and gardens at Dyffryn Gardens',
+    },
+    url: 'https://www.nationaltrust.org.uk/visit/wales/dyffryn-gardens',
+  },
+  {
+    name: 'St Fagans National Museum of History',
+    description:
+      "Wales' open-air history museum — over 40 relocated historic buildings set in parkland, free entry, and mostly flat, easy walking.",
+    image: {
+      src: '/images/pic2.jpg',
+      width: 800,
+      height: 600,
+      alt: 'Historic buildings in the grounds of St Fagans National Museum of History',
+    },
+    url: 'https://museum.wales/stfagans/',
+  },
+  {
+    name: 'Cosmeston Lakes Country Park',
+    description:
+      'Gentle lakeside walks and a reconstructed medieval village, with plenty of benches and a café — a peaceful couple of hours.',
+    image: {
+      src: '/images/pic3.jpg',
+      width: 800,
+      height: 600,
+      alt: 'The lake and medieval village at Cosmeston Lakes Country Park',
+    },
+    url: 'https://www.cosmestonlakes.co.uk/',
+  },
+  {
+    name: 'Llanerch Vineyard',
+    description:
+      'A working Welsh vineyard with guided tastings, a lovely restaurant, and vine-lined grounds to wander at your own pace.',
+    image: {
+      src: '/images/pic4.jpg',
+      width: 800,
+      height: 600,
+      alt: 'Rows of vines at Llanerch Vineyard',
+    },
+    url: 'https://llanerch-vineyard.co.uk/',
+  },
+  {
     name: 'Riding on the Beach, Ogmore',
     description:
       'Trek by horseback along the River Ewenny and out onto the open sand at Ogmore — suitable for beginners and experienced riders alike.',

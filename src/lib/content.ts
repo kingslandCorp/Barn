@@ -471,8 +471,9 @@ export const exploreCategories: AreaCategory[] = [
       },
       {
         name: 'Forage, Cowbridge',
-        description: 'A lovely spot on the high street for good coffee and fresh, simple food.',
-        tags: ['Café', 'Coffee', 'Cowbridge high street'],
+        description:
+          'Good all day posh breakfast, coffee, lunch, and dinner. Part of Penllyn Royal estate and on-site fresh (but posh) farm shop.',
+        tags: ['Breakfast to dinner', 'Farm shop', 'Penllyn Estate'],
         tone: 'sand',
         image: {
           src: '/images/Forage1.jpg',

@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { KeyRound } from 'lucide-react';
 import { siteConfig, sitePhotos } from '@/lib/content';
 
 export default function Hero() {
@@ -59,6 +60,13 @@ export default function Hero() {
             {siteConfig.tagline}
           </p>
           <div className="mt-9 flex flex-wrap gap-4">
+            <Link
+              href="/guests"
+              className="flex items-center gap-2 rounded-full bg-coast px-7 py-3.5 text-sm font-medium text-cream transition-transform hover:-translate-y-0.5 hover:bg-coast-dark"
+            >
+              <KeyRound size={16} />
+              Already Booked? Guest Login
+            </Link>
             <Link
               href="/directions"
               className="rounded-full bg-cream px-7 py-3.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5 hover:bg-white"

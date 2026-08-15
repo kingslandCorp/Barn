@@ -54,14 +54,24 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Mobile toggle */}
-        <button
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          className="text-ink md:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X size={26} /> : <Menu size={26} />}
-        </button>
+        {/* Mobile: Guests stays a persistent, always-visible button rather than being
+            hidden behind the menu toggle — guests who've already booked need it fast. */}
+        <div className="flex items-center gap-3 md:hidden">
+          <Link
+            href="/guests"
+            className="flex items-center gap-1.5 rounded-full bg-coast px-4 py-2 text-sm font-medium text-cream transition-colors hover:bg-coast-dark"
+          >
+            <KeyRound size={15} />
+            Guests
+          </Link>
+          <button
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="text-ink"
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </div>
 
       <AnimatePresence>
@@ -84,14 +94,6 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/guests"
-                onClick={() => setOpen(false)}
-                className="mt-2 flex items-center gap-2 rounded-xl bg-coast px-3 py-3 text-base font-medium text-cream"
-              >
-                <KeyRound size={16} />
-                Guests
-              </Link>
             </div>
           </motion.nav>
         )}

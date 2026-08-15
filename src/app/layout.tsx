@@ -101,6 +101,7 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Dog friendly', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Wi-Fi', value: true },
   ],
+  sameAs: ['https://www.google.com/maps?cid=12837679556617598099'],
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

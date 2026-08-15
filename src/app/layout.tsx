@@ -90,6 +90,9 @@ const jsonLd = {
   email: siteConfig.email,
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Kingsland, St Mary Church',
+    addressLocality: 'Cowbridge',
+    postalCode: 'CF71 7LT',
     addressRegion: 'Vale of Glamorgan',
     addressCountry: 'GB',
   },

@@ -20,11 +20,16 @@ const workSans = Work_Sans({
 });
 const siteUrl = 'https://kingslandbarn.co.uk';
 const businessName = `${siteConfig.name} ${siteConfig.fullName}`;
+// The site's own on-page copy talks about "The Family Barn", but the domain,
+// Google Business Profile listing, and the phrase people actually search for
+// is "Kingsland Barn" — search/social metadata leads with that name so the
+// site is unambiguously the match for that query.
+const searchName = 'Kingsland Barn';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${siteConfig.name} — Luxury Countryside Holiday Let, ${siteConfig.region}`,
-    template: `%s — ${siteConfig.name}`,
+    default: `${searchName} — Luxury Countryside Holiday Let, ${siteConfig.region}`,
+    template: `%s — ${searchName}`,
   },
   description: siteConfig.metaDescription,
   keywords: [
@@ -49,10 +54,10 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${siteConfig.name} — Luxury Countryside Holiday Let`,
+    title: `${searchName} — Luxury Countryside Holiday Let`,
     description: siteConfig.metaDescription,
     url: siteUrl,
-    siteName: siteConfig.name,
+    siteName: searchName,
     locale: 'en_GB',
     type: 'website',
     images: [
@@ -66,7 +71,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${siteConfig.name} — ${siteConfig.region}`,
+    title: `${searchName} — ${siteConfig.region}`,
     description: siteConfig.metaDescription,
     images: [sitePhotos.hero.src],
   },
@@ -83,7 +88,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LodgingBusiness',
-  name: businessName,
+  name: searchName,
+  alternateName: businessName,
   description: siteConfig.metaDescription,
   url: siteUrl,
   image: `${siteUrl}${sitePhotos.hero.src}`,

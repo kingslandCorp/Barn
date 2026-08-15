@@ -9,7 +9,7 @@ export const siteConfig = {
   tagline:
     'A place to slow down, breathe deeply and enjoy the beauty of the Welsh countryside.',
   metaDescription:
-    'The Family Barn (@ Kingsland) is a luxury countryside holiday let in the Vale of Glamorgan, Wales — a heated pool, a wood burner, and the Heritage Coast on your doorstep.',
+    'Kingsland Barn (The Family Barn) is a luxury countryside holiday let in the Vale of Glamorgan, Wales — a heated pool, a wood burner, and the Heritage Coast on your doorstep.',
 };
 
 export const navLinks = [

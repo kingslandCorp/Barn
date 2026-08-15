@@ -46,8 +46,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-cream/10 pt-6 text-xs text-cream/40">
-          © {new Date().getFullYear()} {siteConfig.fullName}. All rights reserved.
+        <div className="mt-12 flex flex-col gap-3 border-t border-cream/10 pt-6 text-xs text-cream/40 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            © {new Date().getFullYear()} {siteConfig.fullName}. All rights reserved.
+          </p>
+          <Link href="/privacy" className="hover:text-cream">
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </footer>

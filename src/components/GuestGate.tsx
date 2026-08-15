@@ -93,6 +93,13 @@ export default function GuestGate({ children }: { children: ReactNode }) {
                 className="w-full rounded-full border border-ink/15 bg-cream px-5 py-3.5 text-sm text-ink placeholder:text-ink/40 focus:border-coast"
               />
               {error && <p className="px-1 text-xs text-red-600">{error}</p>}
+              <p className="px-1 text-xs text-ink/40">
+                We log this email address to confirm you&rsquo;re a registered guest. See our{' '}
+                <a href="/privacy" className="underline">
+                  Privacy Policy
+                </a>
+                .
+              </p>
               <button
                 type="submit"
                 className="w-full rounded-full bg-coast px-6 py-3.5 text-sm font-medium text-cream transition-colors hover:bg-coast-dark"

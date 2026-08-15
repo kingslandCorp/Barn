@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
-import { KeyRound } from 'lucide-react';
 import { siteConfig, sitePhotos } from '@/lib/content';
 
 export default function Hero() {
@@ -59,29 +58,19 @@ export default function Hero() {
           <p className="mt-6 max-w-md text-base leading-relaxed text-cream/85 sm:text-lg">
             {siteConfig.tagline}
           </p>
-          <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:gap-4">
+          <div className="mt-9 flex flex-wrap gap-4">
             <Link
-              href="/guests"
-              className="flex w-full max-w-xs items-center justify-center gap-2 rounded-full bg-coast px-7 py-3.5 text-sm font-medium text-cream transition-transform hover:-translate-y-0.5 hover:bg-coast-dark sm:w-auto sm:max-w-none sm:justify-start"
+              href="/directions"
+              className="rounded-full bg-cream px-7 py-3.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5 hover:bg-white"
             >
-              <KeyRound size={16} />
-              Already Booked? Guest Login
+              Plan Your Stay
             </Link>
-            {/* Narrower on mobile so the pair's combined width matches the pill above; back to natural width from sm: up */}
-            <div className="flex w-full max-w-xs gap-3 sm:contents">
-              <Link
-                href="/directions"
-                className="flex-1 rounded-full bg-cream px-4 py-3.5 text-center text-sm font-medium text-ink transition-transform hover:-translate-y-0.5 hover:bg-white sm:flex-initial sm:px-7"
-              >
-                Plan Your Stay
-              </Link>
-              <Link
-                href="/explore"
-                className="flex-1 rounded-full border border-cream/40 bg-cream/10 px-4 py-3.5 text-center text-sm font-medium text-cream backdrop-blur transition-transform hover:-translate-y-0.5 hover:bg-cream/20 sm:flex-initial sm:px-7"
-              >
-                Explore The Area
-              </Link>
-            </div>
+            <Link
+              href="/explore"
+              className="rounded-full border border-cream/40 bg-cream/10 px-7 py-3.5 text-sm font-medium text-cream backdrop-blur transition-transform hover:-translate-y-0.5 hover:bg-cream/20"
+            >
+              Explore The Area
+            </Link>
           </div>
         </div>
       </motion.div>

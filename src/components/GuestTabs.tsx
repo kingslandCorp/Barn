@@ -6,6 +6,7 @@ import { MapPin, BookOpen, LogOut, Map, CreditCard } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
 import DepartureChecklist from '@/components/DepartureChecklist';
+import DepartureActions from '@/components/DepartureActions';
 import Icon from './Icon';
 import {
   arrivalSteps,
@@ -316,7 +317,8 @@ export default function GuestTabs() {
             <div className="mt-10">
               <DepartureChecklist />
             </div>
-            <Reveal delay={0.2} className="mt-10 rounded-3xl bg-ink px-8 py-8 text-cream">
+            <DepartureActions />
+            <Reveal delay={0.2} className="mt-8 rounded-3xl bg-ink px-8 py-8 text-cream">
               <p className="text-sm sm:text-base">
                 Safe travels — and thank you for looking after The Barn. If anything needs
                 flagging on your way out, drop us a line at{' '}

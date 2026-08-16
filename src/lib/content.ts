@@ -299,6 +299,13 @@ export const directionsMapsUrl =
 
 export const checkInDepositUrl = 'https://buy.stripe.com/3cIaEZ9lh4fX1OD6XJ3ks00';
 
+export const googleReviewUrl = 'https://g.page/r/CZN0fDCKmSiyEBM/review';
+
+// wa.me pre-fills the message; the guest still taps send themselves.
+export const hostWhatsAppUrl = `https://wa.me/447885479048?text=${encodeURIComponent(
+  "Hi Kim, we've just checked out of Kingsland Barn. Thanks for having us!"
+)}`;
+
 export const parkingInfo = {
   title: 'Parking',
   description:
@@ -1049,6 +1056,6 @@ export const departureChecklist: { icon: string; title: string; description: str
     icon: 'KeyRound',
     title: 'Keys',
     description:
-      'Take one last look around — under the bed, behind the sofa — then leave the two sets of keys on the worktop.',
+      'Take one last look around — under the bed, behind the sofa — then leave the two sets of keys on the kitchen worktop.',
   },
 ];

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { MapPin, BookOpen, LogOut, Map } from 'lucide-react';
+import { MapPin, BookOpen, LogOut, Map, CreditCard } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
 import DepartureChecklist from '@/components/DepartureChecklist';
@@ -18,6 +18,7 @@ import {
   localSupermarkets,
   what3words,
   directionsMapsUrl,
+  checkInDepositUrl,
 } from '@/lib/content';
 
 type TabId = 'finding-us' | 'handbook' | 'before-you-leave';
@@ -112,7 +113,21 @@ export default function GuestTabs() {
             </button>
           );
         })}
+        {/* Takes guests off-site to Stripe rather than switching tab content, so it's a
+            link styled to match the bar rather than another button in the `tabs` array. */}
+        <a
+          href={checkInDepositUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-coast px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-coast-dark sm:flex-1 sm:px-6 sm:py-3"
+        >
+          <CreditCard size={15} strokeWidth={1.75} />
+          Check-in
+        </a>
       </div>
+      <p className="mx-auto mt-3 max-w-xl text-center text-xs text-ink/50">
+        Check-in requires a refundable £250 damage deposit, paid securely via Stripe.
+      </p>
 
       {/* Tab content */}
       <div className="mt-10">

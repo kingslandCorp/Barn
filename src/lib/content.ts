@@ -296,6 +296,8 @@ export const mapEmbedSrc =
 export const directionsMapsUrl =
   'https://www.google.com/maps/search/?api=1&query=51.435480,-3.409444';
 
+export const checkInDepositUrl = 'https://buy.stripe.com/3cIaEZ9lh4fX1OD6XJ3ks00';
+
 export const parkingInfo = {
   title: 'Parking',
   description:

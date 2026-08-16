@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function PoolWellnessPage() {
   return (
     <div className="pb-24">
-      <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
+      <section className="mx-auto max-w-content px-5 pt-8 sm:px-8 sm:pt-12 lg:px-12">
         <Reveal>
           <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">Unwind</p>
           <h1 className="font-display text-3xl leading-tight text-ink sm:text-4xl md:text-5xl">

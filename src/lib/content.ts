@@ -302,8 +302,14 @@ export const checkInDepositUrl = 'https://buy.stripe.com/3cIaEZ9lh4fX1OD6XJ3ks00
 export const googleReviewUrl = 'https://g.page/r/CZN0fDCKmSiyEBM/review';
 
 // wa.me pre-fills the message; the guest still taps send themselves.
-export const hostWhatsAppUrl = `https://wa.me/447885479048?text=${encodeURIComponent(
+const hostWhatsAppNumber = '447885479048';
+
+export const hostWhatsAppUrl = `https://wa.me/${hostWhatsAppNumber}?text=${encodeURIComponent(
   "Hi Kim, we've just checked out of Kingsland Barn. Thanks for having us!"
+)}`;
+
+export const reflexologyWhatsAppUrl = `https://wa.me/${hostWhatsAppNumber}?text=${encodeURIComponent(
+  "Hi Kim, is it possible to book a reflexology session while I'm staying at Kingsland Barn?"
 )}`;
 
 export const parkingInfo = {

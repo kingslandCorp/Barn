@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, MessageCircle } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 import Photo from '@/components/Photo';
-import { siteConfig, poolPhotos } from '@/lib/content';
+import { siteConfig, poolPhotos, reflexologyWhatsAppUrl } from '@/lib/content';
 
 export const metadata: Metadata = {
   title: 'Pool & Wellness',
-  description: `The heated outdoor pool at ${siteConfig.fullName}, plus a nearby way to properly unwind.`,
+  description: `The heated outdoor pool at ${siteConfig.fullName}, plus an in-stay reflexology treatment from Kim.`,
 };
 
 export default function PoolWellnessPage() {
@@ -21,12 +20,13 @@ export default function PoolWellnessPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
             A stay here is already a chance to slow down. Between a swim in the pool and a
-            treatment just down the road in Cowbridge, it's easy to make it properly restful.
+            reflexology treatment without ever leaving the property, it's easy to make it
+            properly restful.
           </p>
         </Reveal>
       </section>
 
-      {/* Wellness — Vale Reflexology */}
+      {/* Wellness — reflexology with Kim */}
       <section className="mx-auto mt-4 max-w-content px-5 py-14 sm:px-8 lg:px-12">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal>
@@ -37,12 +37,12 @@ export default function PoolWellnessPage() {
               Why not book a treatment while you're here?
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/65">
-              Right here in the Vale of Glamorgan, in nearby Cowbridge, Kim Davis offers holistic
-              duopody reflexology — a gentle, whole-body treatment worked through both feet
-              together. It's the kind of thing that pairs perfectly with a slow countryside
-              weekend: guests use it to ease stress, ease into better sleep, or simply carve out
-              an hour that's entirely their own. Appointments run Monday to Friday, and a free
-              15-minute discovery call is the easiest way to see if it's for you.
+              Kim, who looks after The Barn, is also a qualified duopody reflexologist — treating
+              both feet together in one gentle, whole-body session. Guests staying here can
+              arrange a treatment without leaving the property: just message Kim directly and
+              she'll find a time that works around your stay. It's the kind of thing that pairs
+              perfectly with a slow countryside weekend — easing stress, easing into better sleep,
+              or simply carving out an hour that's entirely your own.
             </p>
             <a
               href="https://www.valereflexology.com"
@@ -50,25 +50,28 @@ export default function PoolWellnessPage() {
               rel="noopener noreferrer"
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-coast underline underline-offset-2 hover:text-coast-dark"
             >
-              Visit Vale Reflexology
+              More about Kim's reflexology practice
               <ArrowUpRight size={14} />
             </a>
             <div className="mt-7">
-              <Link
-                href="/#book"
-                className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3.5 text-sm font-medium text-ink transition-transform hover:-translate-y-0.5"
+              <a
+                href={reflexologyWhatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-sage-dark px-7 py-3.5 text-sm font-medium text-cream transition-transform hover:-translate-y-0.5"
               >
-                Check availability for your stay →
-              </Link>
+                <MessageCircle size={16} />
+                Ask Kim on WhatsApp
+              </a>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <Photo
-              src="/images/bathsoap.avif"
-              alt="A little luxury waiting in the bathroom at The Barn"
-              width={1200}
-              height={900}
-              className="max-h-[420px]"
+              src="/images/feet-treatment.jpg"
+              alt="A reflexology treatment, both feet worked together"
+              width={1400}
+              height={933}
+              className="max-h-[380px]"
             />
           </Reveal>
         </div>
@@ -96,20 +99,22 @@ export default function PoolWellnessPage() {
                 alt={poolPhotos.main.alt}
                 width={poolPhotos.main.width}
                 height={poolPhotos.main.height}
-                className="max-h-[340px]"
+                className="max-h-[380px]"
               />
             </Reveal>
           </div>
 
+          {/* Both forced to a shared 4:3 box (not each photo's native ratio) so the pair
+              renders at matching height, and stepped down from the 380px hero above. */}
           <Reveal delay={0.15} className="mt-8 grid grid-cols-2 gap-6">
             {poolPhotos.minor.map((photo) => (
               <Photo
                 key={photo.src}
                 src={photo.src}
                 alt={photo.alt}
-                width={photo.width}
-                height={photo.height}
-                className="max-h-[280px]"
+                width={4}
+                height={3}
+                className="max-h-[300px]"
               />
             ))}
           </Reveal>

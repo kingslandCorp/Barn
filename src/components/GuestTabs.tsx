@@ -264,18 +264,20 @@ export default function GuestTabs() {
             <div className="mt-14">
               <h3 className="font-display text-xl text-ink">Pool Rules</h3>
               <div className="mt-6 grid max-w-3xl grid-cols-2 gap-4">
+                {/* Both forced to a shared 4:3 box (not each photo's native ratio) so the
+                    two tiles render at the same height regardless of source dimensions. */}
                 <Photo
                   src={sitePhotos.poolSafety.src}
                   alt={sitePhotos.poolSafety.alt}
-                  width={sitePhotos.poolSafety.width}
-                  height={sitePhotos.poolSafety.height}
+                  width={4}
+                  height={3}
                   className="max-h-[320px]"
                 />
                 <Photo
                   src={poolPhotos.minor[0].src}
                   alt={poolPhotos.minor[0].alt}
-                  width={poolPhotos.minor[0].width}
-                  height={poolPhotos.minor[0].height}
+                  width={4}
+                  height={3}
                   className="max-h-[320px]"
                 />
               </div>

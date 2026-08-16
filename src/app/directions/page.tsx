@@ -13,7 +13,9 @@ export default function LocationPage() {
       {/* The Views */}
       <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
         <SectionHeading eyebrow="The Views" title="Right outside the door" />
-        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 lg:grid-cols-5">
+        {/* 5 photos: skip the sm:4-col step (5 items over 4 cols leaves one orphaned on
+            its own row) and go straight from 2-col to 5-col. */}
+        <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-5">
           {viewPhotos.map((item, i) => (
             <Reveal key={item.label} delay={i * 0.05}>
               <Photo

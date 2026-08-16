@@ -44,7 +44,7 @@ export default function WinterPage() {
               alt="The wood burner, lit, with a basket of logs beside it"
               width={1071}
               height={1428}
-              className="max-h-[420px]"
+              className="max-h-[380px]"
             />
           </Reveal>
         </div>
@@ -73,7 +73,7 @@ export default function WinterPage() {
                 alt="The open-plan kitchen and living space"
                 width={1428}
                 height={1071}
-                className="max-h-[340px]"
+                className="max-h-[380px]"
               />
             </Reveal>
           </div>
@@ -100,7 +100,7 @@ export default function WinterPage() {
               alt="The Barn lit up after dark, with the kitchen visible through the open door"
               width={1428}
               height={1071}
-              className="max-h-[340px]"
+              className="max-h-[380px]"
             />
           </Reveal>
         </div>

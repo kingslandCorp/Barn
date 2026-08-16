@@ -14,6 +14,7 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: 'Home', href: '/' },
+  { label: 'Pool & Wellness', href: '/pool-wellness' },
   { label: 'The Barn at Winter', href: '/winter' },
   { label: 'Location', href: '/directions' },
   { label: 'Explore the Area', href: '/explore' },

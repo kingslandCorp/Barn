@@ -27,7 +27,7 @@ export default function PoolWellnessPage() {
       </section>
 
       {/* Pool */}
-      <section className="mx-auto mt-4 max-w-content px-5 py-14 sm:px-8 lg:px-12">
+      <section className="mx-auto mt-4 max-w-content px-5 py-7 sm:px-8 lg:px-12">
         <div className="grid items-center gap-10 md:grid-cols-2">
           <Reveal className="md:order-2">
             <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">01 — Pool</p>
@@ -70,7 +70,7 @@ export default function PoolWellnessPage() {
 
       {/* Wellness — reflexology with Kim */}
       <section className="bg-white/40">
-        <div className="mx-auto max-w-content px-5 py-14 sm:px-8 lg:px-12">
+        <div className="mx-auto max-w-content px-5 py-7 sm:px-8 lg:px-12">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <Reveal>
               <p className="eyebrow mb-2 text-xs font-semibold uppercase text-coast">

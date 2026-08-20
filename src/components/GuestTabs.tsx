@@ -160,7 +160,7 @@ export default function GuestTabs() {
               </a>
             </Reveal>
             <Reveal delay={0.06}>
-              <p className="mt-3 text-center text-sm text-ink/60">
+              <p className="mt-3 text-center text-sm text-ink">
                 From the M4: westbound, leave at Junction 37; eastbound, leave at Junction 34,
                 then follow the A48. From there, look for the BaffleHaus turning to avoid the
                 smaller lanes.

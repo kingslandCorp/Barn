@@ -159,6 +159,13 @@ export default function GuestTabs() {
                 Open in Maps
               </a>
             </Reveal>
+            <Reveal delay={0.06}>
+              <p className="mt-3 text-center text-sm text-ink/60">
+                From the M4: westbound, leave at Junction 37; eastbound, leave at Junction 34,
+                then follow the A48. From there, look for the BaffleHaus turning to avoid the
+                smaller lanes.
+              </p>
+            </Reveal>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 md:items-stretch">
               <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2">

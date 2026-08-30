@@ -882,22 +882,8 @@ export const houseRules: { icon: string; title: string; description: string }[] 
   {
     icon: 'CigaretteOff',
     title: 'No smoking indoors',
-    description: 'Please smoke outside only, away from open doors and windows.',
-  },
-  {
-    icon: 'PartyPopper',
-    title: 'No parties or events',
-    description: 'The Barn is a peaceful retreat for registered guests, not a venue.',
-  },
-  {
-    icon: 'UserCheck',
-    title: 'Only booked guests in the house',
-    description: 'Please let us know in advance if anyone else will be joining you or staying over.',
-  },
-  {
-    icon: 'Moon',
-    title: 'Quiet hours after 10pm',
-    description: 'Sound travels in the countryside — thank you for keeping things gentle in the evening.',
+    description:
+      'Please smoke outside only, away from open doors and windows — smoking indoors will result in loss of the damage deposit.',
   },
   {
     icon: 'PawPrint',
@@ -910,9 +896,34 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: 'Dogs are very welcome downstairs, but please keep them out of the bedrooms.',
   },
   {
+    icon: 'CloudRain',
+    title: 'Close the Velux windows if it rains',
+    description: "Left open in the rain, they let water in and can damage the room below — please shut them if the weather turns.",
+  },
+  {
+    icon: 'Footprints',
+    title: 'Shoes off, please',
+    description: 'Boots and wellies at the door — we just ask that muddy footwear stays outside.',
+  },
+  {
+    icon: 'UserCheck',
+    title: 'Only booked guests in the house',
+    description: 'Please let us know in advance if anyone else will be joining you or staying over.',
+  },
+  {
     icon: 'Home',
     title: 'Respect neighbouring properties',
     description: 'Our neighbours live here year-round — please be considerate of noise and privacy.',
+  },
+  {
+    icon: 'PartyPopper',
+    title: 'No parties or events',
+    description: 'The Barn is a peaceful retreat for registered guests, not a venue.',
+  },
+  {
+    icon: 'Moon',
+    title: 'Quiet hours after 10pm',
+    description: 'Sound travels in the countryside — thank you for keeping things gentle in the evening.',
   },
   {
     icon: 'AlertTriangle',
@@ -925,19 +936,9 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: "This gives us time to get the Barn ready and looking its best for the next guests.",
   },
   {
-    icon: 'Footprints',
-    title: 'Shoes off, please',
-    description: 'Boots and wellies at the door — we just ask that muddy footwear stays outside.',
-  },
-  {
     icon: 'Umbrella',
     title: 'Cushions & BBQ overnight',
     description: 'Please bring the patio cushions in and put the cover on the BBQ each evening, in case of rain overnight.',
-  },
-  {
-    icon: 'CloudRain',
-    title: 'Close the Velux windows if it rains',
-    description: "Left open in the rain, they let water in and can damage the room below — please shut them if the weather turns.",
   },
   {
     icon: 'Heart',

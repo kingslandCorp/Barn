@@ -270,7 +270,7 @@ export default function GuestTabs() {
             {/* Pool Rules */}
             <div className="mt-14">
               <h3 className="font-display text-xl text-ink">Pool Rules</h3>
-              <div className="mt-6 grid max-w-3xl grid-cols-2 gap-4">
+              <div className="mt-6 grid grid-cols-2 gap-4">
                 {/* Both forced to a shared 4:3 box (not each photo's native ratio) so the
                     two tiles render at the same height regardless of source dimensions. */}
                 <Photo

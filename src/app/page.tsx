@@ -114,36 +114,55 @@ function IconTile({
 export default function HomePage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const dayVideoRef = useRef<HTMLVideoElement>(null);
-  const dayBlurRef = useRef<HTMLVideoElement>(null);
   const nightVideoRef = useRef<HTMLVideoElement>(null);
-  const nightBlurRef = useRef<HTMLVideoElement>(null);
+  const nightSectionRef = useRef<HTMLDivElement>(null);
+
+  // The night video is well below the fold — no point paying for ~1.8MB of
+  // video before a visitor has scrolled anywhere near it. Load it once the
+  // section is getting close (not only once it's actually on screen), so it's
+  // ready by the time it comes into view rather than popping in.
+  const [nightVideoVisible, setNightVideoVisible] = useState(false);
+  useEffect(() => {
+    const el = nightSectionRef.current;
+    if (!el || nightVideoVisible) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setNightVideoVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [nightVideoVisible]);
 
   // The browser's own native `autoplay` handles actually starting these videos —
   // that's the mechanism Apple built and tests specifically for muted, inline
   // video, and it's far more reliable on iOS than anything driven by hand-written
   // JS. This effect only handles keeping the two videos in sync: every time the
-  // day video finishes, snap all four (day, night, and their blurred copies)
-  // back to frame 0 together and resume, so they can't drift apart over time.
+  // day video finishes, snap both back to frame 0 together and resume, so they
+  // can't drift apart over time. Re-runs once the night video actually mounts
+  // (it doesn't exist yet on first render — see nightVideoVisible above).
   useEffect(() => {
     const day = dayVideoRef.current;
-    const dayBlur = dayBlurRef.current;
     const night = nightVideoRef.current;
-    const nightBlur = nightBlurRef.current;
-    if (!day || !night || !dayBlur || !nightBlur) return;
+    if (!day || !night) return;
 
     // iOS Safari checks whether a video is muted at the exact moment .play() is
     // called — the JSX `muted` attribute can land a beat too late for that check.
     // Forcing it here, before anything else, is the reliable fix.
-    [day, dayBlur, night, nightBlur].forEach((v) => {
+    [day, night].forEach((v) => {
       v.muted = true;
       v.defaultMuted = true;
     });
 
     const resync = () => {
-      [day, dayBlur, night, nightBlur].forEach((v) => {
+      [day, night].forEach((v) => {
         v.currentTime = 0;
       });
-      [day, dayBlur, night, nightBlur].forEach((v) => v.play().catch(() => {}));
+      [day, night].forEach((v) => v.play().catch(() => {}));
     };
 
     day.addEventListener('ended', resync);
@@ -151,7 +170,7 @@ export default function HomePage() {
     return () => {
       day.removeEventListener('ended', resync);
     };
-  }, []);
+  }, [nightVideoVisible]);
 
   const lightboxPhotos: LightboxPhoto[] = useMemo(() => {
     const photos: LightboxPhoto[] = [];
@@ -219,18 +238,18 @@ export default function HomePage() {
     <>
       <Hero />
 
-      {/* Day video — full-bleed, full frame visible, blurred stretched copy fills the sides */}
+      {/* Day video — full-bleed, full frame visible, blurred stretched copy fills the sides.
+          The blurred side-fill is a static frame, not a second full video load — at 12px
+          blur, motion in stretched peripheral content isn't perceptible anyway. */}
       <section className="w-full">
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
-          <video
-            ref={dayBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
-            src="/videos/day-to-sunset.mp4"
-            preload="metadata"
-            autoPlay
-            muted
-            playsInline
+          <Image
+            src="/images/day-video-poster.jpg"
+            alt=""
+            fill
+            sizes="100vw"
             aria-hidden="true"
+            className="scale-110 object-cover blur-[12px]"
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <div
@@ -279,18 +298,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Night video — full-bleed, sits right after "Somewhere to properly switch off" */}
-      <section className="w-full">
+      {/* Night video — full-bleed, sits right after "Somewhere to properly switch off".
+          This section is well below the fold, so nothing here loads until
+          nightVideoVisible flips true (see the IntersectionObserver above) — until
+          then both the blurred fill and the sharp centre show the same static poster
+          frame, so there's no layout shift and no visible pop when the video mounts. */}
+      <section className="w-full" ref={nightSectionRef}>
         <div className="relative h-[205px] w-full overflow-hidden sm:h-[256px] md:h-[368px]">
-          <video
-            ref={nightBlurRef}
-            className="absolute inset-0 h-full w-full scale-110 object-cover blur-[12px]"
-            src="/videos/sunset-to-night.mp4"
-            preload="metadata"
-            autoPlay
-            muted
-            playsInline
+          <Image
+            src="/images/night-video-poster.jpg"
+            alt=""
+            fill
+            sizes="100vw"
             aria-hidden="true"
+            className="scale-110 object-cover blur-[12px]"
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <div
@@ -303,15 +324,25 @@ export default function HomePage() {
                   'linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%)',
               }}
             >
-              <video
-                ref={nightVideoRef}
-                className="h-full w-full object-cover"
-                src="/videos/sunset-to-night.mp4"
-                preload="auto"
-                autoPlay
-                muted
-                playsInline
-              />
+              {nightVideoVisible ? (
+                <video
+                  ref={nightVideoRef}
+                  className="h-full w-full object-cover"
+                  src="/videos/sunset-to-night.mp4"
+                  preload="auto"
+                  autoPlay
+                  muted
+                  playsInline
+                />
+              ) : (
+                <Image
+                  src="/images/night-video-poster.jpg"
+                  alt="The Barn as evening settles in"
+                  fill
+                  sizes="(min-width: 768px) 33vw, 66vw"
+                  className="object-cover"
+                />
+              )}
             </div>
           </div>
         </div>

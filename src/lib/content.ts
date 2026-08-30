@@ -930,6 +930,16 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: 'Boots and wellies at the door — we just ask that muddy footwear stays outside.',
   },
   {
+    icon: 'Umbrella',
+    title: 'Cushions & BBQ overnight',
+    description: 'Please bring the patio cushions in and put the cover on the BBQ each evening, in case of rain overnight.',
+  },
+  {
+    icon: 'CloudRain',
+    title: 'Close the Velux windows if it rains',
+    description: "Left open in the rain, they let water in and can damage the room below — please shut them if the weather turns.",
+  },
+  {
     icon: 'Heart',
     title: 'Treat the Barn like home',
     description: "We've furnished it with care — please treat it the same way you'd treat your own place.",

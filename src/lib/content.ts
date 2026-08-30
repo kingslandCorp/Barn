@@ -906,9 +906,9 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: 'Boots and wellies at the door — we just ask that muddy footwear stays outside.',
   },
   {
-    icon: 'UserCheck',
-    title: 'Only booked guests in the house',
-    description: 'Please let us know in advance if anyone else will be joining you or staying over.',
+    icon: 'Moon',
+    title: 'Quiet hours after 10pm',
+    description: 'Sound travels in the countryside — thank you for keeping things gentle in the evening.',
   },
   {
     icon: 'Home',
@@ -916,19 +916,14 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     description: 'Our neighbours live here year-round — please be considerate of noise and privacy.',
   },
   {
+    icon: 'UserCheck',
+    title: 'Only booked guests in the house',
+    description: 'Please let us know in advance if anyone else will be joining you or staying over.',
+  },
+  {
     icon: 'PartyPopper',
     title: 'No parties or events',
     description: 'The Barn is a peaceful retreat for registered guests, not a venue.',
-  },
-  {
-    icon: 'Moon',
-    title: 'Quiet hours after 10pm',
-    description: 'Sound travels in the countryside — thank you for keeping things gentle in the evening.',
-  },
-  {
-    icon: 'AlertTriangle',
-    title: 'Report any damage',
-    description: "Accidents happen — just let us know as soon as possible so we can sort it.",
   },
   {
     icon: 'Clock',
@@ -939,6 +934,11 @@ export const houseRules: { icon: string; title: string; description: string }[] 
     icon: 'Umbrella',
     title: 'Cushions & BBQ overnight',
     description: 'Please bring the patio cushions in and put the cover on the BBQ each evening, in case of rain overnight.',
+  },
+  {
+    icon: 'AlertTriangle',
+    title: "Don't worry about accidents",
+    description: 'These things happen — just let us know as soon as you can so we can sort it, no stress.',
   },
   {
     icon: 'Heart',

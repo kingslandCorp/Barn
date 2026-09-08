@@ -51,9 +51,14 @@ export default function Footer() {
             © {new Date().getFullYear()} {siteConfig.fullName}. All rights reserved.{' '}
             <span className="text-cream/25">Also known as Kingsland Barn.</span>
           </p>
-          <Link href="/privacy" className="hover:text-cream">
-            Privacy Policy
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/terms" className="hover:text-cream">
+              Booking Terms
+            </Link>
+            <Link href="/privacy" className="hover:text-cream">
+              Privacy Policy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

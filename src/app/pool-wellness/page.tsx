@@ -40,6 +40,9 @@ export default function PoolWellnessPage() {
               with nothing but birdsong for company. Heated and ready whenever you are, morning
               swim or last thing before bed.
             </p>
+            <p className="mt-3 max-w-xl text-sm text-ink/50">
+              Pool closed Oct &ndash; March &mdash; it&rsquo;s icy!
+            </p>
           </Reveal>
           <Reveal delay={0.1} className="md:order-1">
             <Photo

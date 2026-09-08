@@ -1009,6 +1009,11 @@ export const poolRules: { icon: string; title: string; description: string }[] =
     title: 'Shower before entering',
     description: 'A quick rinse before you get in keeps the water clean and clear for everyone.',
   },
+  {
+    icon: 'Snowflake',
+    title: 'Pool closed October – March',
+    description: "The pool is closed over the colder months — it's icy!",
+  },
 ];
 
 export const localSupermarkets: {

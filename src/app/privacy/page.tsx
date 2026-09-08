@@ -247,29 +247,31 @@ const sections: Section[] = [
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-content px-5 py-16 pb-24 sm:px-8 sm:py-24 lg:px-12">
-      <Reveal>
-        <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
-          Privacy Policy
-        </p>
-        <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
-          How we handle your data
-        </h1>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-ink/70 sm:text-lg">
-          Last updated: September 2026. A plain-language explanation of the data we collect when
-          you use this site or book a stay with us, in line with UK GDPR.
-        </p>
-      </Reveal>
+    <div className="w-full px-5 py-16 pb-24 sm:px-8 sm:py-24 lg:px-12">
+      <div className="mx-auto max-w-2xl">
+        <Reveal>
+          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
+            Privacy Policy
+          </p>
+          <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
+            How we handle your data
+          </h1>
+          <p className="mt-5 text-base leading-relaxed text-ink/70 sm:text-lg">
+            Last updated: September 2026. A plain-language explanation of the data we collect when
+            you use this site or book a stay with us, in line with UK GDPR.
+          </p>
+        </Reveal>
 
-      <div className="mt-14 max-w-2xl space-y-10">
-        {sections.map((section) => (
-          <Reveal key={section.heading}>
-            <h2 className="font-display text-xl text-ink sm:text-2xl">{section.heading}</h2>
-            <div className="mt-2 text-sm leading-relaxed text-ink/70 sm:text-base">
-              {section.body}
-            </div>
-          </Reveal>
-        ))}
+        <div className="mt-14 space-y-10">
+          {sections.map((section) => (
+            <Reveal key={section.heading}>
+              <h2 className="font-display text-xl text-ink sm:text-2xl">{section.heading}</h2>
+              <div className="mt-2 text-sm leading-relaxed text-ink/70 sm:text-base">
+                {section.body}
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </div>
   );

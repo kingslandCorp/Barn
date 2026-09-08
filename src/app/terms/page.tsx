@@ -840,43 +840,45 @@ const sections: Section[] = [
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto max-w-content px-5 py-16 pb-24 sm:px-8 sm:py-24 lg:px-12">
-      <Reveal>
-        <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
-          Direct Booking Terms &amp; Conditions
-        </p>
-        <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
-          Booking Terms &amp; Conditions
-        </h1>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-          Last updated: September 2026. These Terms &amp; Conditions apply to bookings made
-          directly with Kingsland Barn, including bookings made through{' '}
-          <a href="https://www.kingslandbarn.co.uk" className="text-coast underline">
-            www.kingslandbarn.co.uk
-          </a>{' '}
-          or by email.
-        </p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-          If you book Kingsland Barn through Airbnb or another third-party booking platform, the
-          booking, payment and cancellation terms of that platform will normally apply instead.
-          Our property-specific house and safety rules will continue to apply during your stay.
-        </p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-          Please read these Terms &amp; Conditions carefully before making payment. By making a
-          payment for a direct booking, you confirm that you have read and accepted these Terms
-          &amp; Conditions on behalf of yourself and all members of your party.
-        </p>
-      </Reveal>
+    <div className="w-full px-5 py-16 pb-24 sm:px-8 sm:py-24 lg:px-12">
+      <div className="mx-auto max-w-2xl">
+        <Reveal>
+          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">
+            Direct Booking Terms &amp; Conditions
+          </p>
+          <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
+            Booking Terms &amp; Conditions
+          </h1>
+          <p className="mt-5 text-base leading-relaxed text-ink/70 sm:text-lg">
+            Last updated: September 2026. These Terms &amp; Conditions apply to bookings made
+            directly with Kingsland Barn, including bookings made through{' '}
+            <a href="https://www.kingslandbarn.co.uk" className="text-coast underline">
+              www.kingslandbarn.co.uk
+            </a>{' '}
+            or by email.
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+            If you book Kingsland Barn through Airbnb or another third-party booking platform, the
+            booking, payment and cancellation terms of that platform will normally apply instead.
+            Our property-specific house and safety rules will continue to apply during your stay.
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+            Please read these Terms &amp; Conditions carefully before making payment. By making a
+            payment for a direct booking, you confirm that you have read and accepted these Terms
+            &amp; Conditions on behalf of yourself and all members of your party.
+          </p>
+        </Reveal>
 
-      <div className="mt-14 max-w-2xl space-y-10">
-        {sections.map((section) => (
-          <Reveal key={section.heading}>
-            <h2 className="font-display text-xl text-ink sm:text-2xl">{section.heading}</h2>
-            <div className="mt-2 text-sm leading-relaxed text-ink/70 sm:text-base">
-              {section.body}
-            </div>
-          </Reveal>
-        ))}
+        <div className="mt-14 space-y-10">
+          {sections.map((section) => (
+            <Reveal key={section.heading}>
+              <h2 className="font-display text-xl text-ink sm:text-2xl">{section.heading}</h2>
+              <div className="mt-2 text-sm leading-relaxed text-ink/70 sm:text-base">
+                {section.body}
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </div>
   );

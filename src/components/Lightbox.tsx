@@ -110,18 +110,26 @@ export default function Lightbox({ photos, index, onClose, onIndexChange }: Prop
         className="relative flex max-h-[85vh] max-w-[92vw] flex-col items-center sm:max-h-[88vh] sm:max-w-[85vw]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/*
+          Give the frame a definite width (derived from the photo's aspect ratio and the
+          available height) so its height resolves from aspect-ratio. The image then fills it.
+          Previously the <img> used h-full inside an auto-height box, which iOS Safari resolves
+          to 0 - the lightbox opened but showed no picture.
+        */}
         <div
-          className="relative max-h-[75vh] max-w-full overflow-hidden rounded-2xl sm:max-h-[80vh]"
-          style={{ aspectRatio: `${photo.width} / ${photo.height}` }}
+          className="relative overflow-hidden rounded-2xl"
+          style={{
+            aspectRatio: `${photo.width} / ${photo.height}`,
+            width: `min(92vw, calc(72svh * ${photo.width / photo.height}))`,
+          }}
         >
           <Image
             key={photo.src}
             src={photo.src}
             alt={photo.alt}
-            width={photo.width}
-            height={photo.height}
+            fill
             sizes="92vw"
-            className="h-full max-h-[75vh] w-auto object-contain sm:max-h-[80vh]"
+            className="object-contain"
             priority
           />
         </div>

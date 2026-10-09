@@ -51,25 +51,34 @@ function parseIcs(text: string): BusyRange[] {
   return ranges;
 }
 
-async function fetchFeed(url: string): Promise<BusyRange[] | null> {
+async function fetchFeed(name: string, url: string): Promise<BusyRange[] | null> {
+  // A feed that never answers would otherwise hang the whole response, so give each one
+  // a hard deadline. The route-level revalidate above already caches the merged result.
   try {
-    const res = await fetch(url, { next: { revalidate: 180 } });
-    if (!res.ok) return null;
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) {
+      console.error(`availability: ${name} returned ${res.status}`);
+      return null;
+    }
     return parseIcs(await res.text());
-  } catch {
+  } catch (err) {
+    console.error(`availability: ${name} failed`, err);
     return null;
   }
 }
 
 export async function GET() {
-  const feedUrls = FEED_ENV_VARS.map((name) => process.env[name]).filter((url): url is string => !!url);
+  const feeds = FEED_ENV_VARS.flatMap((name) => {
+    const url = process.env[name]?.trim();
+    return url ? [{ name, url }] : [];
+  });
 
-  if (feedUrls.length === 0) {
+  if (feeds.length === 0) {
     // Fail gracefully — the calendar just shows nothing as booked rather than breaking the form
     return NextResponse.json({ error: 'not configured', ranges: [] });
   }
 
-  const results = await Promise.all(feedUrls.map(fetchFeed));
+  const results = await Promise.all(feeds.map((f) => fetchFeed(f.name, f.url)));
   const ok = results.filter((r): r is BusyRange[] => r !== null);
 
   if (ok.length === 0) {
@@ -79,5 +88,5 @@ export async function GET() {
   // Overlapping ranges from different feeds are fine — the calendar just marks each night busy.
   // A single failed feed still shows the others' dates rather than nothing.
   const ranges = ok.flat();
-  return NextResponse.json(ok.length < feedUrls.length ? { error: 'partial', ranges } : { ranges });
+  return NextResponse.json(ok.length < feeds.length ? { error: 'partial', ranges } : { ranges });
 }

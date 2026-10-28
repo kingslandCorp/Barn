@@ -6,8 +6,8 @@ export const revalidate = 180;
 
 // Every channel the barn is listed on. Airbnb's export leaves out dates it imported
 // from the other platforms, so each feed has to be read directly — Airbnb alone
-// would miss Booking.com and VRBO bookings.
-const FEED_ENV_VARS = ['AIRBNB_ICAL_URL', 'BOOKING_ICAL_URL', 'VRBO_ICAL_URL'] as const;
+// would miss Booking.com bookings. (VRBO was disconnected in October 2026.)
+const FEED_ENV_VARS = ['AIRBNB_ICAL_URL', 'BOOKING_ICAL_URL'] as const;
 
 type BusyRange = { start: string; end: string }; // ISO YYYY-MM-DD, end is exclusive (checkout day)
 

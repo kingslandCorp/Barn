@@ -1,0 +1,48 @@
+name: Email sending setup
+
+# One-off / on-demand: onboards kingslandbarn.co.uk to Cloudflare Email Sending (so the
+# check-in Worker can email Kim), prints the domain's status and DNS records, and can send
+# a test message to the bookings inbox. Safe to re-run. Uses the same token as the deploy.
+on:
+  workflow_dispatch:
+    inputs:
+      send_test:
+        description: Send a test email to booking@kingslandbarn.co.uk
+        type: boolean
+        default: true
+
+jobs:
+  email:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_DEPLOY_CLAUDE }}
+      CLOUDFLARE_ACCOUNT_ID: 7490cee0a58ed4d84ab07c56ebab3fea
+      DOMAIN: kingslandbarn.co.uk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: npm install --legacy-peer-deps --no-audit --no-fund
+      - name: Current status
+        run: npx wrangler email sending list || true
+      - name: Enable Email Sending
+        run: |
+          if npx wrangler email sending settings "$DOMAIN"; then
+            echo "Already enabled for $DOMAIN"
+          else
+            npx wrangler email sending enable "$DOMAIN"
+          fi
+      - name: Settings and DNS records
+        run: |
+          npx wrangler email sending settings "$DOMAIN"
+          npx wrangler email sending dns get "$DOMAIN"
+      - name: Send test email
+        if: inputs.send_test
+        run: |
+          npx wrangler email sending send \
+            --from "checkin@$DOMAIN" --from-name "Kingsland Barn Check-in" \
+            --to "booking@$DOMAIN" \
+            --subject "Test: check-in emails are set up" \
+            --text "This is a test from the Kingsland Barn website. Guest check-in forms will now be emailed to this address."

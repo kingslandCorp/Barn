@@ -9,7 +9,7 @@
 // State lives in one KV key and is written only when something changes
 // (a new candle or an alert), which keeps well inside the free plan.
 
-import { checkCoin, emptyState, inAlertHours, minCandles, pnlAt, MAX_TRENCH_LEVERAGE } from "./logic.js";
+import { assessCoin, checkCoin, emptyState, inAlertHours, minCandles, pnlAt, recommend, MAX_TRENCH_LEVERAGE } from "./logic.js";
 import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
 import { ICON_180, ICON_512 } from "./icons.js";
 import { generateVapidKeys, sendWebPush } from "./webpush.js";
@@ -379,6 +379,44 @@ export default {
       subs.push({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } });
       await env.STATE.put(SUBS_KEY, JSON.stringify(subs.slice(-10)));
       return json({ ok: true, devices: Math.min(subs.length, 10) });
+    }
+
+    // On-demand advice: best clean setup right now, or "no trade".
+    if (url.pathname === "/suggest") {
+      const cfg = config(env);
+      const state = await loadState(env);
+      const results = await Promise.allSettled(cfg.coins.map((c) => fetchCandles(c, cfg.timeframeMin)));
+      const assessed = cfg.coins.map((coin, i) => {
+        const symbol = symbolOf(coin);
+        const r = results[i];
+        if (r.status === "rejected") return { symbol, ok: false, reason: "price data unavailable" };
+        const candles = r.value;
+        const a = assessCoin(symbol, candles, candles[candles.length - 1].close, cfg);
+        if (a.ok && state.open[symbol]) return { ...a, ok: false, reason: "you already have an open trade on this coin" };
+        return a;
+      });
+      return json({ ...recommend(assessed), currency: cfg.currency, time: new Date().toISOString() });
+    }
+
+    // "Watch this trade for me": track a suggested plan so a CLOSE alert follows.
+    if (url.pathname === "/track" && request.method === "POST") {
+      const plan = await request.json().catch(() => null);
+      const cfg = config(env);
+      if (!plan || !cfg.coins.map(symbolOf).includes(plan.symbol) || !["LONG", "SHORT"].includes(plan.direction) ||
+          !(plan.leverage >= 1 && plan.leverage <= MAX_TRENCH_LEVERAGE)) {
+        return json({ error: "bad trade" }, 400);
+      }
+      const state = await loadState(env);
+      if (state.open[plan.symbol]) return json({ error: "already watching a trade on this coin" }, 409);
+      const candles = await fetchCandles(plan.symbol.split("/")[0], cfg.timeframeMin);
+      const keys = ["symbol", "direction", "entry", "stop", "take_profit", "liquidation", "leverage", "stake", "risk_amount", "stop_pct", "reward_risk"];
+      state.open[plan.symbol] = Object.fromEntries(keys.map((k) => [k, plan[k]]));
+      state.opened_at[plan.symbol] = candles[candles.length - 1].t; // exits checked from the next candle on
+      const alert = { time: new Date().toISOString(), event: "open", manual: true, ...state.open[plan.symbol] };
+      state.alerts = [alert, ...state.alerts].slice(0, 50);
+      state.checked_at = new Date().toISOString();
+      await env.STATE.put(STATE_KEY, JSON.stringify(state));
+      return json({ ok: true });
     }
 
     if (url.pathname === "/run-now" && request.method === "POST") {

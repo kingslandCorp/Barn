@@ -46,6 +46,12 @@ const STYLE = `
   th { color:var(--muted); font-weight:500; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
   tbody tr:last-child td { border-bottom:0; }
   #conn.bad { color:var(--short); }
+  .pick { margin-top:12px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px;
+          display:flex; flex-direction:column; gap:8px; max-width:520px; }
+  .pick.LONG { border-left:4px solid var(--long); } .pick.SHORT { border-left:4px solid var(--short); }
+  .pick.NONE { border-left:4px solid var(--muted); }
+  .pick h3 { margin:0; font-size:1.1rem; }
+  .why { margin:0; padding-left:1.1rem; font-size:0.85rem; color:var(--muted); }
   .pushbox { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px; }
   button.primary { background:var(--accent); color:var(--bg); border:0; font-weight:600; padding:8px 14px; font-size:0.95rem; }
   .login { max-width:360px; margin:12vh auto 0; background:var(--panel); border:1px solid var(--line); border-radius:12px;
@@ -91,6 +97,15 @@ export const PAGE = `<!doctype html>
       <span id="pushmsg" class="muted"></span>
     </div>
   </header>
+
+  <section>
+    <h2>Need a trade now?</h2>
+    <div class="pushbox" style="margin-top:0">
+      <button id="suggest" type="button" class="primary">Suggest a trade now</button>
+      <span id="suggestmsg" class="muted"></span>
+    </div>
+    <div id="suggestion"></div>
+  </section>
 
   <section>
     <h2>Coins</h2>
@@ -201,6 +216,51 @@ document.getElementById('test').addEventListener('click', async () => {
     const r = await (await fetch('/test-alert', {method: 'POST'})).json();
     msg.textContent = r.message;
   } catch (e) { msg.textContent = 'Could not send the test alert.'; }
+});
+
+// ---- on-demand suggestion ----
+let lastPick = null;
+function planList(p) {
+  return '<dl class="mono">' +
+    '<dt>Entry</dt><dd>~' + px(p.entry) + '</dd>' +
+    '<dt>Leverage</dt><dd>x' + p.leverage + '</dd>' +
+    '<dt>Stake</dt><dd>' + gbp(p.stake) + '</dd>' +
+    '<dt>Stop-loss</dt><dd class="neg">' + px(p.stop) + ' (lose ~' + gbp(p.risk_amount) + ')</dd>' +
+    '<dt>Take-profit</dt><dd class="pos">' + px(p.take_profit) + ' (win ~' + gbp(p.risk_amount * p.reward_risk) + ')</dd>' +
+    '<dt>Liquidation</dt><dd class="warn">~' + px(p.liquidation) + '</dd></dl>';
+}
+document.getElementById('suggest').addEventListener('click', async () => {
+  const msg = document.getElementById('suggestmsg');
+  const box = document.getElementById('suggestion');
+  msg.textContent = 'Checking all five coins...';
+  try {
+    const r = await (await fetch('/suggest', {cache: 'no-store'})).json();
+    CUR = r.currency || CUR;
+    lastPick = r.pick;
+    const why = '<ul class="why">' + r.coins.map(c =>
+      '<li>' + esc(c.symbol.split('/')[0]) + ': ' + esc(c.ok ? 'OK, ' + c.reason : c.reason) + '</li>').join('') + '</ul>';
+    if (r.pick) {
+      const p = r.pick.plan;
+      box.innerHTML = '<div class="pick ' + p.direction + '"><h3>' + p.direction + ' ' + esc(p.symbol.split('/')[0]) + ' x' + p.leverage + '</h3>' +
+        '<div class="muted">' + esc(r.pick.reason) + '. Weaker than a fresh crossover alert. Set the stop-loss in Trench.</div>' +
+        planList(p) +
+        '<div><button id="track" type="button">Watch this trade for me</button> <span id="trackmsg" class="muted"></span></div>' +
+        '<div class="muted">Why this coin, and the others:</div>' + why + '</div>';
+      document.getElementById('track').addEventListener('click', async () => {
+        const t = document.getElementById('trackmsg');
+        const res = await fetch('/track', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(lastPick.plan)});
+        const j = await res.json();
+        t.textContent = res.ok ? 'Watching. You will get the CLOSE alert.' : (j.error || 'Could not watch it.');
+        if (res.ok) refresh();
+      });
+    } else {
+      box.innerHTML = '<div class="pick NONE"><h3>No trade right now</h3>' +
+        '<div class="muted">None of the five coins has a clean setup. Sitting out is a position too.</div>' + why + '</div>';
+    }
+    msg.textContent = 'Checked at ' + new Date(r.time).toLocaleTimeString() + '. Prices move fast: act within a few minutes or check again.';
+  } catch (e) {
+    msg.textContent = 'Could not get a suggestion. Try again.';
+  }
 });
 
 // ---- phone alerts (web push) ----

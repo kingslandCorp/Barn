@@ -102,3 +102,26 @@ test("quiet hours: signal recorded but no trade opened", () => {
   assert.equal(state.open["SOL/USD"], undefined);
   assert.equal(state.last_signal["SOL/USD"].skipped, true);
 });
+
+test("suggest: fresh clean trend -> trade; stale or tangled -> no trade", async () => {
+  const { assessCoin, recommend } = await import("../src/logic.js");
+  const cfg = { fastMa: 12, slowMa: 26, atrPeriod: 14, timeframeMin: 15, stake: 10, maxLeverage: 200,
+    atrStopMult: 1.5, rewardRisk: 2, liqBuffer: 2, feePct: 0.0005 };
+  // flat, then a steady 2-hour climb: a fresh, clean, not-yet-stretched LONG
+  const wide = (cl) => cl.map((c, i) => ({ t: 1700000000 + i * 900, open: c, high: c * 1.003, low: c * 0.997, close: c }));
+  const climb = Array.from({ length: 8 }, (_, i) => 100 + 0.15 * (i + 1));
+  const fresh = wide([...Array(60).fill(100), ...climb]);
+  const a = assessCoin("SOL/USD", fresh, climb.at(-1), cfg);
+  assert.equal(a.direction, "LONG");
+  assert.ok(a.ok, a.reason);
+  assert.equal(a.plan.stake, 10);
+  // steady uptrend for 60 candles = trend too old to join
+  const stale = candles(Array.from({ length: 70 }, (_, i) => 100 + i * 0.3));
+  assert.equal(assessCoin("BTC/USD", stale, stale.at(-1).close, cfg).ok, false);
+  // perfectly flat = no direction
+  const flat = candles(Array(70).fill(100));
+  assert.equal(assessCoin("ADA/USD", flat, 100, cfg).ok, false);
+  const r = recommend([assessCoin("BTC/USD", stale, stale.at(-1).close, cfg), assessCoin("ADA/USD", flat, 100, cfg)]);
+  assert.equal(r.pick, null);
+  assert.equal(recommend([a]).pick.symbol, "SOL/USD");
+});

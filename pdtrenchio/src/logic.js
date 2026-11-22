@@ -200,3 +200,63 @@ export function inAlertHours(date, timeZone, start = 8, end = 22) {
   const h = localHour(date, timeZone);
   return start <= end ? h >= start && h < end : h >= start || h < end;
 }
+
+// ------------------------------------------------------- on-demand advice
+// "Suggest a trade now": the crossover strategy only fires on the candle of
+// a crossing, so between signals this reads the CURRENT trend instead and
+// only recommends a trade when the setup is clean. Otherwise: no trade.
+//
+// A coin qualifies when its fast/slow averages crossed recently (fresh
+// trend), they've separated by a meaningful amount (not a flat tangle), and
+// price hasn't already run far from the slow average (not chasing).
+export const SUGGEST_RULES = { maxCandlesSinceCross: 8, minSeparationAtr: 0.3, maxStretchAtr: 2.0 };
+
+export function assessCoin(symbol, candles, livePrice, cfg, rules = SUGGEST_RULES) {
+  const closed = candles.slice(0, -1);
+  const fast = cfg.fastMa ?? 12, slow = cfg.slowMa ?? 26;
+  if (closed.length < Math.max(slow + rules.maxCandlesSinceCross + 2, (cfg.atrPeriod ?? 14) + 2)) {
+    return { symbol, ok: false, reason: "not enough price history" };
+  }
+  const closes = closed.map((c) => c.close);
+  const n = closes.length - 1;
+  const f = sma(closes, fast, n), s = sma(closes, slow, n);
+  const direction = f > s ? "LONG" : "SHORT";
+  let since = 0;
+  while (since < 200 && n - since - 1 >= slow) {
+    const pf = sma(closes, fast, n - since - 1), ps = sma(closes, slow, n - since - 1);
+    if ((pf > ps) !== (f > s)) break;
+    since++;
+  }
+  const atr = averageTrueRange(closed, cfg.atrPeriod ?? 14);
+  const separation = Math.abs(f - s) / atr;
+  const stretch = (direction === "LONG" ? livePrice - s : s - livePrice) / atr;
+  const base = { symbol, direction, candlesSinceCross: since, separation, stretch };
+
+  const hrs = (since * (cfg.timeframeMin ?? 15)) / 60;
+  if (separation < rules.minSeparationAtr) {
+    return { ...base, ok: false, reason: "no clear direction: the averages are tangled" };
+  }
+  if (since > rules.maxCandlesSinceCross) {
+    return { ...base, ok: false, reason: `${direction.toLowerCase()} trend is ${hrs.toFixed(1)}h old: too late to join` };
+  }
+  if (stretch > rules.maxStretchAtr) {
+    return { ...base, ok: false, reason: `price has already run ${stretch.toFixed(1)} ATRs: chasing` };
+  }
+  if (stretch < -0.5) {
+    return { ...base, ok: false, reason: "price is moving against the trend" };
+  }
+  const plan = planTrade({
+    symbol, direction, entry: livePrice, atr, balance: cfg.balance ?? 1000,
+    riskPct: cfg.riskPct, maxLeverage: cfg.maxLeverage, atrStopMult: cfg.atrStopMult,
+    rewardRisk: cfg.rewardRisk, liqBuffer: cfg.liqBuffer, feePct: cfg.feePct, fixedStake: cfg.stake || 0,
+  });
+  if (!plan) return { ...base, ok: false, reason: "too volatile to size safely" };
+  // Fresher crosses and cleaner separation score higher; stretched entries lower.
+  const score = separation * (1 - since / (rules.maxCandlesSinceCross + 1)) - 0.2 * Math.max(0, stretch);
+  return { ...base, ok: true, score, plan, reason: `fresh ${direction.toLowerCase()} trend (${(since * (cfg.timeframeMin ?? 15))} min old), clear separation` };
+}
+
+export function recommend(assessments) {
+  const good = assessments.filter((a) => a.ok).sort((a, b) => b.score - a.score);
+  return { pick: good[0] || null, coins: assessments };
+}

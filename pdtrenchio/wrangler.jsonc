@@ -27,6 +27,13 @@
     "REWARD_RISK": "2.0",
     "LIQ_BUFFER": "2.0",
     "FEE_PCT": "0.0005",
+    // Fixed stake per trade in CURRENCY (0 = size from BALANCE x RISK_PCT)
+    "STAKE": "10",
+    "CURRENCY": "£",
+    // Phone alerts only between these hours; overnight closes come as one 8am summary
+    "TIMEZONE": "Europe/London",
+    "ALERT_START_HOUR": "8",
+    "ALERT_END_HOUR": "22",
     // SHA-256 of the one-time setup code (the code itself is never stored); see POST /setup
     // Identifies this server to phone push services (VAPID "sub" claim)
     "PUBLIC_ORIGIN": "https://pdtrenchio.p-g-davis.workers.dev",

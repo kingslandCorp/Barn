@@ -69,7 +69,7 @@ export function averageTrueRange(candles, period = 14) {
 export function planTrade({
   symbol, direction, entry, atr, balance,
   riskPct = 0.01, maxLeverage = MAX_TRENCH_LEVERAGE, atrStopMult = 1.5,
-  rewardRisk = 2.0, liqBuffer = 2.0, feePct = 0.0,
+  rewardRisk = 2.0, liqBuffer = 2.0, feePct = 0.0, fixedStake = 0,
 }) {
   direction = direction.toUpperCase();
   if (direction !== "LONG" && direction !== "SHORT") throw new Error("direction must be LONG or SHORT");
@@ -85,7 +85,11 @@ export function planTrade({
 
   let riskAmount = balance * riskPct;
   let stake = riskAmount / (leverage * (stopPct + feePct));
-  if (stake > balance) {
+  if (fixedStake > 0) {
+    // Fixed stake per trade (e.g. £10): the loss at the stop follows from it.
+    stake = fixedStake;
+    riskAmount = stake * leverage * (stopPct + feePct);
+  } else if (stake > balance) {
     stake = balance;
     riskAmount = stake * leverage * (stopPct + feePct);
   }
@@ -160,17 +164,20 @@ export function checkCoin(state, symbol, candles, cfg) {
   const signal = strategySignal(cfg.strategy, closed, cfg);
   const direction = { BUY: "LONG", SELL: "SHORT" }[signal];
   if (!direction) return alerts;
-  state.last_signal[symbol] = { direction, candle: candleTs };
+  const allowOpen = cfg.allowOpen !== false;
+  state.last_signal[symbol] = { direction, candle: candleTs, skipped: !allowOpen };
   if (plan) {
     if (plan.direction === direction) return alerts;
     close(plan, "OPPOSITE_SIGNAL", price);
   }
+  if (!allowOpen) return alerts; // quiet hours: no new trades you can't act on
 
   const next = planTrade({
     symbol, direction, entry: closed[closed.length - 1].close,
     atr: averageTrueRange(closed, cfg.atrPeriod), balance: cfg.balance,
     riskPct: cfg.riskPct, maxLeverage: cfg.maxLeverage, atrStopMult: cfg.atrStopMult,
     rewardRisk: cfg.rewardRisk, liqBuffer: cfg.liqBuffer, feePct: cfg.feePct,
+    fixedStake: cfg.stake || 0,
   });
   if (!next) return alerts;
   state.open[symbol] = next;
@@ -180,5 +187,16 @@ export function checkCoin(state, symbol, candles, cfg) {
 }
 
 export function emptyState() {
-  return { last_candle: {}, last_signal: {}, open: {}, opened_at: {}, alerts: [], errors: {}, checked_at: null };
+  return { last_candle: {}, last_signal: {}, open: {}, opened_at: {}, alerts: [], held: [], errors: {}, checked_at: null };
+}
+
+// Hour (0-23) in a time zone, e.g. Europe/London (handles GMT/BST).
+export function localHour(date, timeZone) {
+  return Number(new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone }).format(date));
+}
+
+// True when alerts may be sent: from `start` (inclusive) to `end` (exclusive).
+export function inAlertHours(date, timeZone, start = 8, end = 22) {
+  const h = localHour(date, timeZone);
+  return start <= end ? h >= start && h < end : h >= start || h < end;
 }

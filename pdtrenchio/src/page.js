@@ -118,7 +118,9 @@ function px(p) {
   if (p >= 1) return p.toFixed(4);
   return p.toFixed(6);
 }
-const money = v => v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(2);
+let CUR = '£';
+const gbp = v => (v < 0 ? '-' : '') + CUR + Math.abs(v).toFixed(2);
+const money = v => v == null ? '—' : (v >= 0 ? '+' : '') + gbp(v);
 const cls = v => v == null ? '' : (v >= 0 ? 'pos' : 'neg');
 const isoTime = t => (t || '').replace('T', ' ').slice(0, 16);
 const unixTime = s => s ? new Date(s * 1000).toISOString().replace('T', ' ').slice(0, 16) : '';
@@ -134,12 +136,13 @@ function coinCard(c) {
       '<dt>Stop</dt><dd class="neg">' + px(p.stop) + '</dd>' +
       '<dt>Target</dt><dd class="pos">' + px(p.take_profit) + '</dd>' +
       '<dt>Liquidation</dt><dd class="warn">~' + px(p.liquidation) + '</dd>' +
-      '<dt>Stake</dt><dd>' + p.stake.toFixed(2) + '</dd>' +
+      '<dt>Stake</dt><dd>' + gbp(p.stake) + '</dd>' +
       '<dt>Live P&amp;L</dt><dd class="' + cls(c.pnl) + '">' + money(c.pnl) + '</dd>' +
       '<dt>To stop</dt><dd>' + (c.to_stop_pct == null ? '—' : c.to_stop_pct.toFixed(2) + '%') + '</dd>' +
       '</dl><div class="muted">Opened on the ' + esc(unixTime(c.opened_at)) + ' UTC candle</div>';
   } else {
-    const ls = c.last_signal ? c.last_signal.direction + ' on the ' + unixTime(c.last_signal.candle) + ' UTC candle' : 'none yet';
+    const ls = c.last_signal ? c.last_signal.direction + ' on the ' + unixTime(c.last_signal.candle) + ' UTC candle' +
+      (c.last_signal.skipped ? ' (skipped: outside alert hours)' : '') : 'none yet';
     body = '<div class="muted">No open trade. Last signal: ' + esc(ls) + '</div>';
   }
   return '<div class="coin ' + side + '">' +
@@ -162,7 +165,7 @@ function alertRow(a) {
     '<td class="mono">' + px(open ? a.entry : a.price) + '</td>' +
     '<td class="mono">' + (open ? px(a.stop) : '') + '</td>' +
     '<td class="mono">' + (open ? px(a.take_profit) : '') + '</td>' +
-    '<td class="mono">' + (open ? a.stake.toFixed(2) : '') + '</td>' +
+    '<td class="mono">' + (open ? gbp(a.stake) : '') + '</td>' +
     '<td class="mono ' + (open ? '' : cls(a.pnl)) + '">' + (open ? '' : money(a.pnl)) + '</td>' +
     '</tr>';
 }
@@ -173,10 +176,12 @@ async function refresh() {
     const res = await fetch('/status', {cache: 'no-store'});
     if (res.status === 401) { location.reload(); return; }
     const s = await res.json();
+    CUR = s.currency || '£';
+    const sizing = s.stake ? gbp(s.stake) + ' stake per trade' : 'risk ' + (s.risk_pct * 100).toFixed(1) + '% of ' + gbp(s.balance) + ' per trade';
     document.getElementById('sub').textContent =
-      s.strategy + ' on ' + s.timeframe + ' candles · Kraken prices · max x' + s.max_leverage +
-      ' · risk ' + (s.risk_pct * 100).toFixed(1) + '% of ' + s.balance.toFixed(0) + ' per trade · last candle processed ' +
-      (s.last_candle ? unixTime(s.last_candle) + ' UTC' : 'not yet');
+      s.strategy + ' on ' + s.timeframe + ' candles · Kraken prices · max x' + s.max_leverage + ' · ' + sizing +
+      ' · alerts ' + s.alert_hours + (s.awake ? '' : ' (quiet now' + (s.held ? ', ' + s.held + ' held for 8am' : '') + ')') +
+      ' · last candle processed ' + (s.last_candle ? unixTime(s.last_candle) + ' UTC' : 'not yet');
     document.getElementById('channels').innerHTML = s.channels.map(ch =>
       '<span class="chip ' + (ch.on ? 'on' : 'off') + '" title="' + esc(ch.how) + '">' + esc(ch.name) + '</span>').join('');
     document.getElementById('coins').innerHTML = s.coins.map(coinCard).join('');

@@ -9,7 +9,7 @@
 // State lives in one KV key and is written only when something changes
 // (a new candle or an alert), which keeps well inside the free plan.
 
-import { checkCoin, emptyState, minCandles, pnlAt, MAX_TRENCH_LEVERAGE } from "./logic.js";
+import { checkCoin, emptyState, inAlertHours, minCandles, pnlAt, MAX_TRENCH_LEVERAGE } from "./logic.js";
 import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
 import { ICON_180, ICON_512 } from "./icons.js";
 import { generateVapidKeys, sendWebPush } from "./webpush.js";
@@ -39,6 +39,11 @@ function config(env) {
     rewardRisk: num(env.REWARD_RISK, 2.0),
     liqBuffer: num(env.LIQ_BUFFER, 2.0),
     feePct: num(env.FEE_PCT, 0.0005),
+    stake: num(env.STAKE, 0),             // fixed stake per trade; 0 = size from BALANCE x RISK_PCT
+    currency: env.CURRENCY || "£",
+    timeZone: env.TIMEZONE || "Europe/London",
+    alertStart: num(env.ALERT_START_HOUR, 8),
+    alertEnd: num(env.ALERT_END_HOUR, 22),
   };
   if (!(cfg.riskPct > 0 && cfg.riskPct <= 0.1)) cfg.riskPct = 0.01;
   if (!(cfg.maxLeverage >= 1)) cfg.maxLeverage = MAX_TRENCH_LEVERAGE;
@@ -94,15 +99,17 @@ function fmtPrice(p) {
   return p.toFixed(6);
 }
 
-export function alertText(a) {
+export function alertText(a, cur = "£") {
   const coin = a.symbol.split("/")[0];
+  const m = (v) => `${v < 0 ? "-" : ""}${cur}${Math.abs(v).toFixed(2)}`;
   if (a.event === "open") {
     return {
       title: `OPEN ${a.direction} ${coin} x${a.leverage}`,
       body: [
-        `Entry ~${fmtPrice(a.entry)}  Leverage x${a.leverage}  Stake ${a.stake.toFixed(2)}`,
-        `Stop ${fmtPrice(a.stop)} (${(a.stop_pct * 100).toFixed(2)}% away, lose ~${a.risk_amount.toFixed(2)})`,
-        `Target ${fmtPrice(a.take_profit)} (win ~${(a.risk_amount * a.reward_risk).toFixed(2)})`,
+        `Entry ~${fmtPrice(a.entry)}  Leverage x${a.leverage}  Stake ${m(a.stake)}`,
+        `Stop ${fmtPrice(a.stop)} (${(a.stop_pct * 100).toFixed(2)}% away, lose ~${m(a.risk_amount)})`,
+        `Target ${fmtPrice(a.take_profit)} (win ~${m(a.risk_amount * a.reward_risk)})`,
+        `Set the stop-loss in Trench when you open it.`,
         `Liquidation ~${fmtPrice(a.liquidation)}`,
         `Skip it if price is already past the stop or target.`,
       ].join("\n"),
@@ -112,7 +119,7 @@ export function alertText(a) {
   return {
     title: `CLOSE ${a.direction} ${coin} (${why})`,
     body: `Close your x${a.leverage} ${a.direction.toLowerCase()} on ${coin}.\n` +
-      `Entry ${fmtPrice(a.entry)} -> now ~${fmtPrice(a.price)}\nApprox P&L ${a.pnl >= 0 ? "+" : ""}${a.pnl.toFixed(2)}`,
+      `Entry ${fmtPrice(a.entry)} -> now ~${fmtPrice(a.price)}\nApprox P&L ${a.pnl >= 0 ? "+" : ""}${m(a.pnl)}`,
   };
 }
 
@@ -189,8 +196,10 @@ function channels(env, set, subCount = 0) {
 
 // ------------------------------------------------------------------- cron
 
-export async function runChecks(env) {
+export async function runChecks(env, now = new Date()) {
   const cfg = config(env);
+  const awake = inAlertHours(now, cfg.timeZone, cfg.alertStart, cfg.alertEnd);
+  cfg.allowOpen = awake;
   const state = await loadState(env);
   const before = comparable(state);
   const newAlerts = [];
@@ -210,12 +219,31 @@ export async function runChecks(env) {
   });
 
   if (newAlerts.length) state.alerts = [...newAlerts.slice().reverse(), ...state.alerts].slice(0, 50);
+
+  // Quiet hours: hold alerts and send them as one summary when the day starts.
+  let toSend = [];
+  let summary = null;
+  if (!awake) {
+    state.held = [...state.held, ...newAlerts];
+  } else {
+    if (state.held.length) {
+      const lines = state.held.map((a) => {
+        const t = alertText(a, cfg.currency);
+        return `${t.title}${a.event === "close" ? ` (P&L ${a.pnl >= 0 ? "+" : "-"}${cfg.currency}${Math.abs(a.pnl).toFixed(2)})` : ""}`;
+      });
+      summary = { title: `Overnight: ${state.held.length} update${state.held.length > 1 ? "s" : ""}`, body: lines.join("\n") };
+      state.held = [];
+    }
+    toSend = newAlerts;
+  }
+
   if (comparable(state) !== before) {
     state.checked_at = new Date().toISOString();
     await env.STATE.put(STATE_KEY, JSON.stringify(state)); // save before pushing: never alert twice
   }
-  for (const a of newAlerts) {
-    const { title, body } = alertText(a);
+  if (summary) await push(env, summary.title, summary.body);
+  for (const a of toSend) {
+    const { title, body } = alertText(a, cfg.currency);
     await push(env, title, body);
   }
   return newAlerts;
@@ -272,6 +300,8 @@ async function status(env, set) {
   return {
     strategy: cfg.strategy, timeframe: `${cfg.timeframeMin}m`, max_leverage: cfg.maxLeverage,
     risk_pct: cfg.riskPct, balance: cfg.balance, last_candle: lastCandle || null,
+    stake: cfg.stake, currency: cfg.currency, alert_hours: `${cfg.alertStart}:00-${cfg.alertEnd}:00 ${cfg.timeZone}`,
+    awake: inAlertHours(new Date(), cfg.timeZone, cfg.alertStart, cfg.alertEnd), held: state.held.length,
     channels: channels(env, set, (await pushSubs(env)).length), coins, alerts: state.alerts,
   };
 }

@@ -71,3 +71,34 @@ test("checkCoin opens once per candle, then closes on take-profit", () => {
   assert.match(alertText(sent[0]).title, /^OPEN LONG SOL x\d+$/);
   assert.match(alertText(closes2[0]).title, /^CLOSE LONG SOL \(take profit\)$/);
 });
+
+test("fixed £10 stake: stake is exactly 10 and the stop loss follows from leverage", () => {
+  const p = planTrade({ symbol: "SOL/USD", direction: "LONG", entry: 100, atr: 0.25, balance: 1000, fixedStake: 10, feePct: 0.0005 });
+  assert.equal(p.stake, 10);
+  assert.ok(p.leverage <= 200);
+  assert.ok(close(pnlAt(p, p.stop, 0.0005), -p.risk_amount));
+  assert.ok(p.risk_amount < 10, "a stop-out loses less than the whole stake");
+});
+
+test("alert hours follow UK time including summer time", async () => {
+  const { inAlertHours, localHour } = await import("../src/logic.js");
+  // 07:30 UTC in January = 07:30 GMT (quiet); in July = 08:30 BST (awake)
+  assert.equal(inAlertHours(new Date("2026-01-15T07:30:00Z"), "Europe/London"), false);
+  assert.equal(inAlertHours(new Date("2026-07-15T07:30:00Z"), "Europe/London"), true);
+  assert.equal(localHour(new Date("2026-07-15T21:05:00Z"), "Europe/London"), 22);
+  assert.equal(inAlertHours(new Date("2026-07-15T21:05:00Z"), "Europe/London"), false);
+  assert.equal(inAlertHours(new Date("2026-01-15T21:59:00Z"), "Europe/London"), true);
+});
+
+test("quiet hours: signal recorded but no trade opened", () => {
+  const closes = [...Array(40).fill(100), 100.5, 101, 101.5];
+  const all = candles([...closes, closes.at(-1)]);
+  const state = emptyState();
+  const cfg = { strategy: "ma_crossover", balance: 1000, riskPct: 0.01, maxLeverage: 200, atrPeriod: 14,
+    atrStopMult: 1.5, rewardRisk: 2, liqBuffer: 2, feePct: 0.0005, fastMa: 12, slowMa: 26, allowOpen: false };
+  const sent = [];
+  for (let n = 30; n <= all.length; n++) sent.push(...checkCoin(state, "SOL/USD", all.slice(0, n), cfg));
+  assert.equal(sent.length, 0);
+  assert.equal(state.open["SOL/USD"], undefined);
+  assert.equal(state.last_signal["SOL/USD"].skipped, true);
+});

@@ -126,7 +126,7 @@ export default function GuestTabs() {
       </div>
       <p className="mx-auto mt-3 max-w-xl text-center text-xs text-ink/50">
         Before you arrive, please register everyone in your party and any cars you&rsquo;re
-        bringing.
+        bringing. The refundable £250 damage deposit is collected separately by invoice.
       </p>
 
       {/* Tab content */}

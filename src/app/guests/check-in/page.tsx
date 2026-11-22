@@ -23,6 +23,10 @@ export default function CheckInPage() {
             Please register everyone in your party, and any cars you&rsquo;re bringing, before
             you arrive.
           </p>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/60">
+            We&rsquo;ll email the lead guest a QuickBooks invoice for the refundable £250 damage
+            deposit, which is returned after your stay once the barn has been checked.
+          </p>
         </Reveal>
       </section>
       <section className="mx-auto mt-10 max-w-content px-5 sm:px-8 lg:px-12">

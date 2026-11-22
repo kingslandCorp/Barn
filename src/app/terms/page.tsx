@@ -536,7 +536,8 @@ const sections: Section[] = [
       <>
         <p>
           Where a refundable security or damage deposit is required for a particular booking, the
-          amount will be made clear before the booking is confirmed.
+          amount will be made clear before the booking is confirmed. The deposit is requested by
+          invoice sent to the Lead Guest before arrival, and must be paid before check-in.
         </p>
         <p className="mt-3">
           We may make reasonable deductions for damage, loss or exceptional cleaning for which the
@@ -737,8 +738,9 @@ const sections: Section[] = [
           on our website.
         </p>
         <p className="mt-3">
-          Payments may be processed using third-party payment providers, which will process payment information in accordance with its own privacy and security
-          arrangements.
+          Payments may be processed using third-party payment providers, including QuickBooks
+          (Intuit), which will process payment information in accordance with their own privacy
+          and security arrangements.
         </p>
       </>
     ),

@@ -54,6 +54,12 @@ const sections: Section[] = [
             you bring.
           </li>
           <li>
+            <strong>Payment information:</strong> if you pay the damage deposit or a booking
+            payment by QuickBooks invoice, your card or bank details are entered on
+            QuickBooks&rsquo; own secure payment page &mdash; we never see or store your full card
+            number.
+          </li>
+          <li>
             <strong>Messages you send us:</strong> if you use one of the WhatsApp links on the
             site (for example to arrange a reflexology session or send us a message at checkout),
             we receive that message and your WhatsApp number in the same way as any WhatsApp
@@ -108,6 +114,21 @@ const sections: Section[] = [
     ),
   },
   {
+    heading: 'Payments',
+    body: (
+      <>
+        Invoices, including the refundable damage deposit and its refund, are issued and paid
+        through{' '}
+        <a href="https://www.intuit.com/privacy/statement/" className="text-coast underline">
+          QuickBooks (Intuit)
+        </a>
+        . QuickBooks processes your payment details under its own privacy policy and security
+        arrangements &mdash; we receive confirmation that a payment was made, not your full card
+        details.
+      </>
+    ),
+  },
+  {
     heading: 'WhatsApp',
     body: (
       <>
@@ -149,6 +170,10 @@ const sections: Section[] = [
           <li>
             <strong>Cloudflare</strong> &mdash; our website host, which stores guest sign-in and
             check-in records and serves the site.
+          </li>
+          <li>
+            <strong>QuickBooks (Intuit)</strong> &mdash; invoicing and payments, including the
+            damage deposit (see above).
           </li>
           <li>
             <strong>Google</strong> &mdash; Analytics (site traffic) and our Google Business

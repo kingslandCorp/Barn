@@ -129,10 +129,13 @@ async function push(env, title, body) {
     }));
   }
   const results = await Promise.allSettled(sends);
+  const problems = [];
   for (const r of results) {
-    if (r.status === "rejected") console.log("push failed", String(r.reason));
-    else if (!r.value.ok) console.log("push failed", r.value.status);
+    if (r.status === "rejected") problems.push(String(r.reason));
+    else if (!r.value.ok) problems.push(`HTTP ${r.value.status}: ${(await r.value.text()).slice(0, 200)}`);
   }
+  if (problems.length) console.log("push failed", problems.join("; "));
+  return problems;
 }
 
 function channels(env, set) {
@@ -283,7 +286,8 @@ export default {
     if (url.pathname === "/test-alert" && request.method === "POST") {
       const on = channels(env, set).filter((c) => c.on && c.name !== "this page");
       if (!on.length) return json({ sent: false, message: "No phone channel is set up yet, so there's nowhere to send it." });
-      await push(env, "pdtrenchio test alert", "If you can read this, alerts reach your phone.");
+      const problems = await push(env, "pdtrenchio test alert", "If you can read this, alerts reach your phone.");
+      if (problems.length) return json({ sent: false, message: `Sending failed: ${problems.join("; ")}` });
       return json({ sent: true, message: `Test alert sent to ${on.map((c) => c.name).join(" and ")}.` });
     }
 

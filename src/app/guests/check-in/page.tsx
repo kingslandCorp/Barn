@@ -5,7 +5,7 @@ import CheckInForm from '@/components/CheckInForm';
 import { siteConfig } from '@/lib/content';
 
 export const metadata: Metadata = {
-  title: 'Check-in',
+  title: 'Pre-arrival info',
   description: `Register your party before arriving at ${siteConfig.fullName}.`,
   robots: { index: false, follow: false },
 };
@@ -15,7 +15,7 @@ export default function CheckInPage() {
     <div className="pb-24">
       <section className="mx-auto max-w-content px-5 pt-16 sm:px-8 sm:pt-24 lg:px-12">
         <Reveal>
-          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">Check-in</p>
+          <p className="eyebrow mb-3 text-xs font-semibold uppercase text-gold-deep">Pre-arrival info</p>
           <h1 className="font-display text-4xl leading-tight text-ink sm:text-5xl md:text-6xl">
             Who&rsquo;s staying?
           </h1>

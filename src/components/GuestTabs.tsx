@@ -121,7 +121,7 @@ export default function GuestTabs() {
           className="flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-coast px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-coast-dark sm:flex-1 sm:px-6 sm:py-3"
         >
           <ClipboardCheck size={15} strokeWidth={1.75} />
-          Check-in
+          Pre-arrival info
         </Link>
       </div>
       <p className="mx-auto mt-3 max-w-xl text-center text-xs text-ink/50">

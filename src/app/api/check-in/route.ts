@@ -5,7 +5,7 @@ const MAX_GUESTS = 20;
 const MAX_CARS = 10;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
-const NOTIFY_FROM = { email: 'checkin@kingslandbarn.co.uk', name: 'Kingsland Barn Check-in' };
+const NOTIFY_FROM = { email: 'checkin@kingslandbarn.co.uk', name: 'Kingsland Barn Pre-arrival' };
 // The inbox booking@kingslandbarn.co.uk forwards to (a verified Email Routing destination).
 const NOTIFY_TO = 'daviskingsland@outlook.com';
 
@@ -50,7 +50,7 @@ function escapeHtml(s: string): string {
 
 function buildEmail(r: CheckIn) {
   const lead = r.guests[0];
-  const subject = `Check-in: ${lead.name}, ${formatDate(r.arrival)} (${r.totalGuests} guest${
+  const subject = `Wales.gov pre-arrival information needed: ${lead.name}, ${formatDate(r.arrival)} (${r.totalGuests} guest${
     r.totalGuests === 1 ? '' : 's'
   }, ${r.nights} night${r.nights === 1 ? '' : 's'})`;
 
@@ -61,7 +61,7 @@ function buildEmail(r: CheckIn) {
     }`;
 
   const text = [
-    `New check-in submitted ${new Date(r.submittedAt).toUTCString()}`,
+    `Wales.gov pre-arrival information needed. Submitted ${new Date(r.submittedAt).toUTCString()}`,
     '',
     `Arrival:   ${formatDate(r.arrival)}`,
     `Departure: ${formatDate(r.departure)}`,
@@ -83,7 +83,7 @@ function buildEmail(r: CheckIn) {
       value,
     )}</strong></td></tr>`;
   const html = `<div style="font-family:system-ui,sans-serif;color:#2E2A22;font-size:15px;line-height:1.5">
-<h2 style="margin:0 0 12px">New check-in</h2>
+<h2 style="margin:0 0 12px">Wales.gov pre-arrival information needed</h2>
 <table style="border-collapse:collapse">
 ${row('Arrival', formatDate(r.arrival))}
 ${row('Departure', formatDate(r.departure))}
@@ -190,12 +190,12 @@ export async function POST(request: NextRequest) {
   try {
     env = (await getCloudflareContext({ async: true })).env as unknown as typeof env;
   } catch {
-    return bad('Check-in is temporarily unavailable.', 503);
+    return bad('This form is temporarily unavailable.', 503);
   }
 
   // Save first: the stored record is the source of truth (and the visitor levy record),
   // so a guest is only told they're checked in once it's safely kept.
-  if (!env.GUEST_LOGS) return bad('Check-in is temporarily unavailable.', 503);
+  if (!env.GUEST_LOGS) return bad('This form is temporarily unavailable.', 503);
   try {
     const departureSecs = Math.floor(Date.parse(`${departure}T23:59:59Z`) / 1000);
     // Full check-in (names, nationalities, emails, vehicles): kept 12 months after the stay,
@@ -222,7 +222,7 @@ export async function POST(request: NextRequest) {
       { expiration: departureSecs + 7 * 366 * 86_400 }
     );
   } catch {
-    return bad('Something went wrong saving your check-in. Please try again.', 500);
+    return bad('Something went wrong saving your details. Please try again.', 500);
   }
 
   // Then tell Kim. A failed email shouldn't make the guest resubmit; it's logged and the

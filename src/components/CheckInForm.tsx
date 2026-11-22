@@ -86,7 +86,7 @@ export default function CheckInForm() {
     return (
       <Reveal className="mx-auto max-w-xl rounded-3xl bg-white/80 p-8 text-center shadow-soft sm:p-10">
         <CheckCircle2 className="mx-auto text-sage-dark" size={40} strokeWidth={1.5} />
-        <h2 className="mt-4 font-display text-3xl text-ink">You&rsquo;re checked in</h2>
+        <h2 className="mt-4 font-display text-3xl text-ink">Thanks, you&rsquo;re all set</h2>
         <p className="mt-3 text-sm leading-relaxed text-ink/65">
           Thank you &mdash; we&rsquo;ve got everyone&rsquo;s details and passed them to Kim. If
           anything changes, just submit the form again or email us at{' '}
@@ -350,7 +350,7 @@ export default function CheckInForm() {
           disabled={status === 'sending'}
           className="w-full rounded-full bg-coast px-6 py-3.5 text-sm font-medium text-cream transition-colors hover:bg-coast-dark disabled:opacity-60 sm:w-auto sm:px-10"
         >
-          {status === 'sending' ? 'Sending…' : 'Complete check-in'}
+          {status === 'sending' ? 'Sending…' : 'Send pre-arrival info'}
         </button>
       </Reveal>
     </form>

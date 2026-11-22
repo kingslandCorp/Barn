@@ -48,7 +48,7 @@ const sections: Section[] = [
             and any details about your stay that you give us.
           </li>
           <li>
-            <strong>Check-in details:</strong> when you complete the check-in form in the Guests
+            <strong>Pre-arrival details:</strong> when you complete the pre-arrival form in the Guests
             area, the full name, nationality, whether they are under 18 and (optionally) email
             address of everyone staying, your arrival and departure dates, and the registration
             numbers of every vehicle parked on site. These details are emailed to our host so
@@ -86,7 +86,7 @@ const sections: Section[] = [
             before entering into one.
           </li>
           <li>
-            <strong>Check-in details</strong> &mdash; to know who is staying at the property and
+            <strong>Pre-arrival details</strong> &mdash; to know who is staying at the property and
             which vehicles are parked on site, for the safety and security of guests and the
             property, and to meet our legal obligations: keeping a record of guests&rsquo; names
             and nationalities, and keeping records of the number of visitors and nights for the

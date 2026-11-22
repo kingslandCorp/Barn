@@ -13,6 +13,7 @@ import { assessCoin, checkCoin, emptyState, inAlertHours, minCandles, pnlAt, rec
 import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
 import { ICON_180, ICON_512 } from "./icons.js";
 import { generateVapidKeys, sendWebPush } from "./webpush.js";
+import { checkSpikes } from "./spike.js";
 
 const STATE_KEY = "state";
 const SETTINGS_KEY = "settings"; // { password_hash, ntfy_topic } set once via /setup
@@ -64,7 +65,7 @@ async function krakenJson(path) {
 
 async function fetchCandles(coin, intervalMin) {
   const rows = await krakenJson(`OHLC?pair=${krakenPair(coin)}&interval=${intervalMin}`);
-  return rows.map((r) => ({ t: r[0], open: +r[1], high: +r[2], low: +r[3], close: +r[4] }));
+  return rows.map((r) => ({ t: r[0], open: +r[1], high: +r[2], low: +r[3], close: +r[4], volume: +r[6] }));
 }
 
 async function fetchPrice(coin) {
@@ -102,6 +103,17 @@ function fmtPrice(p) {
 export function alertText(a, cur = "£") {
   const coin = a.symbol.split("/")[0];
   const m = (v) => `${v < 0 ? "-" : ""}${cur}${Math.abs(v).toFixed(2)}`;
+  if (a.event === "spike") {
+    const up = a.direction === "LONG";
+    return {
+      title: `BIG MOVE ${up ? "UP" : "DOWN"}: ${coin} ${a.move_pct >= 0 ? "+" : ""}${a.move_pct.toFixed(2)}% in 5 min`,
+      body: [
+        `5-min candle ${a.range_atr.toFixed(1)}x normal size on ${a.vol_mult.toFixed(1)}x normal volume.`,
+        `Confirmed by ${a.by}. Price now ~${fmtPrice(a.price)}.`,
+        `Heads-up only, not a trade signal: chasing spikes lost money in testing.`,
+      ].join("\n"),
+    };
+  }
   if (a.event === "open") {
     return {
       title: `OPEN ${a.direction} ${coin} x${a.leverage}`,
@@ -218,13 +230,35 @@ export async function runChecks(env, now = new Date()) {
     }
   });
 
+  // Spike heads-ups: big 5m moves validated by the 15m trend or 3m follow-through.
+  // Information only (no trade plan); dropped outside alert hours, since a
+  // spike is stale by morning.
+  const spikeAlerts = [];
+  if (env.SPIKE_HEADSUPS !== "off") {
+    const nowSec = Math.floor(now.getTime() / 1000);
+    const extra = await Promise.allSettled(cfg.coins.flatMap((c) => [fetchCandles(c, 5), fetchCandles(c, 1)]));
+    cfg.coins.forEach((coin, i) => {
+      const symbol = symbolOf(coin);
+      const c5 = extra[2 * i], c1 = extra[2 * i + 1], c15 = fetched[i];
+      if (c5.status !== "fulfilled" || c1.status !== "fulfilled" || c15.status !== "fulfilled") return;
+      try {
+        spikeAlerts.push(...checkSpikes(state, symbol, c5.value, c15.value, c1.value, nowSec));
+      } catch (e) {
+        state.errors[symbol] = `spike check: ${String(e).slice(0, 150)}`;
+      }
+    });
+  }
+  const spikesToSend = awake ? spikeAlerts : [];
+  newAlerts.push(...spikeAlerts.map((a) => ({ ...a, sent: awake })));
+
   if (newAlerts.length) state.alerts = [...newAlerts.slice().reverse(), ...state.alerts].slice(0, 50);
 
   // Quiet hours: hold alerts and send them as one summary when the day starts.
   let toSend = [];
   let summary = null;
+  const tradeAlerts = newAlerts.filter((a) => a.event !== "spike");
   if (!awake) {
-    state.held = [...state.held, ...newAlerts];
+    state.held = [...state.held, ...tradeAlerts];
   } else {
     if (state.held.length) {
       const lines = state.held.map((a) => {
@@ -234,7 +268,7 @@ export async function runChecks(env, now = new Date()) {
       summary = { title: `Overnight: ${state.held.length} update${state.held.length > 1 ? "s" : ""}`, body: lines.join("\n") };
       state.held = [];
     }
-    toSend = newAlerts;
+    toSend = [...tradeAlerts, ...spikesToSend];
   }
 
   if (comparable(state) !== before) {

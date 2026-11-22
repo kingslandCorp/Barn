@@ -47,3 +47,39 @@ test("overnight: no new trades; closes held and sent as one 8am summary", async 
   assert.match(pushes[1], /^Overnight: 1 update$/);
   assert.equal((await env.STATE.get("state", "json")).held.length, 0);
 });
+
+test("spike heads-up: pushed in the day, recorded but not pushed at night, never held", async (t) => {
+  const { runChecks } = await import("../src/index.js");
+  const pushes = [];
+  const T0 = 1795000000 - (1795000000 % 900);
+  const calm = (n, step) => Array.from({ length: n }, (_, i) => [T0 + i * step, "100", "100.1", "99.9", "100", "0", "10", 1]);
+  let c5;
+  t.mock.method(globalThis, "fetch", async (url, init) => {
+    const u = String(url);
+    if (/interval=5$/.test(u)) return new Response(JSON.stringify({ error: [], result: { SOLUSD: c5, last: 0 } }));
+    if (/interval=1$/.test(u)) return new Response(JSON.stringify({ error: [], result: { SOLUSD: calm(5, 60), last: 0 } }));
+    if (u.includes("api.kraken.com")) {
+      // 15m: steady uptrend so the spike is confirmed by the 15m trend straight away
+      const up = Array.from({ length: 60 }, (_, i) => [T0 - 60 * 900 + i * 900, String(90 + i * 0.15), String(90.1 + i * 0.15), String(89.9 + i * 0.15), String(90 + i * 0.15), "0", "30", 1]);
+      return new Response(JSON.stringify({ error: [], result: { SOLUSD: up, last: 0 } }));
+    }
+    pushes.push(init.headers.Title);
+    return new Response("ok");
+  });
+  const spikeRow = (t0) => [t0, "100", "101.2", "99.95", "101.1", "0", "40", 1];
+  const mk = (n) => [...calm(n, 300), spikeRow(T0 + n * 300), [T0 + (n + 1) * 300, "101.1", "101.2", "101", "101.15", "0", "5", 1]];
+
+  const env = { STATE: (() => { const m = new Map(); return { get: async (k, ty) => (m.has(k) ? (ty === "json" ? JSON.parse(m.get(k)) : m.get(k)) : null), put: async (k, v) => m.set(k, v) }; })(), COINS: "SOL", NTFY_TOPIC: "pdtrenchio-testtopic1", STAKE: "10" };
+  c5 = mk(40);
+  await runChecks(env, new Date("2026-11-20T12:00:00Z"));
+  assert.equal(pushes.filter((p) => p.startsWith("BIG MOVE UP: SOL")).length, 1);
+
+  const env2 = { ...env, STATE: (() => { const m = new Map(); return { get: async (k, ty) => (m.has(k) ? (ty === "json" ? JSON.parse(m.get(k)) : m.get(k)) : null), put: async (k, v) => m.set(k, v) }; })() };
+  pushes.length = 0;
+  await runChecks(env2, new Date("2026-11-20T23:30:00Z"));
+  assert.equal(pushes.length, 0);
+  const st = await env2.STATE.get("state", "json");
+  assert.equal(st.alerts[0].event, "spike");
+  assert.equal(st.alerts[0].sent, false);
+  assert.equal(st.held.length, 0);
+});

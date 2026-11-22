@@ -168,6 +168,17 @@ function coinCard(c) {
 }
 
 function alertRow(a) {
+  if (a.event === 'spike') {
+    const up = a.direction === 'LONG';
+    return '<tr>' +
+      '<td class="mono">' + esc(isoTime(a.time)) + '</td>' +
+      '<td class="' + (up ? 'pos' : 'neg') + '">' + (up ? 'BIG MOVE UP' : 'BIG MOVE DOWN') + (a.sent === false ? ' (quiet hours)' : '') + '</td>' +
+      '<td>' + esc((a.symbol || '').split('/')[0]) + '</td>' +
+      '<td class="mono">' + (a.move_pct >= 0 ? '+' : '') + a.move_pct.toFixed(2) + '%</td>' +
+      '<td class="mono">' + px(a.price) + '</td>' +
+      '<td colspan="4" class="muted">heads-up · ' + a.range_atr.toFixed(1) + 'x size, ' + a.vol_mult.toFixed(1) + 'x volume · ' + esc(a.by) + '</td>' +
+      '</tr>';
+  }
   const open = a.event === 'open';
   const coin = (a.symbol || '').split('/')[0];
   const label = open ? 'OPEN ' + a.direction : 'CLOSE ' + a.direction + ' (' + (a.reason || '').replace('_', ' ').toLowerCase() + ')';

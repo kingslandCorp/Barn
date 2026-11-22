@@ -6,7 +6,8 @@ const MAX_CARS = 10;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const NOTIFY_FROM = { email: 'checkin@kingslandbarn.co.uk', name: 'Kingsland Barn Check-in' };
-const NOTIFY_TO = 'booking@kingslandbarn.co.uk';
+// The inbox booking@kingslandbarn.co.uk forwards to (a verified Email Routing destination).
+const NOTIFY_TO = 'daviskingsland@outlook.com';
 
 type Guest = { name: string; nationality: string; email: string; under18: boolean };
 type CheckIn = {

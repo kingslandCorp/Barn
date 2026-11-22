@@ -20,12 +20,13 @@
   "observability": {
     "enabled": true
   },
-  // Check-in notifications to Kim. Sends only from an address on kingslandbarn.co.uk,
-  // which must be onboarded to Cloudflare Email Sending, and only to the bookings inbox.
+  // Check-in notifications to Kim. kingslandbarn.co.uk uses Cloudflare Email Routing (booking@
+  // forwards to daviskingsland@outlook.com), and a Worker can send to a verified Email Routing
+  // destination without onboarding the domain to Email Sending. So send straight to that inbox.
   "send_email": [
     {
       "name": "CHECKIN_EMAIL",
-      "destination_address": "booking@kingslandbarn.co.uk"
+      "destination_address": "daviskingsland@outlook.com"
     }
   ],
   "kv_namespaces": [

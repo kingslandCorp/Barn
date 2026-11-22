@@ -1,0 +1,37 @@
+name: Deploy pdtrenchio
+
+# Deploys the pdtrenchio Worker (Trench signal monitor) from pdtrenchio/
+# using the same Cloudflare token as the Barn site (approved by the owner).
+# Runs when pdtrenchio/ changes on this branch or main, or on demand.
+on:
+  push:
+    branches: [main, claude/beautiful-rubin-96kdf5]
+    paths: ["pdtrenchio/**", ".github/workflows/deploy-pdtrenchio.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-pdtrenchio
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pdtrenchio
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_DEPLOY_CLAUDE }}
+      CLOUDFLARE_ACCOUNT_ID: 7490cee0a58ed4d84ab07c56ebab3fea
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test
+        run: node --test test/*.test.js
+      - name: Install
+        run: npm ci --no-audit --no-fund
+      - name: Storage
+        run: node scripts/ensure-kv.mjs
+      - name: Deploy
+        run: npx wrangler deploy

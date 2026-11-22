@@ -1,0 +1,33 @@
+{
+  // pdtrenchio: the Trench signal monitor on Cloudflare Workers.
+  // Page: https://pdtrenchio.<your-subdomain>.workers.dev
+  // Password and ntfy topic: set once with POST /setup (stored in KV), or as
+  // Worker secrets PAGE_PASSWORD / NTFY_TOPIC (`npx wrangler secret put NAME`),
+  // which take priority. Never put them in this file.
+  //   TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID   optional Telegram alerts
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pdtrenchio",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-02",
+  "workers_dev": true,
+  "triggers": { "crons": ["* * * * *"] },
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    { "binding": "STATE", "id": "KV_NAMESPACE_ID" }
+  ],
+  // Trading settings. Change and redeploy; MAX_LEVERAGE is capped at 200 in code.
+  "vars": {
+    "COINS": "SOL,BTC,HYPE,XRP,ADA",
+    "TIMEFRAME_MIN": "15",
+    "STRATEGY": "ma_crossover",
+    "BALANCE": "1000",
+    "RISK_PCT": "0.01",
+    "MAX_LEVERAGE": "200",
+    "ATR_STOP_MULT": "1.5",
+    "REWARD_RISK": "2.0",
+    "LIQ_BUFFER": "2.0",
+    "FEE_PCT": "0.0005",
+    // SHA-256 of the one-time setup code (the code itself is never stored); see POST /setup
+    "CLAIM_HASH": "32dd8b3e2ea9f4452c170633e25ad22c4ef654c010c01399d3812d9fa757979d"
+  }
+}

@@ -146,6 +146,12 @@ export function checkCoin(state, symbol, candles, cfg) {
     });
   };
 
+  // A quick (3-5 min) trade is managed on 1m candles by checkQuickExit;
+  // the 15m strategy leaves that coin alone until it closes.
+  if (state.open[symbol]?.quick) {
+    state.last_candle[symbol] = candles[candles.length - 2]?.t ?? state.last_candle[symbol];
+    return alerts;
+  }
   let plan = state.open[symbol] || null;
   if (plan) {
     const openedAt = state.opened_at[symbol];

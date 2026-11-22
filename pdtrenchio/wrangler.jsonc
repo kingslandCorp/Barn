@@ -30,6 +30,8 @@
     // Fixed stake per trade in CURRENCY (0 = size from BALANCE x RISK_PCT)
     "STAKE": "10",
     "CURRENCY": "£",
+    // Quick (3-5 min) trades are only suggested if the target wins at least this, after fees
+    "MIN_QUICK_WIN": "1",
     // Phone alerts only between these hours; overnight closes come as one 8am summary
     "TIMEZONE": "Europe/London",
     "ALERT_START_HOUR": "8",

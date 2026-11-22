@@ -99,7 +99,7 @@ export const PAGE = `<!doctype html>
   </header>
 
   <section>
-    <h2>Need a trade now?</h2>
+    <h2>Quick trade (3-5 minutes)</h2>
     <div class="pushbox" style="margin-top:0">
       <button id="suggest" type="button" class="primary">Suggest a trade now</button>
       <span id="suggestmsg" class="muted"></span>
@@ -237,13 +237,15 @@ function planList(p) {
     '<dt>Leverage</dt><dd>x' + p.leverage + '</dd>' +
     '<dt>Stake</dt><dd>' + gbp(p.stake) + '</dd>' +
     '<dt>Stop-loss</dt><dd class="neg">' + px(p.stop) + ' (lose ~' + gbp(p.risk_amount) + ')</dd>' +
-    '<dt>Take-profit</dt><dd class="pos">' + px(p.take_profit) + ' (win ~' + gbp(p.risk_amount * p.reward_risk) + ')</dd>' +
-    '<dt>Liquidation</dt><dd class="warn">~' + px(p.liquidation) + '</dd></dl>';
+    '<dt>Take-profit</dt><dd class="pos">' + px(p.take_profit) + ' (win ~' + gbp(p.net_win ?? p.risk_amount * p.reward_risk) + ')</dd>' +
+    '<dt>Liquidation</dt><dd class="warn">~' + px(p.liquidation) + '</dd>' +
+    (p.expires_at ? '<dt>Close by</dt><dd>' + new Date(p.expires_at * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + ' if neither is hit</dd>' : '') +
+    '</dl>';
 }
 document.getElementById('suggest').addEventListener('click', async () => {
   const msg = document.getElementById('suggestmsg');
   const box = document.getElementById('suggestion');
-  msg.textContent = 'Checking all five coins...';
+  msg.textContent = 'Checking the 1-minute charts on all five coins...';
   try {
     const r = await (await fetch('/suggest', {cache: 'no-store'})).json();
     CUR = r.currency || CUR;
@@ -253,7 +255,8 @@ document.getElementById('suggest').addEventListener('click', async () => {
     if (r.pick) {
       const p = r.pick.plan;
       box.innerHTML = '<div class="pick ' + p.direction + '"><h3>' + p.direction + ' ' + esc(p.symbol.split('/')[0]) + ' x' + p.leverage + '</h3>' +
-        '<div class="muted">' + esc(r.pick.reason) + '. Weaker than a fresh crossover alert. Set the stop-loss in Trench.</div>' +
+        '<div class="muted">' + esc(r.pick.reason) + '. Enter within a minute, set the stop-loss and take-profit in Trench, and close after 5 minutes if neither is hit.' +
+        (r.fee_pct > 0 ? ' Small edge in testing: only worth it if Trench\'s fee is very low.' : '') + '</div>' +
         planList(p) +
         '<div><button id="track" type="button">Watch this trade for me</button> <span id="trackmsg" class="muted"></span></div>' +
         '<div class="muted">Why this coin, and the others:</div>' + why + '</div>';
@@ -261,12 +264,12 @@ document.getElementById('suggest').addEventListener('click', async () => {
         const t = document.getElementById('trackmsg');
         const res = await fetch('/track', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(lastPick.plan)});
         const j = await res.json();
-        t.textContent = res.ok ? 'Watching. You will get the CLOSE alert.' : (j.error || 'Could not watch it.');
+        t.textContent = res.ok ? 'Watching. You will get a CLOSE alert at the stop, the target or after 5 minutes.' : (j.error || 'Could not watch it.');
         if (res.ok) refresh();
       });
     } else {
       box.innerHTML = '<div class="pick NONE"><h3>No trade right now</h3>' +
-        '<div class="muted">None of the five coins has a clean setup. Sitting out is a position too.</div>' + why + '</div>';
+        '<div class="muted">None of the five coins has a clean 1-minute setup right now. Setups come and go: try again in a minute or two.</div>' + why + '</div>';
     }
     msg.textContent = 'Checked at ' + new Date(r.time).toLocaleTimeString() + '. Prices move fast: act within a few minutes or check again.';
   } catch (e) {

@@ -14,6 +14,8 @@ import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
 import { ICON_180, ICON_512 } from "./icons.js";
 import { generateVapidKeys, sendWebPush } from "./webpush.js";
 import { checkSpikes } from "./spike.js";
+import { assessQuick, checkQuickExit } from "./quick.js";
+import { exitPrice, exitReason } from "./logic.js";
 
 const STATE_KEY = "state";
 const SETTINGS_KEY = "settings"; // { password_hash, ntfy_topic } set once via /setup
@@ -42,6 +44,7 @@ function config(env) {
     feePct: num(env.FEE_PCT, 0.0005),
     stake: num(env.STAKE, 0),             // fixed stake per trade; 0 = size from BALANCE x RISK_PCT
     currency: env.CURRENCY || "£",
+    minQuickWin: num(env.MIN_QUICK_WIN, 1),  // quick trades: target must win at least this, after fees
     timeZone: env.TIMEZONE || "Europe/London",
     alertStart: num(env.ALERT_START_HOUR, 8),
     alertEnd: num(env.ALERT_END_HOUR, 22),
@@ -127,7 +130,7 @@ export function alertText(a, cur = "£") {
       ].join("\n"),
     };
   }
-  const why = a.reason.replace("_", " ").toLowerCase();
+  const why = a.reason === "TIME_LIMIT" ? "5 minutes up" : a.reason.replace("_", " ").toLowerCase();
   return {
     title: `CLOSE ${a.direction} ${coin} (${why})`,
     body: `Close your x${a.leverage} ${a.direction.toLowerCase()} on ${coin}.\n` +
@@ -234,29 +237,34 @@ export async function runChecks(env, now = new Date()) {
   // Information only (no trade plan); dropped outside alert hours, since a
   // spike is stale by morning.
   const spikeAlerts = [];
-  if (env.SPIKE_HEADSUPS !== "off") {
-    const nowSec = Math.floor(now.getTime() / 1000);
-    const extra = await Promise.allSettled(cfg.coins.flatMap((c) => [fetchCandles(c, 5), fetchCandles(c, 1)]));
-    cfg.coins.forEach((coin, i) => {
-      const symbol = symbolOf(coin);
-      const c5 = extra[2 * i], c1 = extra[2 * i + 1], c15 = fetched[i];
-      if (c5.status !== "fulfilled" || c1.status !== "fulfilled" || c15.status !== "fulfilled") return;
-      try {
-        spikeAlerts.push(...checkSpikes(state, symbol, c5.value, c15.value, c1.value, nowSec));
-      } catch (e) {
-        state.errors[symbol] = `spike check: ${String(e).slice(0, 150)}`;
-      }
-    });
-  }
+  const quickCloses = [];
+  const nowSec = Math.floor(now.getTime() / 1000);
+  const extra = await Promise.allSettled(cfg.coins.flatMap((c) => [fetchCandles(c, 5), fetchCandles(c, 1)]));
+  cfg.coins.forEach((coin, i) => {
+    const symbol = symbolOf(coin);
+    const c5 = extra[2 * i], c1 = extra[2 * i + 1], c15 = fetched[i];
+    // Quick trades you chose to watch: stop / target / 5-minute limit, on 1m candles.
+    if (c1.status === "fulfilled") {
+      quickCloses.push(...checkQuickExit(state, symbol, c1.value, nowSec, exitReason, exitPrice, pnlAt, cfg.feePct));
+    }
+    if (env.SPIKE_HEADSUPS === "off") return;
+    if (c5.status !== "fulfilled" || c1.status !== "fulfilled" || c15.status !== "fulfilled") return;
+    try {
+      spikeAlerts.push(...checkSpikes(state, symbol, c5.value, c15.value, c1.value, nowSec));
+    } catch (e) {
+      state.errors[symbol] = `spike check: ${String(e).slice(0, 150)}`;
+    }
+  });
   const spikesToSend = awake ? spikeAlerts : [];
-  newAlerts.push(...spikeAlerts.map((a) => ({ ...a, sent: awake })));
+  newAlerts.push(...spikeAlerts.map((a) => ({ ...a, sent: awake })), ...quickCloses);
 
   if (newAlerts.length) state.alerts = [...newAlerts.slice().reverse(), ...state.alerts].slice(0, 50);
 
   // Quiet hours: hold alerts and send them as one summary when the day starts.
   let toSend = [];
   let summary = null;
-  const tradeAlerts = newAlerts.filter((a) => a.event !== "spike");
+  // Quick-trade closes always go out: you started that trade minutes ago.
+  const tradeAlerts = newAlerts.filter((a) => a.event !== "spike" && !a.quick);
   if (!awake) {
     state.held = [...state.held, ...tradeAlerts];
   } else {
@@ -270,6 +278,7 @@ export async function runChecks(env, now = new Date()) {
     }
     toSend = [...tradeAlerts, ...spikesToSend];
   }
+  toSend.push(...quickCloses);
 
   if (comparable(state) !== before) {
     state.checked_at = new Date().toISOString();
@@ -419,17 +428,18 @@ export default {
     if (url.pathname === "/suggest") {
       const cfg = config(env);
       const state = await loadState(env);
-      const results = await Promise.allSettled(cfg.coins.map((c) => fetchCandles(c, cfg.timeframeMin)));
+      const nowSec = Math.floor(Date.now() / 1000);
+      const results = await Promise.allSettled(cfg.coins.map((c) => fetchCandles(c, 1)));
       const assessed = cfg.coins.map((coin, i) => {
         const symbol = symbolOf(coin);
         const r = results[i];
         if (r.status === "rejected") return { symbol, ok: false, reason: "price data unavailable" };
         const candles = r.value;
-        const a = assessCoin(symbol, candles, candles[candles.length - 1].close, cfg);
+        const a = assessQuick(symbol, candles, candles[candles.length - 1].close, cfg, nowSec);
         if (a.ok && state.open[symbol]) return { ...a, ok: false, reason: "you already have an open trade on this coin" };
         return a;
       });
-      return json({ ...recommend(assessed), currency: cfg.currency, time: new Date().toISOString() });
+      return json({ ...recommend(assessed), currency: cfg.currency, fee_pct: cfg.feePct, time: new Date().toISOString() });
     }
 
     // "Watch this trade for me": track a suggested plan so a CLOSE alert follows.
@@ -442,10 +452,17 @@ export default {
       }
       const state = await loadState(env);
       if (state.open[plan.symbol]) return json({ error: "already watching a trade on this coin" }, 409);
-      const candles = await fetchCandles(plan.symbol.split("/")[0], cfg.timeframeMin);
       const keys = ["symbol", "direction", "entry", "stop", "take_profit", "liquidation", "leverage", "stake", "risk_amount", "stop_pct", "reward_risk"];
       state.open[plan.symbol] = Object.fromEntries(keys.map((k) => [k, plan[k]]));
-      state.opened_at[plan.symbol] = candles[candles.length - 1].t; // exits checked from the next candle on
+      if (plan.quick) {
+        const nowSec = Math.floor(Date.now() / 1000);
+        state.open[plan.symbol].quick = true;
+        state.open[plan.symbol].expires_at = nowSec + 5 * 60; // set here, not trusted from the browser
+        state.opened_at[plan.symbol] = Math.floor(nowSec / 60) * 60; // exits checked from the next minute on
+      } else {
+        const candles = await fetchCandles(plan.symbol.split("/")[0], cfg.timeframeMin);
+        state.opened_at[plan.symbol] = candles[candles.length - 1].t; // exits checked from the next candle on
+      }
       const alert = { time: new Date().toISOString(), event: "open", manual: true, ...state.open[plan.symbol] };
       state.alerts = [alert, ...state.alerts].slice(0, 50);
       state.checked_at = new Date().toISOString();

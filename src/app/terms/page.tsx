@@ -737,8 +737,7 @@ const sections: Section[] = [
           on our website.
         </p>
         <p className="mt-3">
-          Payments may be processed using third-party payment providers, including Stripe, which
-          will process payment information in accordance with its own privacy and security
+          Payments may be processed using third-party payment providers, which will process payment information in accordance with its own privacy and security
           arrangements.
         </p>
       </>

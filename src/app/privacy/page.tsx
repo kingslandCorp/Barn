@@ -48,10 +48,10 @@ const sections: Section[] = [
             and any details about your stay that you give us.
           </li>
           <li>
-            <strong>Payment information:</strong> if you pay a booking balance or the check-in
-            damage deposit online, your card and payment details are entered directly into
-            Stripe&rsquo;s own secure payment page &mdash; we never see or store your full card
-            number.
+            <strong>Check-in details:</strong> when you complete the check-in form in the Guests
+            area, the full name, nationality and (optionally) email address of each guest in your
+            party, your arrival and departure dates, and the registration numbers of any vehicles
+            you bring.
           </li>
           <li>
             <strong>Messages you send us:</strong> if you use one of the WhatsApp links on the
@@ -79,6 +79,12 @@ const sections: Section[] = [
             before entering into one.
           </li>
           <li>
+            <strong>Check-in details</strong> &mdash; to know who is staying at the property and
+            which vehicles are parked on site, for the safety and security of guests and the
+            property, and to meet our legal obligation to keep a record of guests&rsquo; names
+            and nationalities. We don&rsquo;t use these details for marketing.
+          </li>
+          <li>
             <strong>Guest sign-in</strong> &mdash; to confirm that whoever is viewing house rules,
             pool safety information and arrival details is an actual registered guest, and to keep
             that information secure. This is our legitimate interest in protecting guest safety
@@ -98,20 +104,6 @@ const sections: Section[] = [
             booking involves a payment.
           </li>
         </ul>
-      </>
-    ),
-  },
-  {
-    heading: 'Payments',
-    body: (
-      <>
-        Online payments (booking balances and the check-in damage deposit) are handled by{' '}
-        <a href="https://stripe.com/gb/privacy" className="text-coast underline">
-          Stripe
-        </a>
-        , a PCI-compliant payment processor. Stripe processes your payment details under its own
-        privacy policy and security arrangements &mdash; we receive confirmation that a payment
-        was made, not your full card details.
       </>
     ),
   },
@@ -155,11 +147,8 @@ const sections: Section[] = [
         <p>We don&rsquo;t sell your data. We share it only where needed to run the site and your stay:</p>
         <ul className="mt-2 list-disc space-y-1 pl-5">
           <li>
-            <strong>Cloudflare</strong> &mdash; our website host, which stores guest sign-in
-            records and serves the site.
-          </li>
-          <li>
-            <strong>Stripe</strong> &mdash; processes online payments (see above).
+            <strong>Cloudflare</strong> &mdash; our website host, which stores guest sign-in and
+            check-in records and serves the site.
           </li>
           <li>
             <strong>Google</strong> &mdash; Analytics (site traffic) and our Google Business
@@ -187,6 +176,7 @@ const sections: Section[] = [
       <>
         <ul className="list-disc space-y-1 pl-5">
           <li>Guest sign-in records: up to 12 months, then deleted.</li>
+          <li>Check-in details: 12 months after your stay, then deleted.</li>
           <li>
             Direct booking and payment records: kept as long as required for accounting and tax
             purposes (normally up to 6 years, per HMRC record-keeping requirements).

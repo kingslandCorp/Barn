@@ -46,6 +46,8 @@ const STYLE = `
   th { color:var(--muted); font-weight:500; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
   tbody tr:last-child td { border-bottom:0; }
   #conn.bad { color:var(--short); }
+  .pushbox { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px; }
+  button.primary { background:var(--accent); color:var(--bg); border:0; font-weight:600; padding:8px 14px; font-size:0.95rem; }
   .login { max-width:360px; margin:12vh auto 0; background:var(--panel); border:1px solid var(--line); border-radius:12px;
            padding:24px; display:flex; flex-direction:column; gap:12px; }
   .login input { font:inherit; padding:10px 12px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--fg); }
@@ -56,7 +58,9 @@ const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", 
 
 export const LOGIN_PAGE = (message = "") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PDtrenchio</title><style>${STYLE}</style></head>
+<title>PDtrenchio</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDtrenchio">
+<meta name="theme-color" content="#0f1519"><style>${STYLE}</style></head>
 <body><div class="wrap">
 <form class="login" method="post" action="/login">
   <h1>PDtrenchio</h1>
@@ -70,7 +74,9 @@ export const LOGIN_PAGE = (message = "") => `<!doctype html>
 
 export const PAGE = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PDtrenchio</title><style>${STYLE}</style></head>
+<title>PDtrenchio</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDtrenchio">
+<meta name="theme-color" content="#0f1519"><style>${STYLE}</style></head>
 <body>
 <div class="wrap">
   <header>
@@ -79,6 +85,10 @@ export const PAGE = `<!doctype html>
     <div class="sub">Alerts go to:
       <span class="chips"><span id="channels" class="chips"></span>
       <button id="test" type="button">Send test alert</button><span id="testmsg" class="muted"></span></span>
+    </div>
+    <div class="pushbox">
+      <button id="pushon" type="button" class="primary">Turn on phone alerts</button>
+      <span id="pushmsg" class="muted"></span>
     </div>
   </header>
 
@@ -188,7 +198,84 @@ document.getElementById('test').addEventListener('click', async () => {
   } catch (e) { msg.textContent = 'Could not send the test alert.'; }
 });
 
+// ---- phone alerts (web push) ----
+const pushBtn = document.getElementById('pushon');
+const pushMsg = document.getElementById('pushmsg');
+const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const standalone = window.navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+function keyBytes(b64) {
+  const s = b64.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((b64.length + 3) % 4);
+  return Uint8Array.from(atob(s), c => c.charCodeAt(0));
+}
+async function pushState() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    pushBtn.hidden = true;
+    pushMsg.textContent = isIos && !standalone
+      ? 'iPhone: tap Share, then Add to Home Screen. Open PDtrenchio from your home screen and tap Turn on phone alerts there.'
+      : 'This browser cannot receive alerts. Try Chrome on Android or Safari on iPhone (from the home screen).';
+    return;
+  }
+  const reg = await navigator.serviceWorker.register('/sw.js');
+  const sub = await reg.pushManager.getSubscription();
+  if (sub && Notification.permission === 'granted') {
+    pushBtn.textContent = 'Phone alerts on ✓ (tap to refresh)';
+  }
+}
+pushBtn.addEventListener('click', async () => {
+  pushMsg.textContent = 'Turning on...';
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') { pushMsg.textContent = 'Notifications are blocked. Allow them for this site in your phone settings, then tap again.'; return; }
+    const reg = await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.ready;
+    const { key } = await (await fetch('/push-key')).json();
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(key) });
+    const r = await fetch('/subscribe', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(sub) });
+    if (!r.ok) throw new Error('server said ' + r.status);
+    pushBtn.textContent = 'Phone alerts on ✓ (tap to refresh)';
+    pushMsg.textContent = 'Done. Tap Send test alert to check.';
+    refresh();
+  } catch (e) {
+    pushMsg.textContent = 'Could not turn on alerts: ' + e.message;
+  }
+});
+pushState().catch(() => {});
+
 refresh();
 setInterval(refresh, 15000);
 </script>
 </body></html>`;
+
+export const MANIFEST = JSON.stringify({
+  name: "PDtrenchio",
+  short_name: "PDtrenchio",
+  start_url: "/",
+  display: "standalone",
+  background_color: "#0f1519",
+  theme_color: "#0f1519",
+  icons: [
+    { src: "/icon-180.png", sizes: "180x180", type: "image/png" },
+    { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+  ],
+});
+
+// Shows each pushed alert as a notification; tapping it opens the page.
+export const SERVICE_WORKER = `
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+self.addEventListener('push', (event) => {
+  let data = { title: 'PDtrenchio', body: 'New alert' };
+  try { data = event.data.json(); } catch (e) {}
+  event.waitUntil(self.registration.showNotification(data.title, {
+    body: data.body, icon: '/icon-180.png', badge: '/icon-180.png', tag: data.title, renotify: true,
+  }));
+});
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  event.waitUntil(self.clients.matchAll({ type: 'window' }).then((list) => {
+    for (const c of list) if ('focus' in c) return c.focus();
+    return self.clients.openWindow('/');
+  }));
+});
+`;

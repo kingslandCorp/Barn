@@ -10,10 +10,14 @@
 // (a new candle or an alert), which keeps well inside the free plan.
 
 import { checkCoin, emptyState, minCandles, pnlAt, MAX_TRENCH_LEVERAGE } from "./logic.js";
-import { LOGIN_PAGE, PAGE } from "./page.js";
+import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
+import { ICON_180, ICON_512 } from "./icons.js";
+import { generateVapidKeys, sendWebPush } from "./webpush.js";
 
 const STATE_KEY = "state";
 const SETTINGS_KEY = "settings"; // { password_hash, ntfy_topic } set once via /setup
+const VAPID_KEY = "vapid";       // web push key pair, generated on first use
+const SUBS_KEY = "push_subs";    // browsers that turned on alerts (max 10)
 const KRAKEN = "https://api.kraken.com/0/public";
 const KRAKEN_PAIR = { BTC: "XBTUSD" }; // everything else is <COIN>USD
 const COOKIE = "pdt_session";
@@ -112,7 +116,41 @@ export function alertText(a) {
   };
 }
 
+async function getVapid(env) {
+  let vapid = await env.STATE.get(VAPID_KEY, "json");
+  if (!vapid) {
+    vapid = await generateVapidKeys();
+    await env.STATE.put(VAPID_KEY, JSON.stringify(vapid));
+  }
+  return vapid;
+}
+
+async function pushSubs(env) {
+  return (await env.STATE.get(SUBS_KEY, "json")) || [];
+}
+
+// Sends to every subscribed browser; forgets ones the browser has dropped.
+async function webPush(env, title, body, origin) {
+  const subs = await pushSubs(env);
+  if (!subs.length) return [];
+  const vapid = await getVapid(env);
+  const payload = JSON.stringify({ title, body });
+  const results = await Promise.allSettled(subs.map((sub) => sendWebPush(sub, payload, vapid, origin)));
+  const problems = [];
+  const keep = subs.filter((sub, i) => {
+    const r = results[i];
+    if (r.status === "rejected") { problems.push(`web push: ${String(r.reason).slice(0, 120)}`); return true; }
+    if (r.value.gone) return false;
+    if (!r.value.ok) problems.push(`web push HTTP ${r.value.status}: ${r.value.detail}`);
+    return true;
+  });
+  if (keep.length !== subs.length) await env.STATE.put(SUBS_KEY, JSON.stringify(keep));
+  return problems;
+}
+
 async function push(env, title, body) {
+  const origin = env.PUBLIC_ORIGIN || "https://pdtrenchio.workers.dev";
+  const webProblems = await webPush(env, title, body, origin);
   const sends = [];
   const { ntfyTopic } = await settings(env);
   if (ntfyTopic) {
@@ -134,14 +172,17 @@ async function push(env, title, body) {
     if (r.status === "rejected") problems.push(String(r.reason));
     else if (!r.value.ok) problems.push(`HTTP ${r.value.status}: ${(await r.value.text()).slice(0, 200)}`);
   }
+  problems.push(...webProblems);
   if (problems.length) console.log("push failed", problems.join("; "));
   return problems;
 }
 
-function channels(env, set) {
+function channels(env, set, subCount = 0) {
   return [
     { name: "this page", on: true, how: "Always on: the Recent alerts table" },
-    { name: "phone (ntfy)", on: !!set.ntfyTopic, how: "Subscribe to this monitor's topic in the ntfy app" },
+    { name: subCount ? `phone alerts (${subCount} device${subCount > 1 ? "s" : ""})` : "phone alerts", on: subCount > 0,
+      how: "Tap 'Turn on phone alerts' on each phone" },
+    { name: "ntfy app", on: !!set.ntfyTopic, how: "Subscribe to this monitor's topic in the ntfy app" },
     { name: "Telegram", on: !!(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID), how: "Set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID secrets" },
   ];
 }
@@ -231,7 +272,7 @@ async function status(env, set) {
   return {
     strategy: cfg.strategy, timeframe: `${cfg.timeframeMin}m`, max_leverage: cfg.maxLeverage,
     risk_pct: cfg.riskPct, balance: cfg.balance, last_candle: lastCandle || null,
-    channels: channels(env, set), coins, alerts: state.alerts,
+    channels: channels(env, set, (await pushSubs(env)).length), coins, alerts: state.alerts,
   };
 }
 
@@ -245,6 +286,20 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Public, non-sensitive files the browser needs for install and push.
+    if (url.pathname === "/sw.js") {
+      return new Response(SERVICE_WORKER, { headers: { "Content-Type": "text/javascript", "Cache-Control": "no-cache" } });
+    }
+    if (url.pathname === "/manifest.webmanifest") {
+      return new Response(MANIFEST, { headers: { "Content-Type": "application/manifest+json" } });
+    }
+    if (url.pathname === "/icon-180.png" || url.pathname === "/icon-512.png") {
+      const b64 = url.pathname === "/icon-180.png" ? ICON_180 : ICON_512;
+      return new Response(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0)), {
+        headers: { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" },
+      });
+    }
+
     // One-time (or repeat) setup of the page password and ntfy topic, so
     // neither has to live in the repo. Locked by a claim code: only its
     // SHA-256 (CLAIM_HASH) is in the config, never the code itself.
@@ -254,7 +309,7 @@ export default {
       if (!safeEqual(await sha256Hex(String(body.claim || "")), env.CLAIM_HASH)) return json({ error: "bad claim code" }, 403);
       const password = String(body.password || "");
       const topic = String(body.ntfy_topic || "");
-      if (password.length < 10 || !/^[A-Za-z0-9_-]{12,64}$/.test(topic)) return json({ error: "weak password or bad topic" }, 400);
+      if (password.length < 10 || (topic && !/^[A-Za-z0-9_-]{12,64}$/.test(topic))) return json({ error: "weak password or bad topic" }, 400);
       await env.STATE.put(SETTINGS_KEY, JSON.stringify({ password_hash: await sha256Hex(password), ntfy_topic: topic }));
       return json({ ok: true });
     }
@@ -283,11 +338,30 @@ export default {
 
     if (url.pathname === "/status") return json(await status(env, set));
 
+    if (url.pathname === "/push-key") return json({ key: (await getVapid(env)).publicKey });
+
+    if (url.pathname === "/subscribe" && request.method === "POST") {
+      const sub = await request.json().catch(() => null);
+      if (!sub || typeof sub.endpoint !== "string" || !sub.endpoint.startsWith("https://") || !sub.keys?.p256dh || !sub.keys?.auth) {
+        return json({ error: "bad subscription" }, 400);
+      }
+      const subs = (await pushSubs(env)).filter((s) => s.endpoint !== sub.endpoint);
+      subs.push({ endpoint: sub.endpoint, keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth } });
+      await env.STATE.put(SUBS_KEY, JSON.stringify(subs.slice(-10)));
+      return json({ ok: true, devices: Math.min(subs.length, 10) });
+    }
+
+    if (url.pathname === "/run-now" && request.method === "POST") {
+      const alerts = await runChecks(env);
+      const s = await loadState(env);
+      return json({ alerts: alerts.length, last_candle: Math.max(0, ...Object.values(s.last_candle)) || null, errors: s.errors });
+    }
+
     if (url.pathname === "/test-alert" && request.method === "POST") {
-      const on = channels(env, set).filter((c) => c.on && c.name !== "this page");
+      const on = channels(env, set, (await pushSubs(env)).length).filter((c) => c.on && c.name !== "this page");
       if (!on.length) return json({ sent: false, message: "No phone channel is set up yet, so there's nowhere to send it." });
-      const problems = await push(env, "pdtrenchio test alert", "If you can read this, alerts reach your phone.");
-      if (problems.length) return json({ sent: false, message: `Sending failed: ${problems.join("; ")}` });
+      const problems = await push(env, "PDtrenchio test alert", "If you can read this, alerts reach your phone.");
+      if (problems.length) return json({ sent: false, message: `Sent, but some channels failed: ${problems.join("; ")}` });
       return json({ sent: true, message: `Test alert sent to ${on.map((c) => c.name).join(" and ")}.` });
     }
 

@@ -12,40 +12,52 @@ function rows(closes, start = 1795000000) {
   return closes.map((c, i) => [start + i * 900, String(c), String(c * 1.002), String(c * 0.998), String(c), "0", "1", 1]);
 }
 
-test("overnight: no new trades; closes held and sent as one 8am summary", async (t) => {
+test("only trades you entered get exit alerts; overnight exits wait for the 8am summary", async (t) => {
+  const { enterPosition } = await import("../src/positions.js");
   const pushes = [];
-  let candleRows;
+  let candleRows, minuteRows = [];
   t.mock.method(globalThis, "fetch", async (url, init) => {
     const u = String(url);
+    if (/interval=1$/.test(u)) return new Response(JSON.stringify({ error: [], result: { SOLUSD: minuteRows, last: 0 } }));
+    if (/interval=5$/.test(u)) return new Response(JSON.stringify({ error: [], result: { SOLUSD: [], last: 0 } }));
     if (u.includes("api.kraken.com")) return new Response(JSON.stringify({ error: [], result: { SOLUSD: candleRows, last: 0 } }));
-    pushes.push(init.headers.Title || init.headers.title);
+    pushes.push({ title: init.headers.Title, actions: init.headers.Actions || "" });
     return new Response("ok");
   });
-  const env = { STATE: kv(), COINS: "SOL", NTFY_TOPIC: "pdtrenchio-testtopic1", STAKE: "10" };
+  const env = { STATE: kv(), COINS: "SOL", NTFY_TOPIC: "pdtrenchio-testtopic1", STAKE: "10", SPIKE_HEADSUPS: "off",
+    PUBLIC_ORIGIN: "https://pdtrenchio.example" };
 
-  // Daytime (12:00 UK): a crossover opens a trade -> one OPEN push
+  // Daytime: a crossover -> one OPEN push with an "I entered" button
   const closes = [...Array(40).fill(100), 100.5, 101, 101.5];
   for (let n = 30; n <= closes.length + 1; n++) {
     candleRows = rows([...closes, closes.at(-1)].slice(0, n));
     await runChecks(env, new Date("2026-11-20T12:00:00Z"));
   }
-  assert.deepEqual(pushes, ["OPEN LONG SOL x" + pushes[0].split("x")[1]]);
-  const state = await env.STATE.get("state", "json");
-  assert.equal(state.open["SOL/USD"].stake, 10);
+  assert.equal(pushes.length, 1);
+  assert.match(pushes[0].title, /^OPEN LONG SOL x\d+$/);
+  assert.match(pushes[0].actions, /^view, I entered, https:\/\/pdtrenchio\.example\/enter\?id=[a-z0-9]+, clear=true/);
+  const id = pushes[0].actions.match(/id=([a-z0-9]+)/)[1];
 
-  // Night (23:00 UK): price collapses through the stop -> no push, held
-  const plan = state.open["SOL/USD"];
-  const crash = [...closes, closes.at(-1), plan.stop * 0.99, plan.stop * 0.99];
-  candleRows = rows(crash);
+  // You confirm: £10 at the suggested price and leverage
+  let state = await env.STATE.get("state", "json");
+  const nowSec = Math.floor(new Date("2026-11-20T12:01:00Z").getTime() / 1000);
+  const res = enterPosition(state, id, { stake: "10", entry: "", leverage: "" }, 0.0005, nowSec);
+  assert.ok(res.position, res.error);
+  await env.STATE.put("state", JSON.stringify(state));
+
+  // Night: price falls through the stop on the 1m chart -> no push, held
+  const pos = state.positions["SOL/USD"];
+  minuteRows = [[nowSec + 3600, "101", "101", String(pos.stop * 0.99), String(pos.stop * 0.99), "0", "1", 1], [nowSec + 3660, "100", "100", "100", "100", "0", "1", 1]];
   await runChecks(env, new Date("2026-11-20T23:00:00Z"));
   assert.equal(pushes.length, 1);
-  assert.equal((await env.STATE.get("state", "json")).held.length, 1);
+  state = await env.STATE.get("state", "json");
+  assert.equal(state.held.length, 1);
+  assert.equal(state.positions["SOL/USD"], undefined);
 
-  // 08:01 UK: one summary push, held cleared
+  // 08:01: one summary
   await runChecks(env, new Date("2026-11-21T08:01:00Z"));
   assert.equal(pushes.length, 2);
-  assert.match(pushes[1], /^Overnight: 1 update$/);
-  assert.equal((await env.STATE.get("state", "json")).held.length, 0);
+  assert.match(pushes[1].title, /^Overnight: 1 update$/);
 });
 
 test("spike heads-up: pushed in the day, recorded but not pushed at night, never held", async (t) => {

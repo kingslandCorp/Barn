@@ -10,11 +10,12 @@
 // (a new candle or an alert), which keeps well inside the free plan.
 
 import { assessCoin, checkCoin, emptyState, inAlertHours, minCandles, pnlAt, recommend, MAX_TRENCH_LEVERAGE } from "./logic.js";
-import { LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
+import { ENTER_PAGE, LOGIN_PAGE, PAGE, MANIFEST, SERVICE_WORKER } from "./page.js";
 import { ICON_180, ICON_512 } from "./icons.js";
 import { generateVapidKeys, sendWebPush } from "./webpush.js";
 import { checkSpikes } from "./spike.js";
-import { assessQuick, checkQuickExit } from "./quick.js";
+import { assessQuick } from "./quick.js";
+import { addSuggestion, checkPositionExit, closeManually, enterPosition, reversalExit, suggestionStatus } from "./positions.js";
 import { exitPrice, exitReason } from "./logic.js";
 
 const STATE_KEY = "state";
@@ -127,13 +128,14 @@ export function alertText(a, cur = "£") {
         `Set the stop-loss in Trench when you open it.`,
         `Liquidation ~${fmtPrice(a.liquidation)}`,
         `Skip it if price is already past the stop or target.`,
+        `Tap "I entered" once you're in, so I can tell you when to exit.`,
       ].join("\n"),
     };
   }
   const why = a.reason === "TIME_LIMIT" ? "5 minutes up" : a.reason.replace("_", " ").toLowerCase();
   return {
-    title: `CLOSE ${a.direction} ${coin} (${why})`,
-    body: `Close your x${a.leverage} ${a.direction.toLowerCase()} on ${coin}.\n` +
+    title: `EXIT NOW: ${a.direction} ${coin} (${why})`,
+    body: `Close your ${a.stake ? m(a.stake) + " " : ""}x${a.leverage} ${a.direction.toLowerCase()} on ${coin}.\n` +
       `Entry ${fmtPrice(a.entry)} -> now ~${fmtPrice(a.price)}\nApprox P&L ${a.pnl >= 0 ? "+" : ""}${m(a.pnl)}`,
   };
 }
@@ -152,11 +154,11 @@ async function pushSubs(env) {
 }
 
 // Sends to every subscribed browser; forgets ones the browser has dropped.
-async function webPush(env, title, body, origin) {
+async function webPush(env, title, body, origin, url) {
   const subs = await pushSubs(env);
   if (!subs.length) return [];
   const vapid = await getVapid(env);
-  const payload = JSON.stringify({ title, body });
+  const payload = JSON.stringify({ title, body, url });
   const results = await Promise.allSettled(subs.map((sub) => sendWebPush(sub, payload, vapid, origin)));
   const problems = [];
   const keep = subs.filter((sub, i) => {
@@ -170,16 +172,18 @@ async function webPush(env, title, body, origin) {
   return problems;
 }
 
-async function push(env, title, body) {
+// extra.enterId: adds an "I entered" button that opens the confirm form.
+async function push(env, title, body, extra = {}) {
   const origin = env.PUBLIC_ORIGIN || "https://pdtrenchio.workers.dev";
-  const webProblems = await webPush(env, title, body, origin);
+  const url = extra.enterId ? `${origin}/enter?id=${extra.enterId}` : `${origin}/`;
+  const webProblems = await webPush(env, title, body, origin, url);
   const sends = [];
   const { ntfyTopic } = await settings(env);
   if (ntfyTopic) {
     const server = (env.NTFY_SERVER || "https://ntfy.sh").replace(/\/$/, "");
-    sends.push(fetch(`${server}/${encodeURIComponent(ntfyTopic)}`, {
-      method: "POST", body, headers: { Title: title, Priority: "high" },
-    }));
+    const headers = { Title: title, Priority: "high", Click: url };
+    if (extra.enterId) headers.Actions = `view, I entered, ${url}, clear=true; view, Open page, ${origin}/`;
+    sends.push(fetch(`${server}/${encodeURIComponent(ntfyTopic)}`, { method: "POST", body, headers }));
   }
   if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
     sends.push(fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -218,6 +222,8 @@ export async function runChecks(env, now = new Date()) {
   const state = await loadState(env);
   const before = comparable(state);
   const newAlerts = [];
+  const nowSec = Math.floor(now.getTime() / 1000);
+  const positionCloses = [];
 
   const fetched = await Promise.allSettled(cfg.coins.map((c) => fetchCandles(c, cfg.timeframeMin)));
   cfg.coins.forEach((coin, i) => {
@@ -227,7 +233,18 @@ export async function runChecks(env, now = new Date()) {
     if (r.value.length < minCandles(cfg.strategy, cfg)) { state.errors[symbol] = "not enough candle history"; return; }
     delete state.errors[symbol];
     try {
-      newAlerts.push(...checkCoin(state, symbol, r.value, cfg));
+      for (const a of checkCoin(state, symbol, r.value, cfg)) {
+        if (a.event === "open") {
+          // a new suggestion: give it an id for the "I entered" button
+          const { time, event, ...plan } = a;
+          a.id = addSuggestion(state, plan, "signal", nowSec);
+          if (state.open[symbol]) state.open[symbol].id = a.id;
+          positionCloses.push(...reversalExit(state, symbol, a.direction, a.entry, nowSec, cfg.feePct));
+        } else if (a.event === "close") {
+          a.plan_only = true; // the strategy's own bookkeeping: you never entered it
+        }
+        newAlerts.push(a);
+      }
     } catch (e) {
       state.errors[symbol] = String(e).slice(0, 200);
     }
@@ -237,15 +254,14 @@ export async function runChecks(env, now = new Date()) {
   // Information only (no trade plan); dropped outside alert hours, since a
   // spike is stale by morning.
   const spikeAlerts = [];
-  const quickCloses = [];
-  const nowSec = Math.floor(now.getTime() / 1000);
   const extra = await Promise.allSettled(cfg.coins.flatMap((c) => [fetchCandles(c, 5), fetchCandles(c, 1)]));
   cfg.coins.forEach((coin, i) => {
     const symbol = symbolOf(coin);
     const c5 = extra[2 * i], c1 = extra[2 * i + 1], c15 = fetched[i];
-    // Quick trades you chose to watch: stop / target / 5-minute limit, on 1m candles.
+    // Trades you confirmed: stop / target / liquidation every minute on 1m candles,
+    // plus the 5-minute limit for quick trades.
     if (c1.status === "fulfilled") {
-      quickCloses.push(...checkQuickExit(state, symbol, c1.value, nowSec, exitReason, exitPrice, pnlAt, cfg.feePct));
+      positionCloses.push(...checkPositionExit(state, symbol, c1.value, nowSec, cfg.feePct));
     }
     if (env.SPIKE_HEADSUPS === "off") return;
     if (c5.status !== "fulfilled" || c1.status !== "fulfilled" || c15.status !== "fulfilled") return;
@@ -256,15 +272,19 @@ export async function runChecks(env, now = new Date()) {
     }
   });
   const spikesToSend = awake ? spikeAlerts : [];
-  newAlerts.push(...spikeAlerts.map((a) => ({ ...a, sent: awake })), ...quickCloses);
+  newAlerts.push(...spikeAlerts.map((a) => ({ ...a, sent: awake })), ...positionCloses);
 
   if (newAlerts.length) state.alerts = [...newAlerts.slice().reverse(), ...state.alerts].slice(0, 50);
 
   // Quiet hours: hold alerts and send them as one summary when the day starts.
   let toSend = [];
   let summary = null;
-  // Quick-trade closes always go out: you started that trade minutes ago.
-  const tradeAlerts = newAlerts.filter((a) => a.event !== "spike" && !a.quick);
+  // Pushed: new trade suggestions, and exits for trades you confirmed.
+  // Quick-trade exits always go out (you started that trade minutes ago);
+  // other exits overnight wait for the 8am summary. The strategy's own
+  // closes for trades you never entered are shown on the page only.
+  const quickCloses = positionCloses.filter((a) => a.quick);
+  const tradeAlerts = newAlerts.filter((a) => (a.event === "open" || (a.event === "close" && a.confirmed)) && !a.quick);
   if (!awake) {
     state.held = [...state.held, ...tradeAlerts];
   } else {
@@ -287,7 +307,7 @@ export async function runChecks(env, now = new Date()) {
   if (summary) await push(env, summary.title, summary.body);
   for (const a of toSend) {
     const { title, body } = alertText(a, cfg.currency);
-    await push(env, title, body);
+    await push(env, title, body, a.event === "open" && a.id ? { enterId: a.id } : {});
   }
   return newAlerts;
 }
@@ -329,9 +349,11 @@ async function status(env, set) {
   const coins = cfg.coins.map((coin, i) => {
     const symbol = symbolOf(coin);
     const price = prices[i].status === "fulfilled" ? prices[i].value : null;
-    const plan = state.open[symbol] || null;
+    const plan = state.positions?.[symbol] || null; // your confirmed trade
+    const sug = state.open[symbol];
+    const suggested = !plan && sug?.id && suggestionStatus(state, sug.id, Math.floor(Date.now() / 1000)).ok ? sug : null;
     return {
-      symbol, price, plan,
+      symbol, price, plan, suggested,
       opened_at: state.opened_at[symbol] || null,
       last_signal: state.last_signal[symbol] || null,
       error: state.errors[symbol] || null,
@@ -346,6 +368,7 @@ async function status(env, set) {
     stake: cfg.stake, currency: cfg.currency, alert_hours: `${cfg.alertStart}:00-${cfg.alertEnd}:00 ${cfg.timeZone}`,
     awake: inAlertHours(new Date(), cfg.timeZone, cfg.alertStart, cfg.alertEnd), held: state.held.length,
     channels: channels(env, set, (await pushSubs(env)).length), coins, alerts: state.alerts,
+    enterable: Object.keys(state.suggestions || {}).filter((id) => suggestionStatus(state, id, Math.floor(Date.now() / 1000)).ok),
   };
 }
 
@@ -395,10 +418,11 @@ export default {
       if (!safeEqual(await sha256Hex(String(form.get("password") || "")), set.passwordHash)) {
         return html(LOGIN_PAGE("That password didn't match. Try again."), 401);
       }
+      const next = String(form.get("next") || "/");
       return new Response(null, {
         status: 303,
         headers: {
-          Location: "/",
+          Location: next.startsWith("/") && !next.startsWith("//") ? next : "/",
           "Set-Cookie": `${COOKIE}=${await sessionToken(set.passwordHash)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=31536000`,
         },
       });
@@ -406,7 +430,7 @@ export default {
 
     if (!(await isSignedIn(request, set))) {
       if (url.pathname === "/status") return json({ error: "sign in first" }, 401);
-      return html(LOGIN_PAGE(set.passwordHash ? "" : "This page has no password set yet."), set.passwordHash ? 200 : 503);
+      return html(LOGIN_PAGE(set.passwordHash ? "" : "This page has no password set yet.", url.pathname + url.search), set.passwordHash ? 200 : 503);
     }
 
     if (url.pathname === "/status") return json(await status(env, set));
@@ -436,38 +460,53 @@ export default {
         if (r.status === "rejected") return { symbol, ok: false, reason: "price data unavailable" };
         const candles = r.value;
         const a = assessQuick(symbol, candles, candles[candles.length - 1].close, cfg, nowSec);
-        if (a.ok && state.open[symbol]) return { ...a, ok: false, reason: "you already have an open trade on this coin" };
+        if (a.ok && state.positions?.[symbol]) return { ...a, ok: false, reason: "you already have an open trade on this coin" };
         return a;
       });
-      return json({ ...recommend(assessed), currency: cfg.currency, fee_pct: cfg.feePct, time: new Date().toISOString() });
+      const rec = recommend(assessed);
+      if (rec.pick) {
+        rec.pick.id = addSuggestion(state, rec.pick.plan, "quick", nowSec);
+        await env.STATE.put(STATE_KEY, JSON.stringify(state));
+      }
+      return json({ ...rec, currency: cfg.currency, fee_pct: cfg.feePct, time: new Date().toISOString() });
     }
 
-    // "Watch this trade for me": track a suggested plan so a CLOSE alert follows.
-    if (url.pathname === "/track" && request.method === "POST") {
-      const plan = await request.json().catch(() => null);
+    // "I entered": confirm amount, entry price and leverage -> tracked position.
+    if (url.pathname === "/enter") {
       const cfg = config(env);
-      if (!plan || !cfg.coins.map(symbolOf).includes(plan.symbol) || !["LONG", "SHORT"].includes(plan.direction) ||
-          !(plan.leverage >= 1 && plan.leverage <= MAX_TRENCH_LEVERAGE)) {
-        return json({ error: "bad trade" }, 400);
-      }
+      const nowSec = Math.floor(Date.now() / 1000);
       const state = await loadState(env);
-      if (state.open[plan.symbol]) return json({ error: "already watching a trade on this coin" }, 409);
-      const keys = ["symbol", "direction", "entry", "stop", "take_profit", "liquidation", "leverage", "stake", "risk_amount", "stop_pct", "reward_risk"];
-      state.open[plan.symbol] = Object.fromEntries(keys.map((k) => [k, plan[k]]));
-      if (plan.quick) {
-        const nowSec = Math.floor(Date.now() / 1000);
-        state.open[plan.symbol].quick = true;
-        state.open[plan.symbol].expires_at = nowSec + 5 * 60; // set here, not trusted from the browser
-        state.opened_at[plan.symbol] = Math.floor(nowSec / 60) * 60; // exits checked from the next minute on
-      } else {
-        const candles = await fetchCandles(plan.symbol.split("/")[0], cfg.timeframeMin);
-        state.opened_at[plan.symbol] = candles[candles.length - 1].t; // exits checked from the next candle on
+      if (request.method === "POST") {
+        const form = await request.formData();
+        const id = String(form.get("id") || "");
+        const res = enterPosition(state, id, {
+          stake: form.get("stake"), entry: form.get("entry"), leverage: form.get("leverage"),
+        }, cfg.feePct, nowSec);
+        if (res.error) {
+          const st = state.suggestions?.[id];
+          return html(ENTER_PAGE({ id, plan: st?.plan, kind: st?.kind, error: res.error, cur: cfg.currency, stake: cfg.stake }), 400);
+        }
+        const pos = res.position;
+        state.alerts = [{ time: new Date().toISOString(), event: "entered", ...pos }, ...state.alerts].slice(0, 50);
+        state.checked_at = new Date().toISOString();
+        await env.STATE.put(STATE_KEY, JSON.stringify(state));
+        return html(ENTER_PAGE({ done: pos, warning: res.warning, cur: cfg.currency }));
       }
-      const alert = { time: new Date().toISOString(), event: "open", manual: true, ...state.open[plan.symbol] };
-      state.alerts = [alert, ...state.alerts].slice(0, 50);
-      state.checked_at = new Date().toISOString();
-      await env.STATE.put(STATE_KEY, JSON.stringify(state));
-      return json({ ok: true });
+      const id = url.searchParams.get("id") || "";
+      const st = suggestionStatus(state, id, nowSec);
+      const sug = state.suggestions?.[id];
+      return html(ENTER_PAGE({ id, plan: sug?.plan, kind: sug?.kind, error: st.ok ? "" : st.why, closed: !st.ok, cur: cfg.currency, stake: cfg.stake }));
+    }
+
+    // "I closed it": stop tracking a position you exited yourself.
+    if (url.pathname === "/exit" && request.method === "POST") {
+      const form = await request.formData();
+      const state = await loadState(env);
+      if (closeManually(state, String(form.get("symbol") || ""))) {
+        state.checked_at = new Date().toISOString();
+        await env.STATE.put(STATE_KEY, JSON.stringify(state));
+      }
+      return new Response(null, { status: 303, headers: { Location: "/" } });
     }
 
     if (url.pathname === "/run-now" && request.method === "POST") {

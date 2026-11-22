@@ -69,7 +69,7 @@ test("checkCoin opens once per candle, then closes on take-profit", () => {
   assert.ok(closes2[0].pnl > 0);
   assert.equal(state.open["SOL/USD"], undefined);
   assert.match(alertText(sent[0]).title, /^OPEN LONG SOL x\d+$/);
-  assert.match(alertText(closes2[0]).title, /^CLOSE LONG SOL \(take profit\)$/);
+  assert.match(alertText(closes2[0]).title, /^EXIT NOW: LONG SOL \(take profit\)$/);
 });
 
 test("fixed £10 stake: stake is exactly 10 and the stop loss follows from leverage", () => {

@@ -52,6 +52,9 @@ const STYLE = `
   .pick.NONE { border-left:4px solid var(--muted); }
   .pick h3 { margin:0; font-size:1.1rem; }
   .why { margin:0; padding-left:1.1rem; font-size:0.85rem; color:var(--muted); }
+  a.btnlink { display:inline-block; background:var(--accent); color:var(--bg); font-weight:600; text-decoration:none;
+             border-radius:8px; padding:6px 12px; font-size:0.85rem; }
+  a.btnlink:focus-visible { outline:2px solid var(--fg); outline-offset:2px; }
   .pushbox { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:12px; }
   button.primary { background:var(--accent); color:var(--bg); border:0; font-weight:600; padding:8px 14px; font-size:0.95rem; }
   .login { max-width:360px; margin:12vh auto 0; background:var(--panel); border:1px solid var(--line); border-radius:12px;
@@ -62,7 +65,7 @@ const STYLE = `
 
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-export const LOGIN_PAGE = (message = "") => `<!doctype html>
+export const LOGIN_PAGE = (message = "", next = "/") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>PDtrenchio</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="PDtrenchio">
@@ -74,6 +77,7 @@ export const LOGIN_PAGE = (message = "") => `<!doctype html>
   ${message ? `<div class="neg">${escapeHtml(message)}</div>` : ""}
   <label for="password" class="sub">Password</label>
   <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+  <input type="hidden" name="next" value="${escapeHtml(next)}">
   <button type="submit">Sign in</button>
 </form>
 </div></body></html>`;
@@ -141,11 +145,12 @@ const isoTime = t => (t || '').replace('T', ' ').slice(0, 16);
 const unixTime = s => s ? new Date(s * 1000).toISOString().replace('T', ' ').slice(0, 16) : '';
 
 function coinCard(c) {
-  const p = c.plan;
+  const p = c.plan; // your confirmed trade
   const side = p ? p.direction : 'FLAT';
   let body;
   if (p) {
-    body = '<dl class="mono">' +
+    body = '<div class="muted"><b>You\'re in:</b> ' + gbp(p.stake) + ' x' + p.leverage + (p.expires_at ? ' · quick trade, exit by ' + new Date(p.expires_at * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : '') + '</div>' +
+      '<dl class="mono">' +
       '<dt>Leverage</dt><dd>x' + p.leverage + '</dd>' +
       '<dt>Entry</dt><dd>' + px(p.entry) + '</dd>' +
       '<dt>Stop</dt><dd class="neg">' + px(p.stop) + '</dd>' +
@@ -154,7 +159,12 @@ function coinCard(c) {
       '<dt>Stake</dt><dd>' + gbp(p.stake) + '</dd>' +
       '<dt>Live P&amp;L</dt><dd class="' + cls(c.pnl) + '">' + money(c.pnl) + '</dd>' +
       '<dt>To stop</dt><dd>' + (c.to_stop_pct == null ? '—' : c.to_stop_pct.toFixed(2) + '%') + '</dd>' +
-      '</dl><div class="muted">Opened on the ' + esc(unixTime(c.opened_at)) + ' UTC candle</div>';
+      '</dl><form method="post" action="/exit" onsubmit="return confirm(\'Stop tracking this trade?\') !== false">' +
+      '<input type="hidden" name="symbol" value="' + esc(c.symbol) + '"><button type="submit">I closed it</button></form>';
+  } else if (c.suggested) {
+    const s = c.suggested;
+    body = '<div class="muted">Suggested: ' + s.direction + ' x' + s.leverage + ' at ~' + px(s.entry) + ' (stop ' + px(s.stop) + ', target ' + px(s.take_profit) + ')</div>' +
+      '<a class="btnlink" href="/enter?id=' + encodeURIComponent(s.id) + '">I entered</a>';
   } else {
     const ls = c.last_signal ? c.last_signal.direction + ' on the ' + unixTime(c.last_signal.candle) + ' UTC candle' +
       (c.last_signal.skipped ? ' (skipped: outside alert hours)' : '') : 'none yet';
@@ -167,7 +177,17 @@ function coinCard(c) {
     '</div>';
 }
 
+let ENTERABLE = new Set();
 function alertRow(a) {
+  if (a.event === 'entered') {
+    return '<tr><td class="mono">' + esc(isoTime(a.time)) + '</td><td><b>YOU ENTERED ' + esc(a.direction) + '</b></td><td>' + esc((a.symbol || '').split('/')[0]) +
+      '</td><td class="mono">x' + a.leverage + '</td><td class="mono">' + px(a.entry) + '</td><td class="mono">' + px(a.stop) + '</td><td class="mono">' + px(a.take_profit) +
+      '</td><td class="mono">' + gbp(a.stake) + '</td><td></td></tr>';
+  }
+  if (a.event === 'close' && a.plan_only) {
+    return '<tr><td class="mono">' + esc(isoTime(a.time)) + '</td><td class="muted">suggestion ended (' + esc((a.reason || '').replace('_', ' ').toLowerCase()) + ')</td><td>' +
+      esc((a.symbol || '').split('/')[0]) + '</td><td colspan="6" class="muted">not entered, no alert sent</td></tr>';
+  }
   if (a.event === 'spike') {
     const up = a.direction === 'LONG';
     return '<tr>' +
@@ -181,7 +201,7 @@ function alertRow(a) {
   }
   const open = a.event === 'open';
   const coin = (a.symbol || '').split('/')[0];
-  const label = open ? 'OPEN ' + a.direction : 'CLOSE ' + a.direction + ' (' + (a.reason || '').replace('_', ' ').toLowerCase() + ')';
+  const label = open ? 'OPEN ' + a.direction : 'EXIT ' + a.direction + ' (' + (a.reason === 'TIME_LIMIT' ? '5 minutes up' : (a.reason || '').replace('_', ' ').toLowerCase()) + ')';
   const labelCls = open ? (a.direction === 'LONG' ? 'pos' : 'neg') : '';
   return '<tr>' +
     '<td class="mono">' + esc(isoTime(a.time)) + '</td>' +
@@ -192,7 +212,7 @@ function alertRow(a) {
     '<td class="mono">' + (open ? px(a.stop) : '') + '</td>' +
     '<td class="mono">' + (open ? px(a.take_profit) : '') + '</td>' +
     '<td class="mono">' + (open ? gbp(a.stake) : '') + '</td>' +
-    '<td class="mono ' + (open ? '' : cls(a.pnl)) + '">' + (open ? '' : money(a.pnl)) + '</td>' +
+    '<td class="mono ' + (open ? '' : cls(a.pnl)) + '">' + (open ? (a.id && ENTERABLE.has(a.id) ? '<a class="btnlink" href="/enter?id=' + encodeURIComponent(a.id) + '">I entered</a>' : '') : money(a.pnl)) + '</td>' +
     '</tr>';
 }
 
@@ -203,6 +223,7 @@ async function refresh() {
     if (res.status === 401) { location.reload(); return; }
     const s = await res.json();
     CUR = s.currency || '£';
+    ENTERABLE = new Set(s.enterable || []);
     const sizing = s.stake ? gbp(s.stake) + ' stake per trade' : 'risk ' + (s.risk_pct * 100).toFixed(1) + '% of ' + gbp(s.balance) + ' per trade';
     document.getElementById('sub').textContent =
       s.strategy + ' on ' + s.timeframe + ' candles · Kraken prices · max x' + s.max_leverage + ' · ' + sizing +
@@ -258,15 +279,8 @@ document.getElementById('suggest').addEventListener('click', async () => {
         '<div class="muted">' + esc(r.pick.reason) + '. Enter within a minute, set the stop-loss and take-profit in Trench, and close after 5 minutes if neither is hit.' +
         (r.fee_pct > 0 ? ' Small edge in testing: only worth it if Trench\'s fee is very low.' : '') + '</div>' +
         planList(p) +
-        '<div><button id="track" type="button">Watch this trade for me</button> <span id="trackmsg" class="muted"></span></div>' +
+        '<div><a class="btnlink" href="/enter?id=' + encodeURIComponent(r.pick.id) + '">I entered this trade</a></div>' +
         '<div class="muted">Why this coin, and the others:</div>' + why + '</div>';
-      document.getElementById('track').addEventListener('click', async () => {
-        const t = document.getElementById('trackmsg');
-        const res = await fetch('/track', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(lastPick.plan)});
-        const j = await res.json();
-        t.textContent = res.ok ? 'Watching. You will get a CLOSE alert at the stop, the target or after 5 minutes.' : (j.error || 'Could not watch it.');
-        if (res.ok) refresh();
-      });
     } else {
       box.innerHTML = '<div class="pick NONE"><h3>No trade right now</h3>' +
         '<div class="muted">None of the five coins has a clean 1-minute setup right now. Setups come and go: try again in a minute or two.</div>' + why + '</div>';
@@ -348,13 +362,59 @@ self.addEventListener('push', (event) => {
   try { data = event.data.json(); } catch (e) {}
   event.waitUntil(self.registration.showNotification(data.title, {
     body: data.body, icon: '/icon-180.png', badge: '/icon-180.png', tag: data.title, renotify: true,
+    data: { url: data.url || '/' },
   }));
 });
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  event.waitUntil(self.clients.matchAll({ type: 'window' }).then((list) => {
-    for (const c of list) if ('focus' in c) return c.focus();
-    return self.clients.openWindow('/');
-  }));
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(self.clients.openWindow(url));
 });
 `;
+
+const px2 = (p) => (p >= 1000 ? p.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : p >= 1 ? p.toFixed(4) : p.toFixed(6));
+const HEAD = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PDtrenchio</title><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="theme-color" content="#0f1519"><style>${STYLE}</style></head>`;
+
+// "I entered" form (opened from the notification button or the page).
+export function ENTER_PAGE({ id, plan, kind, error = "", closed = false, cur = "£", stake = 10, done, warning }) {
+  const m = (v) => `${v < 0 ? "-" : ""}${cur}${Math.abs(v).toFixed(2)}`;
+  if (done) {
+    const coin = done.symbol.split("/")[0];
+    return `${HEAD}<body><div class="wrap"><div class="login">
+      <h1>Tracking your ${escapeHtml(coin)} trade</h1>
+      <div class="sub">${escapeHtml(done.direction)} x${done.leverage}, ${m(done.stake)} at ${px2(done.entry)}.</div>
+      ${warning ? `<div class="neg">${escapeHtml(warning)}</div>` : ""}
+      <dl class="mono">
+        <dt>Stop-loss</dt><dd class="neg">${px2(done.stop)} (lose ~${m(done.risk_amount)})</dd>
+        <dt>Take-profit</dt><dd class="pos">${px2(done.take_profit)} (win ~${m(done.risk_amount * done.reward_risk)})</dd>
+        <dt>Liquidation</dt><dd class="warn">~${px2(done.liquidation)}</dd>
+        ${done.expires_at ? `<dt>Exit by</dt><dd>${new Date(done.expires_at * 1000).toISOString().slice(11, 16)} UTC</dd>` : ""}
+      </dl>
+      <div class="sub">I check it every minute and alert you the moment it's time to exit. Set these stop and take-profit levels in Trench too, in case you miss the alert.</div>
+      <a href="/" style="color:var(--accent)">Back to the page</a>
+    </div></div></body></html>`;
+  }
+  if (!plan || closed) {
+    return `${HEAD}<body><div class="wrap"><div class="login"><h1>Can't confirm this trade</h1>
+      <div class="neg">${escapeHtml(error || "This trade has expired.")}</div><a href="/" style="color:var(--accent)">Back to the page</a></div></div></body></html>`;
+  }
+  const coin = plan.symbol.split("/")[0];
+  return `${HEAD}<body><div class="wrap">
+  <form class="login" method="post" action="/enter">
+    <h1>I entered: ${escapeHtml(plan.direction)} ${escapeHtml(coin)}</h1>
+    <div class="sub">${kind === "quick" ? "Quick trade: I'll tell you to exit at the stop, the target, or after 5 minutes." : "I'll tell you to exit at the stop, the target, or if the trend flips."} Change anything that differs from what you did in Trench.</div>
+    ${error ? `<div class="neg">${escapeHtml(error)}</div>` : ""}
+    <input type="hidden" name="id" value="${escapeHtml(id)}">
+    <label for="stake" class="sub">Amount you put in (${escapeHtml(cur)})</label>
+    <input id="stake" name="stake" type="number" step="0.01" min="0.01" inputmode="decimal" value="${stake || plan.stake}" required>
+    <label for="entry" class="sub">Entry price (suggested ${px2(plan.entry)})</label>
+    <input id="entry" name="entry" type="number" step="any" inputmode="decimal" value="${plan.entry}">
+    <label for="leverage" class="sub">Leverage (suggested x${plan.leverage}, max 200)</label>
+    <input id="leverage" name="leverage" type="number" step="1" min="1" max="200" inputmode="numeric" value="${plan.leverage}">
+    <button type="submit">Confirm and track it</button>
+    <a href="/" class="sub" style="color:var(--accent)">I didn't enter it</a>
+  </form></div></body></html>`;
+}

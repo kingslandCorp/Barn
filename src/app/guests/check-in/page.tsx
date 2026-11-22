@@ -20,8 +20,8 @@ export default function CheckInPage() {
             Who&rsquo;s staying?
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-            Please register everyone in your party, and any cars you&rsquo;re bringing, before
-            you arrive.
+            Before you arrive, please register everyone staying overnight, including children,
+            and every vehicle that will be parked on site.
           </p>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/60">
             We&rsquo;ll email the lead guest a QuickBooks invoice for the refundable £250 damage

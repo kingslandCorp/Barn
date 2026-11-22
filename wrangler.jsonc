@@ -20,6 +20,14 @@
   "observability": {
     "enabled": true
   },
+  // Check-in notifications to Kim. Sends only from an address on kingslandbarn.co.uk,
+  // which must be onboarded to Cloudflare Email Sending, and only to the bookings inbox.
+  "send_email": [
+    {
+      "name": "CHECKIN_EMAIL",
+      "destination_address": "booking@kingslandbarn.co.uk"
+    }
+  ],
   "kv_namespaces": [
     {
       "binding": "GUEST_LOGS",

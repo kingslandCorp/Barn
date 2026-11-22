@@ -49,9 +49,10 @@ const sections: Section[] = [
           </li>
           <li>
             <strong>Check-in details:</strong> when you complete the check-in form in the Guests
-            area, the full name, nationality and (optionally) email address of each guest in your
-            party, your arrival and departure dates, and the registration numbers of any vehicles
-            you bring.
+            area, the full name, nationality, whether they are under 18 and (optionally) email
+            address of everyone staying, your arrival and departure dates, and the registration
+            numbers of every vehicle parked on site. These details are emailed to our host so
+            she knows who is arriving.
           </li>
           <li>
             <strong>Payment information:</strong> if you pay the damage deposit or a booking
@@ -87,8 +88,9 @@ const sections: Section[] = [
           <li>
             <strong>Check-in details</strong> &mdash; to know who is staying at the property and
             which vehicles are parked on site, for the safety and security of guests and the
-            property, and to meet our legal obligation to keep a record of guests&rsquo; names
-            and nationalities. We don&rsquo;t use these details for marketing.
+            property, and to meet our legal obligations: keeping a record of guests&rsquo; names
+            and nationalities, and keeping records of the number of visitors and nights for the
+            Welsh Visitor Levy. We don&rsquo;t use these details for marketing.
           </li>
           <li>
             <strong>Guest sign-in</strong> &mdash; to confirm that whoever is viewing house rules,
@@ -169,7 +171,7 @@ const sections: Section[] = [
         <ul className="mt-2 list-disc space-y-1 pl-5">
           <li>
             <strong>Cloudflare</strong> &mdash; our website host, which stores guest sign-in and
-            check-in records and serves the site.
+            check-in records, emails check-in details to our host, and serves the site.
           </li>
           <li>
             <strong>QuickBooks (Intuit)</strong> &mdash; invoicing and payments, including the
@@ -201,7 +203,13 @@ const sections: Section[] = [
       <>
         <ul className="list-disc space-y-1 pl-5">
           <li>Guest sign-in records: up to 12 months, then deleted.</li>
-          <li>Check-in details: 12 months after your stay, then deleted.</li>
+          <li>Check-in details (names, nationalities, emails, vehicles): 12 months after your
+            stay, then deleted automatically.</li>
+          <li>
+            Visitor Levy records (stay dates and the number of visitors and nights, without
+            names): 7 years, as the law requires these to be kept for at least 6 years after
+            each levy return.
+          </li>
           <li>
             Direct booking and payment records: kept as long as required for accounting and tax
             purposes (normally up to 6 years, per HMRC record-keeping requirements).

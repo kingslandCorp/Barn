@@ -117,11 +117,11 @@ export default function GuestTabs() {
         {/* Goes to its own page rather than switching tab content, so it's a link styled
             to match the bar rather than another button in the `tabs` array. */}
         <Link
-          href="/guests/check-in"
+          href="/guests/pre-arrival"
           className="flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-coast px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-coast-dark sm:flex-1 sm:px-6 sm:py-3"
         >
           <ClipboardCheck size={15} strokeWidth={1.75} />
-          Pre-arrival info
+          Complete pre-arrival info
         </Link>
       </div>
       <p className="mx-auto mt-3 max-w-xl text-center text-xs text-ink/50">

@@ -149,7 +149,7 @@ function coinCard(c) {
   const side = p ? p.direction : 'FLAT';
   let body;
   if (p) {
-    body = '<div class="muted"><b>You\'re in:</b> ' + gbp(p.stake) + ' x' + p.leverage + (p.expires_at ? ' · quick trade, exit by ' + new Date(p.expires_at * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : '') + '</div>' +
+    body = '<div class="muted"><b>You’re in:</b> ' + gbp(p.stake) + ' x' + p.leverage + (p.expires_at ? ' · quick trade, exit by ' + new Date(p.expires_at * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : '') + '</div>' +
       '<dl class="mono">' +
       '<dt>Leverage</dt><dd>x' + p.leverage + '</dd>' +
       '<dt>Entry</dt><dd>' + px(p.entry) + '</dd>' +
@@ -159,7 +159,7 @@ function coinCard(c) {
       '<dt>Stake</dt><dd>' + gbp(p.stake) + '</dd>' +
       '<dt>Live P&amp;L</dt><dd class="' + cls(c.pnl) + '">' + money(c.pnl) + '</dd>' +
       '<dt>To stop</dt><dd>' + (c.to_stop_pct == null ? '—' : c.to_stop_pct.toFixed(2) + '%') + '</dd>' +
-      '</dl><form method="post" action="/exit" onsubmit="return confirm(\'Stop tracking this trade?\') !== false">' +
+      '</dl><form method="post" action="/exit">' +
       '<input type="hidden" name="symbol" value="' + esc(c.symbol) + '"><button type="submit">I closed it</button></form>';
   } else if (c.suggested) {
     const s = c.suggested;
@@ -277,7 +277,7 @@ document.getElementById('suggest').addEventListener('click', async () => {
       const p = r.pick.plan;
       box.innerHTML = '<div class="pick ' + p.direction + '"><h3>' + p.direction + ' ' + esc(p.symbol.split('/')[0]) + ' x' + p.leverage + '</h3>' +
         '<div class="muted">' + esc(r.pick.reason) + '. Enter within a minute, set the stop-loss and take-profit in Trench, and close after 5 minutes if neither is hit.' +
-        (r.fee_pct > 0 ? ' Small edge in testing: only worth it if Trench\'s fee is very low.' : '') + '</div>' +
+        (r.fee_pct > 0 ? ' Small edge in testing: only worth it if Trench’s fee is very low.' : '') + '</div>' +
         planList(p) +
         '<div><a class="btnlink" href="/enter?id=' + encodeURIComponent(r.pick.id) + '">I entered this trade</a></div>' +
         '<div class="muted">Why this coin, and the others:</div>' + why + '</div>';
